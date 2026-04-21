@@ -1,0 +1,96 @@
+{
+  "family_id": "impulse_scoring",
+  "status": "implemented",
+  "cases": [
+    {
+      "case_id": "valid_long_impulse_meets_range_and_body_gates",
+      "bias": "Long",
+      "atr_value": 2.0,
+      "ema_fast": 104.2,
+      "min_impulse_atr_multiple": 1.25,
+      "strong_body_pct": 0.5,
+      "min_strong_bars": 2,
+      "bars": [
+        { "o": 100.5, "h": 101.7, "l": 100.2, "c": 101.4 },
+        { "o": 101.4, "h": 103.1, "l": 101.2, "c": 102.8 },
+        { "o": 102.8, "h": 104.9, "l": 102.6, "c": 104.6 }
+      ],
+      "expected_qualified": true,
+      "expected_block_reason": "",
+      "expected_impulse_move": 4.7,
+      "expected_strong_bars": 3
+    },
+    {
+      "case_id": "valid_short_impulse_meets_range_and_body_gates",
+      "bias": "Short",
+      "atr_value": 2.0,
+      "ema_fast": 101.0,
+      "min_impulse_atr_multiple": 1.25,
+      "strong_body_pct": 0.5,
+      "min_strong_bars": 2,
+      "bars": [
+        { "o": 104.8, "h": 105.0, "l": 103.5, "c": 103.8 },
+        { "o": 103.8, "h": 104.0, "l": 102.0, "c": 102.4 },
+        { "o": 102.4, "h": 102.6, "l": 100.1, "c": 100.5 }
+      ],
+      "expected_qualified": true,
+      "expected_block_reason": "",
+      "expected_impulse_move": 4.9,
+      "expected_strong_bars": 3
+    },
+    {
+      "case_id": "impulse_range_too_small_is_rejected",
+      "bias": "Long",
+      "atr_value": 2.0,
+      "ema_fast": 101.2,
+      "min_impulse_atr_multiple": 1.25,
+      "strong_body_pct": 0.5,
+      "min_strong_bars": 2,
+      "bars": [
+        { "o": 100.5, "h": 101.0, "l": 100.2, "c": 100.9 },
+        { "o": 100.9, "h": 101.5, "l": 100.7, "c": 101.3 },
+        { "o": 101.3, "h": 102.3, "l": 101.2, "c": 102.0 }
+      ],
+      "expected_qualified": false,
+      "expected_block_reason": "ImpulseMoveTooSmall",
+      "expected_impulse_move": 2.1,
+      "expected_strong_bars": 0
+    },
+    {
+      "case_id": "not_enough_strong_bars_is_rejected",
+      "bias": "Long",
+      "atr_value": 2.0,
+      "ema_fast": 103.5,
+      "min_impulse_atr_multiple": 1.25,
+      "strong_body_pct": 0.5,
+      "min_strong_bars": 2,
+      "bars": [
+        { "o": 100.0, "h": 101.8, "l": 99.9, "c": 100.7 },
+        { "o": 100.7, "h": 103.0, "l": 100.5, "c": 101.4 },
+        { "o": 101.4, "h": 104.0, "l": 101.2, "c": 103.8 }
+      ],
+      "expected_qualified": false,
+      "expected_block_reason": "NotEnoughStrongBars",
+      "expected_impulse_move": 4.1,
+      "expected_strong_bars": 1
+    },
+    {
+      "case_id": "final_bar_wrong_side_of_ema50_is_rejected",
+      "bias": "Long",
+      "atr_value": 2.0,
+      "ema_fast": 104.7,
+      "min_impulse_atr_multiple": 1.25,
+      "strong_body_pct": 0.5,
+      "min_strong_bars": 2,
+      "bars": [
+        { "o": 100.5, "h": 101.7, "l": 100.2, "c": 101.4 },
+        { "o": 101.4, "h": 103.1, "l": 101.2, "c": 102.8 },
+        { "o": 102.8, "h": 104.9, "l": 102.6, "c": 104.6 }
+      ],
+      "expected_qualified": false,
+      "expected_block_reason": "FinalBarWrongSideOfEma50",
+      "expected_impulse_move": 4.7,
+      "expected_strong_bars": 3
+    }
+  ]
+}

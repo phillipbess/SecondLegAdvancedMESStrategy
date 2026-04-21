@@ -1,0 +1,15 @@
+{
+  "family_id": "host_shell_contract",
+  "status": "scaffold_assertions",
+  "required_members": [
+    "OnBarUpdate",
+    "OnStateChange",
+    "BeginAtomicFinalization",
+    "MaySubmitOrders",
+    "ResetTradeState",
+    "SaveStrategyState",
+    "RestoreStrategyState",
+    "RuntimeSnapshot"
+  ],
+  "notes": "M1 host shell now carries scaffold assertions for lifecycle authority, runtime control seams, persistence hooks, and the harness-aligned runtime snapshot surface."
+}

@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "purpose": "Placeholder manifest for the first source-level contract-test families.",
+  "owner_scope": "tests scaffolding only",
+  "families": [
+    {
+      "id": "host_shell_contract",
+      "status": "scaffold_assertions",
+      "goal": "Lock the minimum host strategy shell required by reused order, fill, exit, and safety components.",
+      "planned_artifacts": [
+        "test_host_shell_contract.py",
+        "fixtures/host_shell_minimum.json"
+      ]
+    },
+    {
+      "id": "exit_authority_contract",
+      "status": "scaffold_assertions",
+      "goal": "Ensure exit submissions stay centralized and no competing exit path is introduced.",
+      "planned_artifacts": [
+        "test_exit_authority_contract.py"
+      ]
+    },
+    {
+      "id": "execution_event_contract",
+      "status": "implemented",
+      "goal": "Protect the single-source-of-truth execution/fill lane and parity-relevant recovery/coverage sequencing without binding to a specific transport implementation.",
+      "planned_artifacts": [
+        "test_execution_event_contract.py"
+      ]
+    },
+    {
+      "id": "runtime_scaffold_contract",
+      "status": "scaffold_assertions",
+      "goal": "Keep the donor runtime import behind explicit host-shell, lifecycle, and activation TODO seams until the host wiring is complete.",
+      "planned_artifacts": [
+        "test_runtime_scaffold_contract.py"
+      ]
+    },
+    {
+      "id": "external_harness_readiness_contract",
+      "status": "scaffold_assertions",
+      "goal": "Lock the host-state surface needed for later adoption of the external runtime harness.",
+      "planned_artifacts": [
+        "test_external_harness_readiness_contract.py"
+      ]
+    },
+    {
+      "id": "runtime_snapshot_contract",
+      "status": "implemented",
+      "goal": "Freeze the harness-aligned runtime snapshot/diagnostic surface and the parity-relevant gating/coverage/finalization semantics it exposes.",
+      "planned_artifacts": [
+        "test_runtime_snapshot_contract.py"
+      ]
+    },
+    {
+      "id": "runtime_scenario_pack_contract",
+      "status": "scaffold_assertions",
+      "goal": "Lock the first external runtime-harness scenario pack and its semantic anchors before adapter work begins.",
+      "planned_artifacts": [
+        "test_runtime_scenario_pack_contract.py"
+      ]
+    },
+    {
+      "id": "runtime_harness_adapter_contract",
+      "status": "scaffold_assertions",
+      "goal": "Freeze the thin local harness-adapter surface used to drive the first restart and compatible-coverage scenarios.",
+      "planned_artifacts": [
+        "test_runtime_harness_adapter_contract.py"
+      ]
+    },
+    {
+      "id": "runtime_harness_projection_contract",
+      "status": "implemented",
+      "goal": "Freeze the flat harness-shaped snapshot projection that external runtime scenarios will eventually consume.",
+      "planned_artifacts": [
+        "test_runtime_harness_projection_contract.py"
+      ]
+    },
+    {
+      "id": "persistence_symmetry_contract",
+      "status": "implemented",
+      "goal": "Catch parity-relevant durable and trade-scoped state drift whenever recovery, stop, or coverage fields are added or renamed.",
+      "planned_artifacts": [
+        "test_persistence_symmetry_contract.py",
+        "fixtures/persistence_fields_expected.json"
+      ]
+    },
+    {
+      "id": "logging_contract",
+      "status": "implemented",
+      "goal": "Freeze the real Debug/Risk/Patterns/Trades logging sinks and the entry-observation surface that explains setup progression and block reasons.",
+      "planned_artifacts": [
+        "test_logging_contract.py",
+        "fixtures/log_contracts.json"
+      ]
+    },
+    {
+      "id": "simple_trail_contract",
+      "status": "scaffold_assertions",
+      "goal": "Keep the playback strategy on a donor-style simple-trail exit lane instead of drifting back to mixed target-plus-trail management.",
+      "planned_artifacts": [
+        "test_simple_trail_contract.py"
+      ]
+    },
+    {
+      "id": "edge_filters_contract",
+      "status": "scaffold_assertions",
+      "goal": "Freeze the stripped-down v1 entry surface so deferred HTF/RVOL/opening-bias logic does not drift back into the base strategy.",
+      "planned_artifacts": [
+        "test_edge_filters_contract.py"
+      ]
+    },
+    {
+      "id": "signoff_evidence_contract",
+      "status": "implemented",
+      "goal": "Keep checklist, runbooks, and artifact templates aligned so compile/playback/harness signoff evidence stays explicit and reviewable.",
+      "planned_artifacts": [
+        "test_signoff_evidence_contract.py"
+      ]
+    }
+  ]
+}

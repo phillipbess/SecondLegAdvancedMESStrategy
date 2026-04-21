@@ -1,0 +1,73 @@
+{
+  "family_id": "trend_context",
+  "status": "implemented",
+  "cases": [
+    {
+      "case_id": "two_of_three_long_context_qualifies",
+      "close": 5200.0,
+      "ema_fast": 5196.0,
+      "ema_slow": 5190.0,
+      "ema_fast_slope_atr_pct": 0.04,
+      "slope_min_atr_pct_per_bar": 0.03,
+      "trend_filter_mode": "TwoOfThree",
+      "session_filter_valid": true,
+      "volatility_regime_valid": true,
+      "higher_timeframe_enabled": false,
+      "use_opening_bias_filter": false,
+      "expected_active_bias": "Long",
+      "expected_trend_context_valid": true
+    },
+    {
+      "case_id": "strict_mode_rejects_two_vote_long",
+      "close": 5200.0,
+      "ema_fast": 5196.0,
+      "ema_slow": 5190.0,
+      "ema_fast_slope_atr_pct": 0.01,
+      "slope_min_atr_pct_per_bar": 0.03,
+      "trend_filter_mode": "Strict",
+      "session_filter_valid": true,
+      "volatility_regime_valid": true,
+      "higher_timeframe_enabled": false,
+      "use_opening_bias_filter": false,
+      "expected_active_bias": "Neutral",
+      "expected_trend_context_valid": false
+    },
+    {
+      "case_id": "long_context_ignores_deferred_opening_bias_filter",
+      "close": 5205.0,
+      "ema_fast": 5198.0,
+      "ema_slow": 5191.0,
+      "ema_fast_slope_atr_pct": 0.05,
+      "slope_min_atr_pct_per_bar": 0.03,
+      "trend_filter_mode": "TwoOfThree",
+      "session_filter_valid": true,
+      "volatility_regime_valid": true,
+      "higher_timeframe_enabled": false,
+      "use_opening_bias_filter": true,
+      "opening_bias_mode": "AlignOnly",
+      "opening_bias_ready": true,
+      "opening_bias_value": -6.0,
+      "opening_bias_end_hhmm": 1000,
+      "hhmm": 1030,
+      "expected_active_bias": "Long",
+      "expected_trend_context_valid": true
+    },
+    {
+      "case_id": "long_context_ignores_deferred_higher_timeframe_filter",
+      "close": 5202.0,
+      "ema_fast": 5198.0,
+      "ema_slow": 5191.0,
+      "ema_fast_slope_atr_pct": 0.05,
+      "slope_min_atr_pct_per_bar": 0.03,
+      "trend_filter_mode": "TwoOfThree",
+      "session_filter_valid": true,
+      "volatility_regime_valid": true,
+      "higher_timeframe_enabled": true,
+      "htf_ema_fast": 5188.0,
+      "htf_ema_slow": 5194.0,
+      "use_opening_bias_filter": false,
+      "expected_active_bias": "Long",
+      "expected_trend_context_valid": true
+    }
+  ]
+}

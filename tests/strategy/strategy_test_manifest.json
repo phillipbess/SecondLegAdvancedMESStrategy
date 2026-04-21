@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "purpose": "Tracks deterministic strategy-logic test families for the second-leg entry thesis.",
+  "owner_scope": "tests scaffolding only",
+  "families": [
+    {
+      "id": "trend_context",
+      "status": "implemented",
+      "goal": "Verify trend qualification from EMA location, normalized slope, and basic session context.",
+      "planned_artifacts": [
+        "test_trend_context.py",
+        "fixtures/trend_context_cases.json"
+      ]
+    },
+    {
+      "id": "impulse_scoring",
+      "status": "implemented",
+      "goal": "Confirm strong impulse detection is distinguishable from noisy or overlapping bars.",
+      "planned_artifacts": [
+        "test_impulse_scoring.py",
+        "fixtures/impulse_cases.json"
+      ]
+    },
+    {
+      "id": "pullback_state_machine",
+      "status": "implemented",
+      "goal": "Verify two-leg counting, invalidation, and stale pullback handling.",
+      "planned_artifacts": [
+        "test_pullback_state_machine.py",
+        "fixtures/pullback_sequences.json"
+      ]
+    },
+    {
+      "id": "entry_qualification",
+      "status": "implemented",
+      "goal": "Verify stop-entry, protective-stop placement inputs, and room-to-structure gating.",
+      "planned_artifacts": [
+        "test_entry_qualification.py",
+        "fixtures/entry_qualification_cases.json"
+      ]
+    },
+    {
+      "id": "regime_and_session_filters",
+      "status": "implemented",
+      "goal": "Verify participation rules reject dead or chaotic regimes and disallowed sessions.",
+      "planned_artifacts": [
+        "test_regime_and_session_filters.py",
+        "fixtures/regime_session_cases.json"
+      ]
+    },
+    {
+      "id": "armed_entry_lifecycle",
+      "status": "implemented",
+      "goal": "Verify armed-entry expiry, pre-fill cancellation, and donor-style simple-trail behavior after fill.",
+      "planned_artifacts": [
+        "test_armed_entry_lifecycle.py",
+        "fixtures/armed_entry_lifecycle_cases.json"
+      ]
+    },
+    {
+      "id": "golden_cases",
+      "status": "implemented",
+      "goal": "Pin the first canonical labeled bar sequences for valid and invalid second-leg setups.",
+      "planned_artifacts": [
+        "test_golden_cases.py",
+        "fixtures/golden_cases/"
+      ]
+    }
+  ]
+}

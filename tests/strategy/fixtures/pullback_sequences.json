@@ -1,0 +1,306 @@
+{
+  "family_id": "pullback_state_machine",
+  "status": "implemented",
+  "sequences": [
+    {
+      "sequence_id": "long_two_leg_candidate_reaches_signal",
+      "bias": "Long",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 106.0, "h": 106.1, "l": 105.0, "c": 105.2 },
+        { "o": 105.2, "h": 105.3, "l": 104.2, "c": 104.4 },
+        { "o": 104.4, "h": 104.6, "l": 103.9, "c": 104.0 },
+        { "o": 104.0, "h": 104.95, "l": 104.1, "c": 104.9 },
+        { "o": 104.9, "h": 105.1, "l": 104.2, "c": 105.0 },
+        { "o": 105.0, "h": 105.0, "l": 104.1, "c": 104.2 },
+        { "o": 104.2, "h": 104.7, "l": 104.15, "c": 104.6 }
+      ],
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
+      "expected_signal_valid": true,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2",
+        "WaitingForSignalBar",
+        "WaitingForTrigger"
+      ]
+    },
+    {
+      "sequence_id": "continuous_long_pullback_times_out_without_separation",
+      "bias": "Long",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 5,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 106.0, "h": 106.1, "l": 105.1, "c": 105.2 },
+        { "o": 105.2, "h": 105.3, "l": 104.4, "c": 104.6 },
+        { "o": 104.6, "h": 104.8, "l": 104.0, "c": 104.1 },
+        { "o": 104.1, "h": 104.2, "l": 103.8, "c": 103.9 },
+        { "o": 103.9, "h": 104.0, "l": 103.6, "c": 103.7 },
+        { "o": 103.7, "h": 103.8, "l": 103.4, "c": 103.5 },
+        { "o": 103.5, "h": 103.6, "l": 103.2, "c": 103.3 }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "PullbackTooLong",
+      "expected_signal_valid": false,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "Reset"
+      ]
+    },
+    {
+      "sequence_id": "long_second_leg_too_strong_stays_candidate_tracking",
+      "bias": "Long",
+      "impulse_high": 104.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 103.8, "h": 103.9, "l": 103.3, "c": 103.4 },
+        { "o": 103.4, "h": 103.5, "l": 103.0, "c": 103.1 },
+        { "o": 103.1, "h": 103.2, "l": 103.0, "c": 103.0 },
+        { "o": 103.0, "h": 103.7, "l": 103.1, "c": 103.6 },
+        { "o": 103.6, "h": 103.9, "l": 103.2, "c": 103.8 },
+        { "o": 103.8, "h": 103.8, "l": 102.5, "c": 102.6 }
+      ],
+      "expected_final_state": "TrackingPullbackLeg2",
+      "expected_block_reason": "SecondLegTooStrong",
+      "expected_signal_valid": false,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2"
+      ]
+    },
+    {
+      "sequence_id": "short_two_leg_candidate_reaches_signal",
+      "bias": "Short",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 100.0, "h": 101.0, "l": 99.9, "c": 100.8 },
+        { "o": 100.8, "h": 101.8, "l": 100.7, "c": 101.6 },
+        { "o": 101.6, "h": 102.1, "l": 101.4, "c": 101.9 },
+        { "o": 101.9, "h": 101.95, "l": 101.0, "c": 101.1 },
+        { "o": 101.1, "h": 101.1, "l": 100.7, "c": 100.8 },
+        { "o": 100.8, "h": 101.7, "l": 100.8, "c": 101.5 },
+        { "o": 101.5, "h": 101.65, "l": 100.95, "c": 101.1 }
+      ],
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
+      "expected_signal_valid": true,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2",
+        "WaitingForSignalBar",
+        "WaitingForTrigger"
+      ]
+    },
+    {
+      "sequence_id": "long_candidate_waits_for_valid_signal_bar",
+      "bias": "Long",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 106.0, "h": 106.1, "l": 105.0, "c": 105.2 },
+        { "o": 105.2, "h": 105.3, "l": 104.2, "c": 104.4 },
+        { "o": 104.4, "h": 104.6, "l": 103.9, "c": 104.0 },
+        { "o": 104.0, "h": 104.95, "l": 104.1, "c": 104.9 },
+        { "o": 104.9, "h": 105.1, "l": 104.2, "c": 105.0 },
+        { "o": 105.0, "h": 105.0, "l": 104.1, "c": 104.2 },
+        { "o": 104.2, "h": 104.6, "l": 104.15, "c": 104.2 }
+      ],
+      "expected_final_state": "WaitingForSignalBar",
+      "expected_block_reason": "",
+      "expected_signal_valid": false,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2",
+        "WaitingForSignalBar"
+      ]
+    },
+    {
+      "sequence_id": "long_same_bar_leg2_candidate_cannot_qualify_signal",
+      "bias": "Long",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 106.0, "h": 106.1, "l": 105.0, "c": 105.2 },
+        { "o": 105.2, "h": 105.3, "l": 104.2, "c": 104.4 },
+        { "o": 104.4, "h": 104.6, "l": 103.9, "c": 104.0 },
+        { "o": 104.0, "h": 104.95, "l": 104.1, "c": 104.9 },
+        { "o": 104.9, "h": 105.1, "l": 104.2, "c": 105.0 },
+        { "o": 105.0, "h": 105.0, "l": 104.2, "c": 104.65 }
+      ],
+      "expected_final_state": "WaitingForSignalBar",
+      "expected_block_reason": "",
+      "expected_signal_valid": false,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2",
+        "WaitingForSignalBar"
+      ]
+    },
+    {
+      "sequence_id": "long_same_bar_new_leg2_low_cannot_qualify_signal",
+      "bias": "Long",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 106.0, "h": 106.1, "l": 105.0, "c": 105.2 },
+        { "o": 105.2, "h": 105.3, "l": 104.2, "c": 104.4 },
+        { "o": 104.4, "h": 104.6, "l": 103.9, "c": 104.0 },
+        { "o": 104.0, "h": 104.95, "l": 104.1, "c": 104.9 },
+        { "o": 104.9, "h": 105.1, "l": 104.2, "c": 105.0 },
+        { "o": 105.0, "h": 105.0, "l": 104.1, "c": 104.2 },
+        { "o": 104.2, "h": 104.7, "l": 104.0, "c": 104.55 }
+      ],
+      "expected_final_state": "TrackingPullbackLeg2",
+      "expected_block_reason": "SignalInvalid",
+      "expected_signal_valid": false,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2",
+        "WaitingForSignalBar",
+        "TrackingPullbackLeg2"
+      ]
+    },
+    {
+      "sequence_id": "short_same_bar_new_leg2_high_cannot_qualify_signal",
+      "bias": "Short",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 100.0, "h": 101.0, "l": 99.9, "c": 100.8 },
+        { "o": 100.8, "h": 101.8, "l": 100.7, "c": 101.6 },
+        { "o": 101.6, "h": 102.1, "l": 101.4, "c": 101.9 },
+        { "o": 101.9, "h": 101.95, "l": 101.0, "c": 101.1 },
+        { "o": 101.1, "h": 101.1, "l": 100.7, "c": 100.8 },
+        { "o": 100.8, "h": 101.7, "l": 100.8, "c": 101.5 },
+        { "o": 101.5, "h": 101.75, "l": 101.0, "c": 101.05 }
+      ],
+      "expected_final_state": "TrackingPullbackLeg2",
+      "expected_block_reason": "SignalInvalid",
+      "expected_signal_valid": false,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2",
+        "WaitingForSignalBar",
+        "TrackingPullbackLeg2"
+      ]
+    },
+    {
+      "sequence_id": "short_corrective_validation_only_needs_ema200_side",
+      "bias": "Short",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 100.0, "h": 101.0, "l": 99.9, "c": 100.8 },
+        { "o": 100.8, "h": 101.8, "l": 100.7, "c": 101.6 },
+        { "o": 101.6, "h": 102.1, "l": 101.4, "c": 101.9 },
+        { "o": 101.9, "h": 101.95, "l": 101.0, "c": 101.1 },
+        { "o": 101.1, "h": 101.1, "l": 100.7, "c": 100.8 },
+        {
+          "o": 100.8,
+          "h": 101.7,
+          "l": 100.8,
+          "c": 101.5,
+          "trend_valid": false,
+          "corrective_ema200_valid": true
+        }
+      ],
+      "expected_final_state": "WaitingForSignalBar",
+      "expected_block_reason": "",
+      "expected_signal_valid": false,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2",
+        "WaitingForSignalBar"
+      ]
+    },
+    {
+      "sequence_id": "long_pullback_too_deep_before_signal",
+      "bias": "Long",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "min_pullback_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.8,
+      "bars": [
+        { "o": 106.0, "h": 106.1, "l": 105.0, "c": 105.1 },
+        { "o": 105.1, "h": 105.2, "l": 103.8, "c": 104.0 },
+        { "o": 104.0, "h": 104.2, "l": 102.1, "c": 102.3 }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "PullbackTooDeep",
+      "expected_signal_valid": false,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "Reset"
+      ]
+    }
+  ]
+}

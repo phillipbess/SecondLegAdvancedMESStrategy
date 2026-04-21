@@ -1,0 +1,370 @@
+{
+  "family_id": "armed_entry_lifecycle",
+  "status": "implemented",
+  "cases": [
+    {
+      "case_id": "entry_waits_through_last_allowed_trigger_bar",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false }
+      ],
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_can_fill_on_last_allowed_trigger_bar",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": true }
+      ],
+      "fill_event": {
+        "filled": true,
+        "fill_price": 104.75
+      },
+      "post_fill_prices": [],
+      "expected_final_state": "ManagingTrade",
+      "expected_block_reason": "",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_expires_on_first_bar_after_max_trigger_bars",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "EntryExpired",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_cancels_before_fill_when_trend_invalidates",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
+        { "trend_valid": false, "atr_regime_valid": true, "session_valid": true, "triggered": false }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "TrendInvalid",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_cancels_before_fill_when_atr_regime_invalidates",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
+        { "trend_valid": true, "atr_regime_valid": false, "session_valid": true, "triggered": false }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "AtrRegimeInvalid",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_cancels_before_fill_when_session_blocks",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": false, "triggered": false }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "SessionBlocked",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_cancels_before_fill_when_flatten_window_begins",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "flatten_window_active": true, "triggered": false }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "FlattenWindow",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_cancels_before_fill_when_pullback_runs_too_long",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "pullback_too_long": true, "triggered": false }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "PullbackTooLong",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_cancels_before_fill_when_pullback_gets_too_deep",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "pullback_too_deep": true, "triggered": false }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "PullbackTooDeep",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_stays_armed_before_fill_when_second_leg_stops_being_corrective",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "second_leg_too_strong": true, "triggered": false }
+      ],
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "entry_cancels_before_fill_when_opposite_signal_appears",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "opposite_signal": true, "triggered": false }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "OppositeSignal",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "flatten_window_beats_trigger_on_same_bar",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "flatten_window_active": true, "triggered": true }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "FlattenWindow",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "trend_invalidation_beats_trigger_on_same_bar",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": false, "atr_regime_valid": true, "session_valid": true, "triggered": true }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "TrendInvalid",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "session_block_beats_trend_invalidation_on_same_bar",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": false, "atr_regime_valid": true, "session_valid": false, "triggered": true }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "SessionBlocked",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "trend_invalidation_beats_atr_regime_invalidation_on_same_bar",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": false, "atr_regime_valid": false, "session_valid": true, "triggered": true }
+      ],
+      "expected_final_state": "Reset",
+      "expected_block_reason": "TrendInvalid",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "filled_long_trade_keeps_initial_stop_before_trail_arms",
+      "bias": "Long",
+      "entry_price": 104.75,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": true }
+      ],
+      "fill_event": {
+        "filled": true,
+        "fill_price": 104.75
+      },
+      "post_fill_prices": [105.00, 106.25],
+      "expected_final_state": "ManagingTrade",
+      "expected_block_reason": "",
+      "expected_trail_armed": false,
+      "expected_final_stop": 103.50,
+      "expected_target_used": false
+    },
+    {
+      "case_id": "filled_short_trade_arms_and_ratchets_simple_trail",
+      "bias": "Short",
+      "entry_price": 100.00,
+      "initial_stop_price": 103.50,
+      "tick_size": 0.25,
+      "trail_enabled": true,
+      "trail_trigger_points": 2.0,
+      "trail_lock_points": 1.0,
+      "trail_distance_points": 1.5,
+      "max_trigger_bars": 3,
+      "pre_fill_bars": [
+        { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": true }
+      ],
+      "fill_event": {
+        "filled": true,
+        "fill_price": 100.00
+      },
+      "post_fill_prices": [99.25, 98.00, 96.50],
+      "expected_final_state": "ManagingTrade",
+      "expected_block_reason": "",
+      "expected_trail_armed": true,
+      "expected_final_stop": 98.00,
+      "expected_target_used": false
+    }
+  ]
+}

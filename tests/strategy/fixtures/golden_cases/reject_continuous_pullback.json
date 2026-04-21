@@ -1,0 +1,79 @@
+{
+  "family_id": "golden_cases",
+  "status": "implemented",
+  "case_id": "reject_continuous_pullback",
+  "trend_context": {
+    "close": 104.2,
+    "ema_slow": 102.8,
+    "ema_fast_slope_atr_pct": 0.04,
+    "session_filter_valid": true,
+    "volatility_regime_valid": true
+  },
+  "session_regime": {
+    "use_session_filter": true,
+    "trade_rth_only": true,
+    "hhmm": 1010,
+    "start_trading_time_hhmm": 940,
+    "end_morning_time_hhmm": 1130,
+    "start_afternoon_time_hhmm": 1345,
+    "last_entry_time_hhmm": 1530,
+    "atr_value": 2.0,
+    "atr_regime_ratio": 1.0,
+    "min_atr_regime_ratio": 0.75,
+    "max_atr_regime_ratio": 2.25
+  },
+  "impulse": {
+    "bias": "Long",
+    "atr_value": 2.0,
+    "ema_fast": 103.9,
+    "min_impulse_atr_multiple": 1.25,
+    "strong_body_pct": 0.5,
+    "min_strong_bars": 2,
+    "bars": [
+      { "o": 100.4, "h": 101.8, "l": 100.1, "c": 101.6 },
+      { "o": 101.6, "h": 103.2, "l": 101.4, "c": 102.9 },
+      { "o": 102.9, "h": 104.8, "l": 102.7, "c": 104.2 }
+    ]
+  },
+  "pullback": {
+    "bias": "Long",
+    "impulse_high": 106.0,
+    "impulse_low": 100.0,
+    "impulse_bars": 3,
+    "min_pullback_bars": 3,
+    "max_pullback_bars": 5,
+    "min_pullback_retracement": 0.236,
+    "max_pullback_retracement": 0.618,
+    "second_leg_max_momentum_ratio": 0.8,
+    "bars": [
+      { "o": 106.0, "h": 106.1, "l": 105.1, "c": 105.2 },
+      { "o": 105.2, "h": 105.3, "l": 104.4, "c": 104.6 },
+      { "o": 104.6, "h": 104.8, "l": 104.0, "c": 104.1 },
+      { "o": 104.1, "h": 104.2, "l": 103.8, "c": 103.9 },
+      { "o": 103.9, "h": 104.0, "l": 103.6, "c": 103.7 },
+      { "o": 103.7, "h": 103.8, "l": 103.4, "c": 103.5 },
+      { "o": 103.5, "h": 103.6, "l": 103.2, "c": 103.3 }
+    ]
+  },
+  "entry": {
+    "bias": "Long",
+    "signal_bar_high": 104.6,
+    "signal_bar_low": 104.0,
+    "pullback_leg2_low": 103.8,
+    "pullback_leg2_high": 104.7,
+    "entry_offset_ticks": 1,
+    "stop_buffer_ticks": 2,
+    "tick_size": 0.25,
+    "point_value": 5.0,
+    "risk_per_trade": 150.0,
+    "atr_value": 2.0,
+    "max_stop_atr_multiple": 1.25,
+    "min_room_to_structure_r": 1.2,
+    "structure_filter_enabled": true,
+    "structure_levels": [108.0]
+  },
+  "expected_accepted": false,
+  "expected_armed": false,
+  "expected_stage": "pullback",
+  "expected_block_reason": "PullbackTooLong"
+}
