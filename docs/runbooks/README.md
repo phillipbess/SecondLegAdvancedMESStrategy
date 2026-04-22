@@ -11,9 +11,22 @@ This folder holds operator and validation runbooks for the strategy lifecycle.
 ## Current Runbooks
 
 - `playback.md`
+- `playback-preflight.md`
+- `playback-scenario-matrix.md`
+- `log-review-guide.md`
+- `golden-log-sequences.md`
+- `playback-issue-template.md`
 - `signoff-evidence.md`
 - `walk-forward.md`
 - `shadow-sim.md`
 - `rollback-disable.md`
 
-The playback runbook is now the immediate operator path because the repo is at the point where NT8 compile and Playback are the next meaningful promotion gates.
+The immediate operator path is now:
+
+1. `playback-preflight.md`
+2. `playback-scenario-matrix.md`
+3. `playback.md`
+4. `log-review-guide.md`
+
+That sequence should make the first Playback pass much more disciplined and much more
+useful.

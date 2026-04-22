@@ -184,6 +184,16 @@ For the honest current posture, read:
 - [CURRENT_STATE.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/CURRENT_STATE.md)
 - [Parity_Signoff_Checklist.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Parity_Signoff_Checklist.md)
 
+## Before NT8 Playback
+
+Use this exact operator path:
+
+1. [playback-preflight.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/runbooks/playback-preflight.md)
+2. [playback-scenario-matrix.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/runbooks/playback-scenario-matrix.md)
+3. [playback.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/runbooks/playback.md)
+4. [log-review-guide.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/runbooks/log-review-guide.md)
+5. [golden-log-sequences.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/runbooks/golden-log-sequences.md)
+
 ## If You Only Read Three Things
 
 1. `Entry_Brain_V1_Contract.md`

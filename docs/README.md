@@ -28,6 +28,11 @@ ordered path below.
   Research notes that informed the strategy thesis.
 - `runbooks/`
   Operator procedures for compile, playback, walk-forward, and signoff evidence capture.
+  For the first serious NT8 pass, start with:
+  - `runbooks/playback-preflight.md`
+  - `runbooks/playback-scenario-matrix.md`
+  - `runbooks/playback.md`
+  - `runbooks/log-review-guide.md`
 
 ## Planning Documents
 

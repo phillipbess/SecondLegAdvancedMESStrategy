@@ -21,6 +21,13 @@ Before starting Playback:
 4. user-configured parameters match the locked `v1` defaults unless intentionally testing a specific threshold
 5. a dated artifact folder exists under `docs/artifacts/YYYY-MM-DD/`
 
+Use these operator companions before and during the run:
+
+- [playback-preflight.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/runbooks/playback-preflight.md)
+- [playback-scenario-matrix.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/runbooks/playback-scenario-matrix.md)
+- [log-review-guide.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/runbooks/log-review-guide.md)
+- [golden-log-sequences.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/runbooks/golden-log-sequences.md)
+
 ## Suggested First Playback Scope
 
 Use a small but honest first pass:
