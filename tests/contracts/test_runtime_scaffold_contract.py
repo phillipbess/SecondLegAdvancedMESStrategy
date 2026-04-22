@@ -62,7 +62,7 @@ class RuntimeScaffoldContractTests(unittest.TestCase):
         self.assertIn("_currentEntryTag = string.Empty;", runtime_host)
         self.assertIn("controllerStopPlaced = false;", runtime_host)
         self.assertIn("tradeOpen = false;", runtime_host)
-        self.assertIn("_exitState = ExitFlowState.Flat;", runtime_host)
+        self.assertIn("_exitState = SecondLegExitFlowState.Flat;", runtime_host)
         self.assertNotIn("EnterLongStopMarket(", runtime_host)
         self.assertNotIn("EnterShortStopMarket(", runtime_host)
         self.assertNotIn("SetStopLoss(", runtime_host)
@@ -97,7 +97,10 @@ class RuntimeScaffoldContractTests(unittest.TestCase):
         self.assertIn("private sealed class ExitController", control_lane)
         self.assertIn("internal void EnsureProtectiveExit(double stopPx, int qty, string stopTag, string reason)", control_lane)
         self.assertIn("internal void ChangeUnmanaged(Order order, double newStopPrice, string reason)", control_lane)
-        self.assertIn("internal FlattenSubmitResult SubmitFlattenMarket(int qty, string signalName, string reason)", control_lane)
+        self.assertIn(
+            "internal SecondLegExitControllerFlattenSubmitResult SubmitFlattenMarket(int qty, string signalName, string reason)",
+            control_lane,
+        )
         self.assertIn("_strategy.EnqueueEnsureProtectiveExit(stopPrice, _strategy.entryQuantity, \"StopLoss_PrimaryEntry\", \"EntryFill\");", control_lane)
         self.assertIn("_strategy.SubmitPrimaryEntryBridge(plannedEntry);", control_lane)
         self.assertIn("_strategy.EnsureProtectiveStopBridge(", control_lane)

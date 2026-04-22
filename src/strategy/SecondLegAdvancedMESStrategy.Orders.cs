@@ -264,7 +264,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 BindPrimaryEntryTransportHandle(order, "OnOrderUpdate.Entry");
                 TradeStateManager.AddActiveOrder(order);
 
-                if (OrderStateExtensions.IsWorkingLike(orderState))
+                if (SecondLegOrderStateExtensions.IsWorkingLike(orderState))
                 {
                     _hasWorkingEntry = true;
                     ClearEntrySubmitInFlight("OnOrderUpdate.EntryWorking");
@@ -298,7 +298,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             if (IsStrategyProtectiveStopOrder(order))
             {
-                if (OrderStateExtensions.IsWorkingLike(orderState))
+                if (SecondLegOrderStateExtensions.IsWorkingLike(orderState))
                 {
                     WriteRiskEvent(
                         "STOP_ACK",
@@ -390,7 +390,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             if (IsStrategyFlattenOrder(order))
             {
-                if (OrderStateExtensions.IsWorkingLike(orderState))
+                if (SecondLegOrderStateExtensions.IsWorkingLike(orderState))
                 {
                     BindFlattenTransportHandle(order, "OnOrderUpdate.Flatten");
                     WriteTradeLifecycleLog(
@@ -475,7 +475,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
                 _entryFilledForActiveSignal = true;
                 _hasWorkingEntry = HasWorkingPrimaryEntryForActiveSignal()
-                    || (order.OrderState != OrderState.Filled && OrderStateExtensions.IsWorkingLike(order.OrderState));
+                    || (order.OrderState != OrderState.Filled && SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState));
                 _entryPending = _hasWorkingEntry;
                 _tradeJustClosed = false;
                 tradeOpen = true;
@@ -588,7 +588,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         {
             OrderMaintenanceState state = SnapshotOrderMaintenanceState();
 
-            if (OrderStateExtensions.IsWorkingLike(orderState))
+            if (SecondLegOrderStateExtensions.IsWorkingLike(orderState))
                 OrderMaintenance.TrackWorkingOrder(state, order, orderState);
             else
                 OrderMaintenance.ReleaseTerminalOrder(state, order);
@@ -640,7 +640,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         private bool IsWorkingProtectiveStopOrder(Order order)
         {
-            if (order == null || !OrderStateExtensions.IsWorkingLike(order.OrderState))
+            if (order == null || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))
                 return false;
 
             return IsStrategyProtectiveStopOrder(order);
@@ -651,7 +651,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (order == null)
                 return false;
 
-            if (!order.IsProtectiveStop())
+            if (!SecondLegOrderExtensions.IsProtectiveStop(order))
                 return false;
 
             if (TryGetOwnedProtectiveSignal(order, out string ownedSignal))
@@ -677,14 +677,14 @@ namespace NinjaTrader.NinjaScript.Strategies
         {
             if (_entryOrder != null
                 && IsTrackedPrimaryEntryOrder(_entryOrder)
-                && OrderStateExtensions.IsWorkingLike(_entryOrder.OrderState))
+                && SecondLegOrderStateExtensions.IsWorkingLike(_entryOrder.OrderState))
             {
                 return true;
             }
 
             foreach (Order order in _workingOrders)
             {
-                if (IsTrackedPrimaryEntryOrder(order) && OrderStateExtensions.IsWorkingLike(order.OrderState))
+                if (IsTrackedPrimaryEntryOrder(order) && SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))
                     return true;
             }
 
@@ -816,7 +816,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             currentControllerStopPrice = updatedStop;
             workingStopPrice = updatedStop;
 
-            Order workingStop = FindWorkingExitForRole(OrderRole.StopLoss);
+            Order workingStop = FindWorkingExitForRole(SecondLegOrderRole.StopLoss);
             if (HasWorkingProtectiveCoverage() || workingStop != null)
                 exitCtl?.ChangeUnmanaged(workingStop, updatedStop, "SimpleTrail");
             else

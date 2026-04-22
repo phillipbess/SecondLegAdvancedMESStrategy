@@ -1,4 +1,4 @@
-internal static class RlLevelName
+internal static class SecondLegRlLevelName
 {
     public const string Support1 = "Support1";
     public const string Support2 = "Support2";
@@ -8,7 +8,7 @@ internal static class RlLevelName
 
 namespace NinjaTrader.NinjaScript.Strategies
 {
-    internal static class CtxTokens
+    internal static class SecondLegCtxTokens
     {
         public const string Flatten = "FLATTEN";
         public const string Adopt = "ADOPT";
@@ -45,7 +45,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         public const string SimpleTrailExit = "SIMPLE_Trail_Exit";
     }
 
-    internal static class NameTokens
+    internal static class SecondLegNameTokens
     {
         public const string Flatten = "Flatten";
         public const string SafetyFlatten = "SafetyFlatten";

@@ -648,8 +648,8 @@ namespace NinjaTrader.NinjaScript.Strategies
             }
 
             string pendingEntrySignal = plannedEntryBias == SecondLegBias.Short
-                ? Nt8SignalName.Entry(ClosedBarIndex().ToString(), "PE2S")
-                : Nt8SignalName.Entry(ClosedBarIndex().ToString(), "PE2L");
+                ? SecondLegNt8SignalName.Entry(ClosedBarIndex().ToString(), "PE2S")
+                : SecondLegNt8SignalName.Entry(ClosedBarIndex().ToString(), "PE2L");
 
             _plannedEntry = new PlannedEntry
             {

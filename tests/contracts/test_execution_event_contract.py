@@ -200,7 +200,7 @@ class ExecutionEventContractTests(unittest.TestCase):
         self.assertIn("private static bool IsPrimaryEntrySideAction(OrderAction action)", execution_identity)
         self.assertIn("private bool MatchesKnownPrimaryEntrySignal(string signal)", execution_identity)
         owned_stop_predicate = _method_block(orders, "private bool IsStrategyProtectiveStopOrder(Order order)")
-        self.assertIn("if (!order.IsProtectiveStop())", owned_stop_predicate)
+        self.assertIn("if (!SecondLegOrderExtensions.IsProtectiveStop(order))", owned_stop_predicate)
         self.assertIn("if (TryGetOwnedProtectiveSignal(order, out string ownedSignal))", owned_stop_predicate)
         self.assertIn("return MatchesOwnedPrimaryEntrySignal(ownedSignal);", owned_stop_predicate)
         self.assertIn("return MatchesOwnedPrimaryEntrySignal(order.FromEntrySignal);", owned_stop_predicate)
@@ -335,7 +335,7 @@ class ExecutionEventContractTests(unittest.TestCase):
             "_submissionRetryCorrelationBySignal.Clear();",
             "_submissionAuthorityEmitOnce.Clear();",
             "ResetRuntimeScenarioState();",
-            "_exitState = ExitFlowState.Flat;",
+            "_exitState = SecondLegExitFlowState.Flat;",
         ):
             self.assertIn(marker, reset_trade_state)
 

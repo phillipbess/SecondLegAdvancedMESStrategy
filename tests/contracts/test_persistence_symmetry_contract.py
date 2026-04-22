@@ -123,4 +123,4 @@ class PersistenceSymmetryContractTests(unittest.TestCase):
         self.assertIn("ResetTradeStateScaffold();", runtime_host)
         self.assertIn("_submissionRetryCorrelationBySignal.Clear();", runtime_host)
         self.assertIn("_submissionAuthorityEmitOnce.Clear();", runtime_host)
-        self.assertIn("_exitState = ExitFlowState.Flat;", runtime_host)
+        self.assertIn("_exitState = SecondLegExitFlowState.Flat;", runtime_host)

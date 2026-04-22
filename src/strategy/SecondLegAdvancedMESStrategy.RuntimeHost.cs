@@ -27,7 +27,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         private const int FlattenAwaitCancelWindowMs = 1000;
         private const int SubmissionAuthorityStopSubmitCooldownMs = 3000;
 
-        private ExitFlowState _exitState = ExitFlowState.Flat;
+        private SecondLegExitFlowState _exitState = SecondLegExitFlowState.Flat;
         private bool _exitOpBusy;
         private DateTime _exitOpPendingUntil = DateTime.MinValue;
         private int _exitEpoch;
@@ -127,14 +127,14 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         private void TriggerFlatten(string reason)
         {
-            if (_exitState == ExitFlowState.Flattening || _exitState == ExitFlowState.PostSweep)
+            if (_exitState == SecondLegExitFlowState.Flattening || _exitState == SecondLegExitFlowState.PostSweep)
             {
                 WriteDebugLog($"[FLATTEN] duplicate ignored | reason={reason}");
                 return;
             }
 
             BeginAtomicFinalization(reason);
-            _exitState = ExitFlowState.Flattening;
+            _exitState = SecondLegExitFlowState.Flattening;
             _flattenInFlight = true;
             _flattenMarketSubmitted = false;
             _flattenRequestCount++;
@@ -160,7 +160,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             bool hasWorkingEntry = HasWorkingPrimaryEntryForActiveSignal();
             bool hasWorkingExits = WorkingResidualExitCount() > 0;
 
-            if (_exitState == ExitFlowState.Flattening)
+            if (_exitState == SecondLegExitFlowState.Flattening)
             {
                 if (Position.Quantity == 0 && !hasWorkingEntry && !hasWorkingExits)
                 {
@@ -176,11 +176,11 @@ namespace NinjaTrader.NinjaScript.Strategies
                         string fromEntrySignal = !string.IsNullOrEmpty(_activeEntrySignal)
                             ? _activeEntrySignal
                             : PlannedEntrySignalName();
-                        ExitController.FlattenSubmitResult flattenSubmitResult =
+                        ExitController.SecondLegExitControllerFlattenSubmitResult flattenSubmitResult =
                             exitCtl != null
                                 ? exitCtl.SubmitFlattenMarket(flattenQty, fromEntrySignal, context ?? "TriggerFlatten")
-                                : ExitController.FlattenSubmitResult.Failed;
-                        if (flattenSubmitResult == ExitController.FlattenSubmitResult.Submitted)
+                                : ExitController.SecondLegExitControllerFlattenSubmitResult.Failed;
+                        if (flattenSubmitResult == ExitController.SecondLegExitControllerFlattenSubmitResult.Submitted)
                         {
                             SetFlattenRecoveryState(false, false, $"{context}.FlattenSubmit");
                             WriteTradeContextLog(
@@ -210,12 +210,12 @@ namespace NinjaTrader.NinjaScript.Strategies
                     {
                         _flattenMarketSubmitted = true;
                         _flattenPostSweepUntil = DateTime.UtcNow.AddSeconds(3);
-                        _exitState = ExitFlowState.PostSweep;
+                        _exitState = SecondLegExitFlowState.PostSweep;
                     }
                 }
             }
 
-            if (_exitState != ExitFlowState.PostSweep)
+            if (_exitState != SecondLegExitFlowState.PostSweep)
                 return;
 
             if (hasWorkingEntry || hasWorkingExits)
@@ -242,7 +242,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             isFinalizingTrade = false;
             suppressAllOrderSubmissions = false;
             SetFlattenRecoveryState(false, false, $"{context}.{completionReason}");
-            _exitState = ExitFlowState.Flat;
+            _exitState = SecondLegExitFlowState.Flat;
             WriteTradeContextLog(
                 "FLATTEN_COMPLETE",
                 $"reason={completionReason}",
@@ -445,7 +445,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         private bool IsExitMutateSuppressed(string reason)
         {
-            return _exitState != ExitFlowState.Live && Position.Quantity == 0;
+            return _exitState != SecondLegExitFlowState.Live && Position.Quantity == 0;
         }
 
         private bool CanMutateProtectiveStop(Order order, string context)
@@ -482,8 +482,8 @@ namespace NinjaTrader.NinjaScript.Strategies
             foreach (Order order in _workingOrders)
             {
                 if (order == null
-                    || !OrderStateExtensions.IsWorkingLike(order.OrderState)
-                    || !order.IsProtectiveStop()
+                || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState)
+                || !SecondLegOrderExtensions.IsProtectiveStop(order)
                     || !CanMutateProtectiveStop(order, context))
                 {
                     continue;
@@ -634,10 +634,10 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             _nativeFlattenOrder = order;
             _flattenMarketSubmitted = true;
-            if (_exitState == ExitFlowState.Flattening)
+            if (_exitState == SecondLegExitFlowState.Flattening)
             {
                 _flattenPostSweepUntil = DateTime.UtcNow.AddSeconds(3);
-                _exitState = ExitFlowState.PostSweep;
+                _exitState = SecondLegExitFlowState.PostSweep;
             }
             BindRuntimeOrderHandle(order, context);
         }
@@ -645,17 +645,17 @@ namespace NinjaTrader.NinjaScript.Strategies
         private Order ResolveBoundProtectiveStopHandle()
         {
             if (_nativeProtectiveStopOrder != null
-                && OrderStateExtensions.IsWorkingLike(_nativeProtectiveStopOrder.OrderState))
+                && SecondLegOrderStateExtensions.IsWorkingLike(_nativeProtectiveStopOrder.OrderState))
             {
                 return _nativeProtectiveStopOrder;
             }
 
-            return FindWorkingExitForRole(OrderRole.StopLoss);
+            return FindWorkingExitForRole(SecondLegOrderRole.StopLoss);
         }
 
         private void BindRuntimeOrderHandle(Order order, string context)
         {
-            if (order == null || !OrderStateExtensions.IsWorkingLike(order.OrderState))
+            if (order == null || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))
                 return;
 
             OrderMaintenanceState state = SnapshotOrderMaintenanceState();
@@ -829,7 +829,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (releasedReplaceSource)
             {
                 if (_nativeProtectiveReplaceToOrder != null
-                    && OrderStateExtensions.IsWorkingLike(_nativeProtectiveReplaceToOrder.OrderState))
+                && SecondLegOrderStateExtensions.IsWorkingLike(_nativeProtectiveReplaceToOrder.OrderState))
                 {
                     FinalizeProtectiveReplaceLineage($"{context}.SourceReleased");
                 }
@@ -908,7 +908,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             string replaceOco = _nativeProtectiveReplaceOco;
             bool oldCoverageStillWorking =
                 _nativeProtectiveReplaceFromOrder != null
-                && OrderStateExtensions.IsWorkingLike(_nativeProtectiveReplaceFromOrder.OrderState);
+                && SecondLegOrderStateExtensions.IsWorkingLike(_nativeProtectiveReplaceFromOrder.OrderState);
 
             if (oldCoverageStillWorking)
                 _nativeProtectiveStopOrder = _nativeProtectiveReplaceFromOrder;
@@ -944,7 +944,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         {
             if (_nativeProtectiveReplaceFromOrder == null
                 || _nativeProtectiveReplaceToOrder == null
-                || !OrderStateExtensions.IsWorkingLike(_nativeProtectiveReplaceToOrder.OrderState))
+                || !SecondLegOrderStateExtensions.IsWorkingLike(_nativeProtectiveReplaceToOrder.OrderState))
             {
                 return;
             }
@@ -1055,7 +1055,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                     && string.Equals(order.Oco ?? string.Empty, _nativeProtectiveReplaceOco, StringComparison.Ordinal));
         }
 
-        private Order FindWorkingExitForRole(OrderRole role)
+        private Order FindWorkingExitForRole(SecondLegOrderRole role)
         {
             OrderMaintenanceState state = SnapshotOrderMaintenanceState();
             return OrderMaintenance.FindWorkingExitForRole(state, role);
@@ -1079,7 +1079,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             int count = 0;
             foreach (Order order in _workingOrders)
             {
-                if (order == null || !OrderStateExtensions.IsWorkingLike(order.OrderState))
+            if (order == null || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))
                     continue;
 
                 if (IsPrimaryEntryOrder(order) || IsStrategyFlattenOrder(order))
@@ -1117,7 +1117,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         private bool IsStrategyFlattenOrder(Order order)
         {
-            if (order == null || !order.IsFlattenLike())
+            if (order == null || !SecondLegOrderExtensions.IsFlattenLike(order))
                 return false;
 
             if (TryGetOwnedFlattenSignal(order, out string ownedSignal))
@@ -1133,7 +1133,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 return false;
 
             string orderName = order.Name ?? string.Empty;
-            string prefix = NameTokens.SafetyFlatten + "|";
+            string prefix = SecondLegNameTokens.SafetyFlatten + "|";
             if (!orderName.StartsWith(prefix, StringComparison.Ordinal))
                 return false;
 
@@ -1156,7 +1156,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 if (order == null || order.Instrument != Instrument)
                     continue;
 
-                if (!OrderStateExtensions.IsWorkingLike(order.OrderState))
+                if (!SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))
                     continue;
 
                 yield return order;
@@ -1168,10 +1168,10 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (order == null || liveQty <= 0)
                 return false;
 
-            if (order.IsFlattenLike())
+            if (SecondLegOrderExtensions.IsFlattenLike(order))
                 return false;
 
-            bool stopLike = order.IsProtectiveStop();
+            bool stopLike = SecondLegOrderExtensions.IsProtectiveStop(order);
             if (!stopLike)
             {
                 bool stopType = order.OrderType == OrderType.StopMarket || order.OrderType == OrderType.StopLimit;
@@ -1361,7 +1361,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             foreach (Order order in _workingOrders)
             {
                 if (order == null
-                    || !OrderStateExtensions.IsWorkingLike(order.OrderState)
+                    || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState)
                     || IsStrategyFlattenOrder(order)
                     || !CanCancelOrderForOrderMaintenance(order))
                 {
@@ -1460,7 +1460,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             ResetTradeStateScaffold();
             ResetRuntimeScenarioState();
             ResetOmCompatibilityTracking();
-            _exitState = ExitFlowState.Flat;
+            _exitState = SecondLegExitFlowState.Flat;
             RefreshRuntimeSnapshot("ResetTradeState");
         }
 
@@ -1761,7 +1761,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (order == null)
                 return false;
 
-            if (order.IsFlattenLike() || order.IsProtectiveStop())
+            if (SecondLegOrderExtensions.IsFlattenLike(order) || SecondLegOrderExtensions.IsProtectiveStop(order))
                 return false;
 
             if (!IsPrimaryEntrySideAction(order.OrderAction))
@@ -1934,7 +1934,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             foreach (Order order in _workingOrders.ToArray())
             {
                 if (order == null
-                    || !OrderStateExtensions.IsWorkingLike(order.OrderState)
+                    || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState)
                     || IsPrimaryEntryOrder(order)
                     || IsStrategyFlattenOrder(order)
                     || !CanCancelOrderForOrderMaintenance(order))
@@ -1959,7 +1959,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             foreach (Order order in _workingOrders)
             {
-                if (order == null || !OrderStateExtensions.IsWorkingLike(order.OrderState))
+                if (order == null || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))
                     continue;
 
                 workingOrders++;
@@ -2033,7 +2033,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         private bool CanCancelOrderForOrderMaintenance(Order order)
         {
             return order != null
-                && (OrderStateExtensions.IsWorkingLike(order.OrderState)
+                && (SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState)
                 || order.OrderState == OrderState.Accepted);
         }
 

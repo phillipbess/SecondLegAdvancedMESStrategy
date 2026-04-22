@@ -281,7 +281,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (state == null)
                 throw new ArgumentNullException(nameof(state));
 
-            if (order == null || !OrderStateExtensions.IsWorkingLike(orderState))
+            if (order == null || !SecondLegOrderStateExtensions.IsWorkingLike(orderState))
                 return;
 
             RemoveWorkingOrder(state, order);
@@ -301,17 +301,17 @@ namespace NinjaTrader.NinjaScript.Strategies
             _host.NullOrderReference?.Invoke(order);
         }
 
-        public Order FindWorkingExitForRole(OrderMaintenanceState state, OrderRole role)
+        public Order FindWorkingExitForRole(OrderMaintenanceState state, SecondLegOrderRole role)
         {
             if (state == null)
                 throw new ArgumentNullException(nameof(state));
 
             foreach (Order order in SnapshotWorkingOrders(state))
             {
-                if (order == null || !OrderStateExtensions.IsWorkingLike(order.OrderState))
+                if (order == null || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))
                     continue;
 
-                if (role == OrderRole.StopLoss
+                if (role == SecondLegOrderRole.StopLoss
                     && _host.IsProtectiveStopOrder != null
                     && _host.IsProtectiveStopOrder(order))
                 {
@@ -330,7 +330,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             int count = 0;
             foreach (Order order in SnapshotWorkingOrders(state))
             {
-                if (order == null || !OrderStateExtensions.IsWorkingLike(order.OrderState))
+                if (order == null || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))
                     continue;
 
                 bool isEntryOrder = _host.IsPrimaryEntryOrder != null && _host.IsPrimaryEntryOrder(order);
@@ -349,7 +349,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (_host.HasCoverageNow != null)
                 return _host.HasCoverageNow();
 
-            return FindWorkingExitForRole(state, OrderRole.StopLoss) != null;
+            return FindWorkingExitForRole(state, SecondLegOrderRole.StopLoss) != null;
         }
 
         private bool AtRiskNow(OrderMaintenanceState state)

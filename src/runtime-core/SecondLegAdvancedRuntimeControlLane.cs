@@ -9,7 +9,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         private sealed class RuntimeTradeManager
         {
             private readonly SecondLegAdvancedMESStrategy _strategy;
-            private readonly TradeManager _inner;
+            private readonly SecondLegTradeManager _inner;
 
             internal RuntimeTradeManager(SecondLegAdvancedMESStrategy strategy)
             {
@@ -60,7 +60,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         private sealed class ExitController
         {
-            internal enum FlattenSubmitResult
+            internal enum SecondLegExitControllerFlattenSubmitResult
             {
                 Submitted = 0,
                 Failed = 1,
@@ -75,7 +75,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             private static bool IsWorkingLike(Order order)
             {
-                return order != null && OrderStateExtensions.IsWorkingLike(order.OrderState);
+                return order != null && SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState);
             }
 
             private Order ExistingWorkingStop()
@@ -245,7 +245,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                         ? _strategy._currentExitOco
                         : _strategy.NewExitOco();
                     DateTime submitAtUtc = DateTime.UtcNow;
-                    _strategy._exitState = ExitFlowState.Live;
+                    _strategy._exitState = SecondLegExitFlowState.Live;
                     _strategy.workingStopPrice = stopPx;
                     _strategy.currentControllerStopPrice = stopPx;
                     _strategy.initialStopPrice = _strategy.initialStopPrice > 0.0 ? _strategy.initialStopPrice : stopPx;
@@ -413,21 +413,21 @@ namespace NinjaTrader.NinjaScript.Strategies
                     $"[RUNTIME_EXIT_CTL] change protective | order={order.Name} reason={reason} stop={newStopPrice:F2}");
             }
 
-            internal FlattenSubmitResult SubmitFlattenMarket(int qty, string signalName, string reason)
+            internal SecondLegExitControllerFlattenSubmitResult SubmitFlattenMarket(int qty, string signalName, string reason)
             {
                 int liveQty = Math.Abs(_strategy.Position.Quantity);
                 if (qty <= 0 && liveQty == 0)
                 {
                     _strategy.WriteDebugLog(
                         $"[RUNTIME_EXIT_CTL][DROP] flatten submit while flat | signal={signalName} reason={reason}");
-                    return FlattenSubmitResult.Failed;
+                    return SecondLegExitControllerFlattenSubmitResult.Failed;
                 }
 
                 if (liveQty <= 0)
                 {
                     _strategy.WriteDebugLog(
                         $"[RUNTIME_EXIT_CTL][DROP] flatten submit has no live quantity | signal={signalName} reason={reason}");
-                    return FlattenSubmitResult.Failed;
+                    return SecondLegExitControllerFlattenSubmitResult.Failed;
                 }
 
                 int effQty = qty > 0 ? Math.Min(qty, liveQty) : liveQty;
@@ -436,14 +436,14 @@ namespace NinjaTrader.NinjaScript.Strategies
                 if (!flattenResult.IsSuccess)
                 {
                     MarkFlattenSubmitFailure(reason, ownedSignal, effQty, flattenResult.FailureReason);
-                    return FlattenSubmitResult.Failed;
+                    return SecondLegExitControllerFlattenSubmitResult.Failed;
                 }
 
                 _strategy.SetFlattenRecoveryState(false, false);
                 _strategy.BindFlattenTransportHandle(flattenResult.Order, "ExitController.SubmitFlattenMarket");
                 _strategy.WriteDebugLog(
                     $"[RUNTIME_EXIT_CTL] flatten submitted | signal={ownedSignal} reason={reason} qty={effQty}");
-                return FlattenSubmitResult.Submitted;
+                return SecondLegExitControllerFlattenSubmitResult.Submitted;
             }
 
             internal void OnEntryFilled(string fromEntry, double fillPrice, MarketPosition side, int totalQty)
@@ -455,7 +455,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 _strategy.entryPrice = fillPrice;
                 _strategy.avgEntryPrice = fillPrice;
                 _strategy.entryQuantity = Math.Max(1, Math.Abs(totalQty));
-                _strategy._exitState = ExitFlowState.Live;
+                _strategy._exitState = SecondLegExitFlowState.Live;
 
                 double stopPrice = _strategy.tradeManager != null && _strategy.tradeManager.StopPrice > 0.0
                     ? _strategy.tradeManager.StopPrice

@@ -1,7 +1,7 @@
 using System;
 using NinjaTrader.Cbi;
 
-internal static class Nt8SignalName
+internal static class SecondLegNt8SignalName
 {
     public const int MaxLen = 50;
 
@@ -36,7 +36,7 @@ internal static class Nt8SignalName
     }
 }
 
-internal enum ExitFlowState
+internal enum SecondLegExitFlowState
 {
     Flat = 0,
     Live = 1,
@@ -46,7 +46,7 @@ internal enum ExitFlowState
 
 namespace NinjaTrader.NinjaScript.Strategies
 {
-    public enum OrderRole
+    public enum SecondLegOrderRole
     {
         Unknown = 0,
         Entry = 1,
@@ -55,7 +55,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         Flatten = 4,
     }
 
-    public static class OrderStateExtensions
+    public static class SecondLegOrderStateExtensions
     {
         public static bool IsWorkingLike(OrderState state)
         {
@@ -76,25 +76,25 @@ namespace NinjaTrader.NinjaScript.Strategies
         }
     }
 
-    public static class OrderExtensions
+    public static class SecondLegOrderExtensions
     {
-        public static bool IsFlattenLike(this Order order)
+        public static bool IsFlattenLike(Order order)
         {
             if (order == null || string.IsNullOrEmpty(order.Name))
                 return false;
 
-            return order.Name.IndexOf(NameTokens.SafetyFlatten, StringComparison.OrdinalIgnoreCase) >= 0
-                || order.Name.IndexOf(NameTokens.EmergencyFlatten, StringComparison.OrdinalIgnoreCase) >= 0
-                || order.Name.IndexOf(NameTokens.Flatten, StringComparison.OrdinalIgnoreCase) >= 0;
+            return order.Name.IndexOf(SecondLegNameTokens.SafetyFlatten, StringComparison.OrdinalIgnoreCase) >= 0
+                || order.Name.IndexOf(SecondLegNameTokens.EmergencyFlatten, StringComparison.OrdinalIgnoreCase) >= 0
+                || order.Name.IndexOf(SecondLegNameTokens.Flatten, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        public static bool IsProtectiveStop(this Order order)
+        public static bool IsProtectiveStop(Order order)
         {
             if (order == null || string.IsNullOrEmpty(order.Name))
                 return false;
 
-            return order.Name.StartsWith(NameTokens.StopLossPrefix, StringComparison.Ordinal)
-                || order.Name.StartsWith(NameTokens.TrailExitPrefix, StringComparison.Ordinal);
+            return order.Name.StartsWith(SecondLegNameTokens.StopLossPrefix, StringComparison.Ordinal)
+                || order.Name.StartsWith(SecondLegNameTokens.TrailExitPrefix, StringComparison.Ordinal);
         }
     }
 }

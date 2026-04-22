@@ -298,7 +298,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             string ownedSignal = !string.IsNullOrEmpty(fromEntrySignal)
                 ? fromEntrySignal
                 : (!string.IsNullOrEmpty(_activeEntrySignal) ? _activeEntrySignal : currentTradeID);
-            return $"{NameTokens.SafetyFlatten}|{ownedSignal}";
+            return $"{SecondLegNameTokens.SafetyFlatten}|{ownedSignal}";
         }
 
         private bool TryGetOwnedProtectiveSignal(Order order, out string ownedSignal)

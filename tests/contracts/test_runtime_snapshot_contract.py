@@ -194,8 +194,8 @@ class RuntimeSnapshotContractTests(unittest.TestCase):
             "return BuildHarnessCoverageSnapshotOverride();",
             "OrderMaintenanceState state = SnapshotOrderMaintenanceState();",
             "WorkingOrderCount = state.WorkingOrders.Count,",
-            "if (order == null || !OrderStateExtensions.IsWorkingLike(order.OrderState))",
-            "bool isProtective = order.IsProtectiveStop();",
+            "if (order == null || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))",
+            "bool isProtective = SecondLegOrderExtensions.IsProtectiveStop(order);",
             "snapshot.WorkingProtectiveOrderCount++;",
             "snapshot.WorkingProtectiveOrderQuantityTotal += Math.Max(0, order.Quantity);",
             "if (IsOurStrategyExitOrder(order))",
@@ -239,7 +239,7 @@ class RuntimeSnapshotContractTests(unittest.TestCase):
         self.assertIn("string.Equals(signal, currentTradeID, StringComparison.Ordinal)", owned_signal_match)
         self.assertNotIn('signal.StartsWith("PE_", StringComparison.Ordinal)', owned_signal_match)
         self.assertIn("return MatchesOwnedPrimaryEntrySignal(order.FromEntrySignal);", strategy_exit_predicate)
-        self.assertNotIn("if (order.IsProtectiveStop())", strategy_exit_predicate)
+        self.assertNotIn("if (SecondLegOrderExtensions.IsProtectiveStop(order))", strategy_exit_predicate)
 
         harness_override = _method_block(
             read_strategy_file("SecondLegAdvancedMESStrategy.RuntimeHarnessAdapterScaffold.cs"),

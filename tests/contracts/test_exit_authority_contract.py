@@ -107,7 +107,10 @@ class ExitAuthorityContractTests(unittest.TestCase):
         self.assertIn("_strategy.TriggerFlatten(reason);", control_lane)
         self.assertIn("internal void SubmitFlatten(string fromEntrySignal)", control_lane)
         self.assertIn('SubmitFlattenMarket(Math.Abs(_strategy.Position.Quantity), fromEntrySignal, "ExitController");', control_lane)
-        self.assertIn("internal FlattenSubmitResult SubmitFlattenMarket(int qty, string signalName, string reason)", control_lane)
+        self.assertIn(
+            "internal SecondLegExitControllerFlattenSubmitResult SubmitFlattenMarket(int qty, string signalName, string reason)",
+            control_lane,
+        )
         self.assertIn("private void MarkFlattenSubmitFailure(string reason, string signalName, int quantity, string detail)", control_lane)
         self.assertIn('string ownedSignal = !string.IsNullOrEmpty(signalName) ? signalName : ResolveProtectiveSignalName();', control_lane)
         self.assertIn("TransportResult flattenResult = _strategy.SubmitFlattenBridge(ownedSignal, effQty);", control_lane)
@@ -122,7 +125,7 @@ class ExitAuthorityContractTests(unittest.TestCase):
 
         self.assertIn("private void TriggerFlatten(string reason)", runtime_host)
         self.assertIn("BeginAtomicFinalization(reason);", runtime_host)
-        self.assertIn("_exitState = ExitFlowState.Flattening;", runtime_host)
+        self.assertIn("_exitState = SecondLegExitFlowState.Flattening;", runtime_host)
         self.assertIn('WriteDebugLog($"[FLATTEN] duplicate ignored | reason={reason}");', runtime_host)
 
     def test_flatten_reprice_is_child_action_aware_or_explicitly_deferred(self) -> None:

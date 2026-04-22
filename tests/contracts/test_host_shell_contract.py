@@ -11,7 +11,7 @@ TESTS_ROOT = Path(__file__).resolve().parents[1]
 if str(TESTS_ROOT) not in sys.path:
     sys.path.insert(0, str(TESTS_ROOT))
 
-from nt8_contract_helpers import read_doc_file, read_strategy_file
+from nt8_contract_helpers import read_doc_file, read_runtime_file, read_strategy_file
 
 FAMILY_ID = "host_shell_contract"
 MANIFEST_PATH = Path(__file__).with_name("contract_test_manifest.json")
@@ -83,7 +83,7 @@ class HostShellContractTests(unittest.TestCase):
             "private readonly List<Order> _workingOrders = new List<Order>();",
             "private readonly Queue<Action> _exitOpQueue = new Queue<Action>();",
             "private readonly Queue<(Order Order, string Tag, DateTime EnqueuedAt)> _cancelQueue =",
-            "private ExitFlowState _exitState = ExitFlowState.Flat;",
+            "private SecondLegExitFlowState _exitState = SecondLegExitFlowState.Flat;",
             "private int _exitEpoch;",
             "private DateTime? _flattenAwaitCancelsUntil;",
             "private DateTime? _flattenPostSweepUntil;",
@@ -130,7 +130,7 @@ class HostShellContractTests(unittest.TestCase):
             "private void EnqueueExitOp(string label, Action op, int delayMs)",
             "private bool IsExitMutateSuppressed(string reason)",
             "private bool CanMutateProtectiveStop(Order order, string context)",
-            "private Order FindWorkingExitForRole(OrderRole role)",
+            "private Order FindWorkingExitForRole(SecondLegOrderRole role)",
             "private string NewExitOco()",
             "private int WorkingExitCount()",
             "private int WorkingResidualExitCount()",
@@ -183,16 +183,16 @@ class HostShellContractTests(unittest.TestCase):
         self.assertIn("ContinueFlattenProtocol(reason ?? \"TriggerFlatten\");", trigger_flatten)
 
         reprice_flatten = _method_block(runtime_host, "private void RepriceWorkingProtectiveOrdersForFlatten(string context)")
-        self.assertIn("order.IsProtectiveStop()", reprice_flatten)
+        self.assertIn("SecondLegOrderExtensions.IsProtectiveStop(order)", reprice_flatten)
         self.assertIn('exitCtl?.ChangeUnmanaged(order, rounded, "FLATTEN_REPRICE");', reprice_flatten)
         self.assertIn("RuntimeCurrentBidSafe()", reprice_flatten)
         self.assertIn("RuntimeBestAsk()", reprice_flatten)
 
         continue_flatten = _method_block(runtime_host, "private void ContinueFlattenProtocol(string context = \"\")")
-        self.assertIn("if (_exitState == ExitFlowState.Flattening)", continue_flatten)
+        self.assertIn("if (_exitState == SecondLegExitFlowState.Flattening)", continue_flatten)
         self.assertIn("if (_flattenAwaitCancelsUntil.HasValue && DateTime.UtcNow >= _flattenAwaitCancelsUntil.Value)", continue_flatten)
         self.assertIn("bool hasWorkingExits = WorkingResidualExitCount() > 0;", continue_flatten)
-        self.assertIn("ExitController.FlattenSubmitResult flattenSubmitResult =", continue_flatten)
+        self.assertIn("ExitController.SecondLegExitControllerFlattenSubmitResult flattenSubmitResult =", continue_flatten)
         self.assertIn("exitCtl != null", continue_flatten)
         self.assertIn("exitCtl.SubmitFlattenMarket(flattenQty, fromEntrySignal, context ?? \"TriggerFlatten\")", continue_flatten)
         self.assertIn("if (!_flattenMarketSubmitted && Position.Quantity == 0)", continue_flatten)
@@ -201,7 +201,7 @@ class HostShellContractTests(unittest.TestCase):
 
         bind_flatten = _method_block(runtime_host, "private void BindFlattenTransportHandle(Order order, string context)")
         self.assertIn("_flattenMarketSubmitted = true;", bind_flatten)
-        self.assertIn("if (_exitState == ExitFlowState.Flattening)", bind_flatten)
+        self.assertIn("if (_exitState == SecondLegExitFlowState.Flattening)", bind_flatten)
 
         begin_reconnect = _method_block(runtime_host, "private void BeginReconnectGrace(string context)")
         self.assertIn("SetReconnectObservationState(false, Math.Abs(Position.Quantity), Position.AveragePrice);", begin_reconnect)
@@ -214,7 +214,7 @@ class HostShellContractTests(unittest.TestCase):
         complete_flatten = _method_block(runtime_host, "private void CompleteFlattenProtocol(string context, string completionReason)")
         self.assertIn("_flattenAwaitCancelsUntil = null;", complete_flatten)
         self.assertIn("_flattenPostSweepUntil = null;", complete_flatten)
-        self.assertIn("_exitState = ExitFlowState.Flat;", complete_flatten)
+        self.assertIn("_exitState = SecondLegExitFlowState.Flat;", complete_flatten)
         self.assertIn("RefreshRuntimeSnapshot($\"{context}.{completionReason}\");", complete_flatten)
 
         may_submit = _method_block(runtime_host, "private bool MaySubmitOrders(string context = \"\")")
@@ -226,13 +226,13 @@ class HostShellContractTests(unittest.TestCase):
         self.assertIn("ApplyOrderMaintenanceState(state);", cancel_all)
 
         flatten_order_predicate = _method_block(runtime_host, "private bool IsStrategyFlattenOrder(Order order)")
-        self.assertIn("if (order == null || !order.IsFlattenLike())", flatten_order_predicate)
+        self.assertIn("if (order == null || !SecondLegOrderExtensions.IsFlattenLike(order))", flatten_order_predicate)
         self.assertIn("if (TryGetOwnedFlattenSignal(order, out string ownedSignal))", flatten_order_predicate)
         self.assertIn("return MatchesOwnedPrimaryEntrySignal(ownedSignal);", flatten_order_predicate)
         self.assertIn("return MatchesOwnedPrimaryEntrySignal(order.FromEntrySignal);", flatten_order_predicate)
 
         flatten_signal_parser = _method_block(runtime_host, "private bool TryGetOwnedFlattenSignal(Order order, out string ownedSignal)")
-        self.assertIn('string prefix = NameTokens.SafetyFlatten + "|";', flatten_signal_parser)
+        self.assertIn('string prefix = SecondLegNameTokens.SafetyFlatten + "|";', flatten_signal_parser)
         self.assertIn("orderName.StartsWith(prefix, StringComparison.Ordinal)", flatten_signal_parser)
 
         flatten_sweep = _method_block(runtime_host, "private void CancelResidualWorkingOrdersForFlattenSweep()")
@@ -319,7 +319,7 @@ class HostShellContractTests(unittest.TestCase):
         self.assertIn("return SubmissionAuthorityStopSubmitCooldownMs;", stop_cooldown)
 
         primary_entry = _method_block(runtime_host, "internal bool IsPrimaryEntryOrder(Order order)")
-        self.assertIn("if (order.IsFlattenLike() || order.IsProtectiveStop())", primary_entry)
+        self.assertIn("if (SecondLegOrderExtensions.IsFlattenLike(order) || SecondLegOrderExtensions.IsProtectiveStop(order))", primary_entry)
         self.assertIn("if (!IsPrimaryEntrySideAction(order.OrderAction))", primary_entry)
         self.assertIn("string plannedSignalName = PlannedEntrySignalName();", primary_entry)
         self.assertIn("string.Equals(orderName, currentTradeID, StringComparison.Ordinal)", primary_entry)
@@ -335,6 +335,34 @@ class HostShellContractTests(unittest.TestCase):
         self.assertIn("`OnExecutionUpdate -> tradeManager -> exitCtl -> coverage -> flatten/cancel -> SaveStrategyState/ResetTradeState`", host_contract)
         self.assertIn("The operating rule is simple", host_contract)
         self.assertIn("The host strategy must supply:", host_contract)
+
+    def test_helper_type_names_are_strategy_specific_to_avoid_mancini_namespace_collisions(self) -> None:
+        tokens = read_runtime_file("SecondLegAdvancedRuntimeTokens.cs")
+        support = read_runtime_file("SecondLegAdvancedRuntimeSupport.cs")
+        trade_manager = read_runtime_file("SecondLegAdvancedTradeManager.cs")
+
+        self.assertIn("internal static class SecondLegCtxTokens", tokens)
+        self.assertIn("internal static class SecondLegNameTokens", tokens)
+        self.assertIn("internal static class SecondLegRlLevelName", tokens)
+        self.assertNotIn("internal static class CtxTokens", tokens)
+        self.assertNotIn("internal static class NameTokens", tokens)
+        self.assertNotIn("internal static class RlLevelName", tokens)
+
+        self.assertIn("internal enum SecondLegExitFlowState", support)
+        self.assertIn("internal static class SecondLegNt8SignalName", support)
+        self.assertIn("public enum SecondLegOrderRole", support)
+        self.assertIn("public static class SecondLegOrderStateExtensions", support)
+        self.assertIn("public static class SecondLegOrderExtensions", support)
+        self.assertNotIn("internal enum ExitFlowState", support)
+        self.assertNotIn("internal static class Nt8SignalName", support)
+        self.assertNotIn("public enum OrderRole", support)
+        self.assertNotIn("public static class OrderStateExtensions", support)
+        self.assertNotIn("public static class OrderExtensions", support)
+        self.assertNotIn("IsFlattenLike(this Order order)", support)
+        self.assertNotIn("IsProtectiveStop(this Order order)", support)
+
+        self.assertIn("internal sealed class SecondLegTradeManager", trade_manager)
+        self.assertNotIn("internal sealed class TradeManager", trade_manager)
 
 
 if __name__ == "__main__":

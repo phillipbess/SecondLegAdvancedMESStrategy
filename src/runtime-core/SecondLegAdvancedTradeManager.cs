@@ -28,23 +28,23 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
     public partial class SecondLegAdvancedMESStrategy
     {
-        private TradeManager _tradeStateManager;
+        private SecondLegTradeManager _tradeStateManager;
 
-        internal TradeManager TradeStateManager
+        internal SecondLegTradeManager TradeStateManager
         {
-            get { return _tradeStateManager ?? (_tradeStateManager = new TradeManager(this)); }
+            get { return _tradeStateManager ?? (_tradeStateManager = new SecondLegTradeManager(this)); }
         }
 
         /// <summary>
         /// First-pass trade state tracker imported from the donor runtime.
         /// This class intentionally avoids broad behavioral changes.
         /// </summary>
-        internal sealed class TradeManager
+        internal sealed class SecondLegTradeManager
         {
             private readonly SecondLegAdvancedMESStrategy strategy;
             private readonly List<Order> activeOrders = new List<Order>();
 
-            public TradeManager(SecondLegAdvancedMESStrategy strategy)
+            public SecondLegTradeManager(SecondLegAdvancedMESStrategy strategy)
             {
                 this.strategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
             }

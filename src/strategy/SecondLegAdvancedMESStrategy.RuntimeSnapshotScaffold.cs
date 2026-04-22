@@ -181,10 +181,10 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             foreach (Order order in state.WorkingOrders)
             {
-                if (order == null || !OrderStateExtensions.IsWorkingLike(order.OrderState))
+                if (order == null || !SecondLegOrderStateExtensions.IsWorkingLike(order.OrderState))
                     continue;
 
-                bool isProtective = order.IsProtectiveStop();
+                bool isProtective = SecondLegOrderExtensions.IsProtectiveStop(order);
                 if (isProtective)
                 {
                     snapshot.WorkingProtectiveOrderCount++;
