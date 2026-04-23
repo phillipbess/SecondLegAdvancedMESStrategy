@@ -113,7 +113,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         private TransportResult SubmitPrimaryEntryBridge(PlannedEntry plannedEntry)
         {
-            if (plannedEntry == null || !plannedEntry.IsReady)
+            if (plannedEntry == null || !plannedEntry.IsValid)
                 return TransportResult.Failed("entry-plan-not-ready");
 
             int quantity = NormalizePositiveQuantity(plannedEntry.Quantity);
@@ -283,6 +283,13 @@ namespace NinjaTrader.NinjaScript.Strategies
             }
 
             return false;
+        }
+
+        private OrderAction ResolveProtectiveStopAction()
+        {
+            return TryResolveProtectiveStopAction(out OrderAction action)
+                ? action
+                : OrderAction.BuyToCover;
         }
 
         private string BuildProtectiveStopSignalName(string signalName)

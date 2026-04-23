@@ -89,8 +89,8 @@
         { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
         { "trend_valid": false, "atr_regime_valid": true, "session_valid": true, "triggered": false }
       ],
-      "expected_final_state": "Reset",
-      "expected_block_reason": "TrendInvalid",
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
       "expected_trail_armed": false,
       "expected_final_stop": 103.50,
       "expected_target_used": false
@@ -110,8 +110,8 @@
         { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "triggered": false },
         { "trend_valid": true, "atr_regime_valid": false, "session_valid": true, "triggered": false }
       ],
-      "expected_final_state": "Reset",
-      "expected_block_reason": "AtrRegimeInvalid",
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
       "expected_trail_armed": false,
       "expected_final_stop": 103.50,
       "expected_target_used": false
@@ -130,8 +130,8 @@
       "pre_fill_bars": [
         { "trend_valid": true, "atr_regime_valid": true, "session_valid": false, "triggered": false }
       ],
-      "expected_final_state": "Reset",
-      "expected_block_reason": "SessionBlocked",
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
       "expected_trail_armed": false,
       "expected_final_stop": 103.50,
       "expected_target_used": false
@@ -230,8 +230,8 @@
       "pre_fill_bars": [
         { "trend_valid": true, "atr_regime_valid": true, "session_valid": true, "opposite_signal": true, "triggered": false }
       ],
-      "expected_final_state": "Reset",
-      "expected_block_reason": "OppositeSignal",
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
       "expected_trail_armed": false,
       "expected_final_stop": 103.50,
       "expected_target_used": false
@@ -270,8 +270,8 @@
       "pre_fill_bars": [
         { "trend_valid": false, "atr_regime_valid": true, "session_valid": true, "triggered": true }
       ],
-      "expected_final_state": "Reset",
-      "expected_block_reason": "TrendInvalid",
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
       "expected_trail_armed": false,
       "expected_final_stop": 103.50,
       "expected_target_used": false
@@ -290,8 +290,8 @@
       "pre_fill_bars": [
         { "trend_valid": false, "atr_regime_valid": true, "session_valid": false, "triggered": true }
       ],
-      "expected_final_state": "Reset",
-      "expected_block_reason": "SessionBlocked",
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
       "expected_trail_armed": false,
       "expected_final_stop": 103.50,
       "expected_target_used": false
@@ -310,8 +310,8 @@
       "pre_fill_bars": [
         { "trend_valid": false, "atr_regime_valid": false, "session_valid": true, "triggered": true }
       ],
-      "expected_final_state": "Reset",
-      "expected_block_reason": "TrendInvalid",
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
       "expected_trail_armed": false,
       "expected_final_stop": 103.50,
       "expected_target_used": false

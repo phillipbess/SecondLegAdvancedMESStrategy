@@ -270,10 +270,12 @@ namespace NinjaTrader.NinjaScript.Strategies
         private void WriteTradeContextLog(string eventName, params string[] detailFields)
         {
             string safeEventName = string.IsNullOrWhiteSpace(eventName) ? "UNKNOWN" : eventName.Trim();
-            string fields = JoinStructuredFields(
+            string[] baseFields =
+            {
                 $"signal={_activeEntrySignal}",
                 $"trade={currentTradeID}",
-                detailFields);
+            };
+            string fields = JoinStructuredFields(baseFields.Concat(detailFields ?? Array.Empty<string>()).ToArray());
             string message = string.IsNullOrEmpty(fields)
                 ? $"[{safeEventName}]"
                 : $"[{safeEventName}] {fields}";
@@ -378,8 +380,11 @@ namespace NinjaTrader.NinjaScript.Strategies
         private string BuildEntryObservationContext(string detail)
         {
             bool hasBarContext = Bars != null && CurrentBar >= 0 && Bars.Count > 0;
+            bool priorRthUnavailable = UsePriorDayHighLow && (double.IsNaN(_priorRthHigh) || double.IsNaN(_priorRthLow));
             string structurePart = string.IsNullOrEmpty(_lastStructureLabel)
-                ? "structure=clear"
+                ? (priorRthUnavailable
+                    ? "structure=clear pdhPdl=unavailable(no_prior_rth)"
+                    : "structure=clear")
                 : $"structure={_lastStructureLabel}@{_lastStructurePrice:F2} room={_lastStructureRoom:F2} required={_lastStructureRequiredRoom:F2}";
 
             string signalPart = _signalBarIndex >= 0

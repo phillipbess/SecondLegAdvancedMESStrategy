@@ -20,7 +20,7 @@
       "expected_participate": true
     },
     {
-      "case_id": "midday_window_blocks_even_with_good_regime",
+      "case_id": "midday_window_participates_with_good_regime",
       "use_session_filter": true,
       "trade_rth_only": true,
       "hhmm": 1230,
@@ -32,9 +32,9 @@
       "atr_regime_ratio": 1.0,
       "min_atr_regime_ratio": 0.75,
       "max_atr_regime_ratio": 2.25,
-      "expected_session_valid": false,
+      "expected_session_valid": true,
       "expected_regime_valid": true,
-      "expected_participate": false
+      "expected_participate": true
     },
     {
       "case_id": "chaotic_regime_blocks_even_in_valid_window",

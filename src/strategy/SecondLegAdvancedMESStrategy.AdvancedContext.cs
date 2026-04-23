@@ -7,42 +7,41 @@ namespace NinjaTrader.NinjaScript.Strategies
         private void UpdateAdvancedSessionContext()
         {
             DateTime tradingDate = ClosedBarTime().Date;
-            bool sessionBoundary = ClosedBarIsFirstBarOfSession();
-
-            if (_contextTradingDate == DateTime.MinValue || sessionBoundary)
-                RollTradingDate(tradingDate);
-
-            _currentSessionHigh = double.IsNaN(_currentSessionHigh) ? ClosedBarHigh() : Math.Max(_currentSessionHigh, ClosedBarHigh());
-            _currentSessionLow = double.IsNaN(_currentSessionLow) ? ClosedBarLow() : Math.Min(_currentSessionLow, ClosedBarLow());
-
             int hhmm = ClosedBarTimeHhmm();
-            const int rthOpen = 930;
-            int openingRangeEnd = AddMinutesToHhmm(rthOpen, OpeningRangeMinutes);
+            if (IsRthBar(hhmm))
+            {
+                if (_rthTradingDate == DateTime.MinValue || tradingDate != _rthTradingDate)
+                    RollRthTradingDate(tradingDate);
 
-            if (UseOpeningRange && hhmm >= rthOpen && hhmm < openingRangeEnd)
-            {
-                _openingRangeHigh = double.IsNaN(_openingRangeHigh) ? ClosedBarHigh() : Math.Max(_openingRangeHigh, ClosedBarHigh());
-                _openingRangeLow = double.IsNaN(_openingRangeLow) ? ClosedBarLow() : Math.Min(_openingRangeLow, ClosedBarLow());
-            }
-            else if (UseOpeningRange && hhmm >= openingRangeEnd && !double.IsNaN(_openingRangeHigh) && !double.IsNaN(_openingRangeLow))
-            {
-                _openingRangeComplete = true;
+                _currentRthHigh = double.IsNaN(_currentRthHigh) ? ClosedBarHigh() : Math.Max(_currentRthHigh, ClosedBarHigh());
+                _currentRthLow = double.IsNaN(_currentRthLow) ? ClosedBarLow() : Math.Min(_currentRthLow, ClosedBarLow());
+
+                int openingRangeEnd = AddMinutesToHhmm(RthOpenHhmm, OpeningRangeMinutes);
+                if (UseOpeningRange && hhmm >= RthOpenHhmm && hhmm < openingRangeEnd)
+                {
+                    _openingRangeHigh = double.IsNaN(_openingRangeHigh) ? ClosedBarHigh() : Math.Max(_openingRangeHigh, ClosedBarHigh());
+                    _openingRangeLow = double.IsNaN(_openingRangeLow) ? ClosedBarLow() : Math.Min(_openingRangeLow, ClosedBarLow());
+                }
+                else if (UseOpeningRange && hhmm >= openingRangeEnd && !double.IsNaN(_openingRangeHigh) && !double.IsNaN(_openingRangeLow))
+                {
+                    _openingRangeComplete = true;
+                }
             }
 
             RefreshStructureLevels();
         }
 
-        private void RollTradingDate(DateTime tradingDate)
+        private void RollRthTradingDate(DateTime tradingDate)
         {
-            if (_contextTradingDate != DateTime.MinValue && !double.IsNaN(_currentSessionHigh) && !double.IsNaN(_currentSessionLow))
+            if (_rthTradingDate != DateTime.MinValue && !double.IsNaN(_currentRthHigh) && !double.IsNaN(_currentRthLow))
             {
-                _priorSessionHigh = _currentSessionHigh;
-                _priorSessionLow = _currentSessionLow;
+                _priorRthHigh = _currentRthHigh;
+                _priorRthLow = _currentRthLow;
             }
 
-            _contextTradingDate = tradingDate;
-            _currentSessionHigh = ClosedBarHigh();
-            _currentSessionLow = ClosedBarLow();
+            _rthTradingDate = tradingDate;
+            _currentRthHigh = double.NaN;
+            _currentRthLow = double.NaN;
             _openingRangeHigh = double.NaN;
             _openingRangeLow = double.NaN;
             _openingRangeComplete = false;
@@ -54,8 +53,8 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             if (UsePriorDayHighLow)
             {
-                AddStructureLevel(StructureLevelKind.PriorDayHigh, _priorSessionHigh, "PDH");
-                AddStructureLevel(StructureLevelKind.PriorDayLow, _priorSessionLow, "PDL");
+                AddStructureLevel(StructureLevelKind.PriorDayHigh, _priorRthHigh, "PDH");
+                AddStructureLevel(StructureLevelKind.PriorDayLow, _priorRthLow, "PDL");
             }
 
             if (UseOpeningRange && _openingRangeComplete)
@@ -88,6 +87,28 @@ namespace NinjaTrader.NinjaScript.Strategies
             DateTime anchor = new DateTime(2000, 1, 1, hours, minutes, 0);
             DateTime result = anchor.AddMinutes(minutesToAdd);
             return (result.Hour * 100) + result.Minute;
+        }
+
+        private bool IsRthBar(int hhmm)
+        {
+            return hhmm >= RthOpenHhmm && hhmm < RthCloseHhmm;
+        }
+
+        private bool ClosedBarStartsRthSession()
+        {
+            int currentHhmm = ClosedBarTimeHhmm();
+            if (!IsRthBar(currentHhmm))
+                return false;
+
+            if (ClosedBarIndex() == 0)
+                return true;
+
+            DateTime currentTime = ClosedBarTime();
+            DateTime priorTime = ClosedBarTime(1);
+            if (currentTime.Date != priorTime.Date)
+                return true;
+
+            return !IsRthBar(ClosedBarTimeHhmm(1));
         }
     }
 }

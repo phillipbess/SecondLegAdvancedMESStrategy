@@ -95,6 +95,8 @@ class HostShellContractTests(unittest.TestCase):
             "private bool autoDisabled;",
             "private bool _globalKillSwitch;",
             "private bool stateRestorationInProgress;",
+            "private string _lastCoverageStateSignature = string.Empty;",
+            "private DateTime _lastCoverageStateLoggedAtUtc = DateTime.MinValue;",
             "private string currentTradeID = string.Empty;",
             "private string _activeTradeId = string.Empty;",
             "private string _currentExitOco = string.Empty;",
@@ -210,6 +212,12 @@ class HostShellContractTests(unittest.TestCase):
         self.assertIn("RebuildWorkingOrderTruthFromBroker", eval_reconnect)
         self.assertIn("RestoreProtectiveReplaceLineageFromBroker", eval_reconnect)
         self.assertIn('ValidateStopQuantity($"{context}.ReconnectPending");', eval_reconnect)
+
+        log_coverage = _method_block(runtime_host, "private void LogCoverageState(string context)")
+        self.assertIn('bool isMarketDataHeartbeat = string.Equals(context, "OnMarketData.Last", StringComparison.Ordinal);', log_coverage)
+        self.assertIn("CoverageStateHeartbeatIntervalMs", log_coverage)
+        self.assertIn("_lastCoverageStateSignature = signature;", log_coverage)
+        self.assertIn("_lastCoverageStateLoggedAtUtc = nowUtc;", log_coverage)
 
         complete_flatten = _method_block(runtime_host, "private void CompleteFlattenProtocol(string context, string completionReason)")
         self.assertIn("_flattenAwaitCancelsUntil = null;", complete_flatten)

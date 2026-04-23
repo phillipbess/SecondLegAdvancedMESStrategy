@@ -26,6 +26,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         private const int FlattenRepriceTicks = 10;
         private const int FlattenAwaitCancelWindowMs = 1000;
         private const int SubmissionAuthorityStopSubmitCooldownMs = 3000;
+        private const int CoverageStateHeartbeatIntervalMs = 5000;
 
         private SecondLegExitFlowState _exitState = SecondLegExitFlowState.Flat;
         private bool _exitOpBusy;
@@ -49,6 +50,8 @@ namespace NinjaTrader.NinjaScript.Strategies
         private DateTime _lastOcoResubmitAt = DateTime.MinValue;
         private DateTime _lastMarketDataUtc = DateTime.MinValue;
         private bool _awaitingReconnectGrace;
+        private string _lastCoverageStateSignature = string.Empty;
+        private DateTime _lastCoverageStateLoggedAtUtc = DateTime.MinValue;
 
         private string currentTradeID = string.Empty;
         private string _activeTradeId = string.Empty;
@@ -681,7 +684,9 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (!string.IsNullOrEmpty(left.OrderId) && string.Equals(left.OrderId, right.OrderId, StringComparison.Ordinal))
                 return true;
 
-            if (!string.IsNullOrEmpty(left.Id) && string.Equals(left.Id, right.Id, StringComparison.Ordinal))
+            string leftNativeId = left.Id > 0 ? left.Id.ToString() : string.Empty;
+            string rightNativeId = right.Id > 0 ? right.Id.ToString() : string.Empty;
+            if (!string.IsNullOrEmpty(leftNativeId) && string.Equals(leftNativeId, rightNativeId, StringComparison.Ordinal))
                 return true;
 
             return false;
@@ -692,8 +697,9 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (order == null || string.IsNullOrEmpty(identity))
                 return false;
 
+            string nativeId = order.Id > 0 ? order.Id.ToString() : string.Empty;
             return string.Equals(order.OrderId ?? string.Empty, identity, StringComparison.Ordinal)
-                || string.Equals(order.Id ?? string.Empty, identity, StringComparison.Ordinal)
+                || string.Equals(nativeId, identity, StringComparison.Ordinal)
                 || string.Equals(order.Name ?? string.Empty, identity, StringComparison.Ordinal);
         }
 
@@ -705,8 +711,8 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (!string.IsNullOrEmpty(order.OrderId))
                 return order.OrderId;
 
-            if (!string.IsNullOrEmpty(order.Id))
-                return order.Id;
+            if (order.Id > 0)
+                return order.Id.ToString();
 
             return order.Name ?? string.Empty;
         }
@@ -1313,13 +1319,32 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         private void LogCoverageState(string context)
         {
+            bool covered = HasCoverageNow();
+            bool pending = IsProtectiveCoveragePending(DateTime.UtcNow);
+            int qty = Position.Quantity;
+            int workingStopQty = SumWorkingProtectiveCoverageQty();
+
+            bool isMarketDataHeartbeat = string.Equals(context, "OnMarketData.Last", StringComparison.Ordinal);
+            string signature = $"{covered}|{pending}|{qty}|{workingStopQty}";
+            DateTime nowUtc = DateTime.UtcNow;
+            if (isMarketDataHeartbeat
+                && string.Equals(signature, _lastCoverageStateSignature, StringComparison.Ordinal)
+                && _lastCoverageStateLoggedAtUtc != DateTime.MinValue
+                && (nowUtc - _lastCoverageStateLoggedAtUtc).TotalMilliseconds < CoverageStateHeartbeatIntervalMs)
+            {
+                return;
+            }
+
+            _lastCoverageStateSignature = signature;
+            _lastCoverageStateLoggedAtUtc = nowUtc;
+
             WriteRiskEvent(
                 "COVERAGE_STATE",
                 $"ctx={context}",
-                $"covered={HasCoverageNow()}",
-                $"pending={IsProtectiveCoveragePending(DateTime.UtcNow)}",
-                $"qty={Position.Quantity}",
-                $"workingStopQty={SumWorkingProtectiveCoverageQty()}");
+                $"covered={covered}",
+                $"pending={pending}",
+                $"qty={qty}",
+                $"workingStopQty={workingStopQty}");
         }
 
         private bool IsProtectiveCoveragePending(DateTime nowUtc)
@@ -1743,16 +1768,11 @@ namespace NinjaTrader.NinjaScript.Strategies
         {
             int hhmm = ToTime(time) / 100;
             bool flattenWindowActive = FlattenBeforeClose && hhmm >= FlattenTimeHhmm;
-            bool sessionAllowsExposure = !UseSessionFilter || !TradeRthOnly
-                || (hhmm >= StartTradingTimeHhmm && hhmm <= EndMorningTimeHhmm)
-                || (hhmm >= StartAfternoonTimeHhmm && hhmm <= LastEntryTimeHhmm);
 
-            if (!flattenWindowActive && sessionAllowsExposure)
+            if (!flattenWindowActive)
                 return false;
 
-            TriggerFlatten(flattenWindowActive
-                ? $"FlattenWindow|{context}"
-                : $"SessionControlBlocked|{context}");
+            TriggerFlatten($"FlattenWindow|{context}");
             return true;
         }
 

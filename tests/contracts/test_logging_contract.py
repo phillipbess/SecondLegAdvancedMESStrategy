@@ -79,6 +79,7 @@ class LoggingContractTests(unittest.TestCase):
 
     def test_pattern_context_schema_is_pinned(self) -> None:
         self.assertIn('WritePatternLog($"[{eventName}] {context}");', self.logging_file)
+        self.assertIn('pdhPdl=unavailable(no_prior_rth)', self.logging_file)
         for marker in self.fixture["entry_context_schema_markers"]:
             with self.subTest(marker=marker):
                 self.assertIn(f'"{marker}', self.logging_file)

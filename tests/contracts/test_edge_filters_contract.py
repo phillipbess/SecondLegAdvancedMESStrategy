@@ -29,6 +29,7 @@ class EdgeFiltersContractTests(unittest.TestCase):
 
         required_markers = [
             "public double MinImpulseAtrMultiple { get; set; } = 1.25;",
+            "public double MaxStopAtrMultiple { get; set; } = 1.50;",
             "public int MaxTriggerBars { get; set; } = 3;",
             "public bool StructureFilterEnabled { get; set; } = true;",
             "public bool UsePriorDayHighLow { get; set; } = true;",
@@ -101,6 +102,8 @@ class EdgeFiltersContractTests(unittest.TestCase):
         self.assertIn("private void ResetClosedBarSessionFlags()", closed_bar_adapter)
         self.assertIn("private void AdvanceClosedBarSessionFlags()", closed_bar_adapter)
         self.assertIn("private bool ClosedBarIsFirstBarOfSession()", closed_bar_adapter)
+        self.assertIn("private bool ClosedBarStartsRthSession()", advanced_context)
+        self.assertIn("private bool IsRthBar(int hhmm)", advanced_context)
         self.assertIn("if (IsFirstTickOfBar)", closed_bar_adapter)
         self.assertIn("return _closedBarWasFirstBarOfSession;", closed_bar_adapter)
 
@@ -122,15 +125,17 @@ class EdgeFiltersContractTests(unittest.TestCase):
         self.assertIn("&& ClosedBarHigh() > ClosedBarHigh(1)", entry_analysis)
         self.assertIn("&& ClosedBarClose() < ClosedBarClose(1)", entry_analysis)
         self.assertIn("&& ClosedBarLow() < ClosedBarLow(1)", entry_analysis)
-        self.assertIn('return "OppositeSignal";', entry_analysis)
         self.assertIn("if (!HasPullbackLeg2Candidate())", entry_analysis)
         self.assertIn('_setupState = SecondLegSetupState.TrackingPullbackLeg2;', entry_analysis)
-        self.assertIn("bool extendsLeg2Extreme = false;", entry_analysis)
-        self.assertIn("if (extendsLeg2Extreme)", entry_analysis)
+        self.assertIn("bool leg2Refreshed = false;", entry_analysis)
+        self.assertIn("if (leg2Refreshed)", entry_analysis)
+        self.assertIn("PullbackLeg2CandidateRefresh", entry_analysis)
+        self.assertNotIn('LogSetupStateTransition(previousState, _setupState, "PullbackLeg2Candidate");\n            TryWaitForSignalBar();', entry_analysis)
         self.assertIn("return \"EntryExpired\";", entry_analysis)
         self.assertIn("CancelPendingEntry(armedEntryInvalidationReason);", entry_analysis)
         self.assertIn("ClosedBarIndex()", entry_analysis)
-        self.assertIn('RecordEntryBlock("SignalInvalid",', entry_analysis)
+        self.assertIn('RecordEntryBlock(', entry_analysis)
+        self.assertIn('"SignalInvalid"', entry_analysis)
         self.assertIn('RecordEntryBlock("RiskTooSmall",', entry_analysis)
         self.assertIn('RecordEntryBlock("SecondLegTooStrong",', entry_analysis)
         self.assertIn("private bool IsLongOpposingStructure(StructureLevelKind kind)", entry_analysis)
@@ -158,14 +163,20 @@ class EdgeFiltersContractTests(unittest.TestCase):
         self.assertIn("private void SyncSetupStateWithEntryLifecycle()", orders)
         self.assertNotIn("SignalExpired", entry_analysis)
         self.assertNotIn("MinRoomToStructureAtr", entry_analysis)
+        self.assertNotIn("MinPullbackBars", entry_analysis)
+        self.assertNotIn("CancelIfOppositeSignal", entry_analysis)
         self.assertIn("private bool EnforceSessionClose()", state_lifecycle)
+        self.assertIn("bool rthBoundary = ClosedBarStartsRthSession();", state_lifecycle)
+        self.assertIn('CancelPendingEntry("RthOpen");', state_lifecycle)
+        self.assertIn('ResetSetupState("RthOpen");', state_lifecycle)
 
         self.assertIn("private void RefreshStructureLevels()", advanced_context)
         self.assertIn("DateTime tradingDate = ClosedBarTime().Date;", advanced_context)
-        self.assertIn("if (_contextTradingDate == DateTime.MinValue || sessionBoundary)", advanced_context)
+        self.assertIn("if (IsRthBar(hhmm))", advanced_context)
+        self.assertIn("if (_rthTradingDate == DateTime.MinValue || tradingDate != _rthTradingDate)", advanced_context)
         self.assertIn("int hhmm = ClosedBarTimeHhmm();", advanced_context)
-        self.assertIn("const int rthOpen = 930;", advanced_context)
-        self.assertIn("AddStructureLevel(StructureLevelKind.PriorDayHigh, _priorSessionHigh, \"PDH\");", advanced_context)
+        self.assertIn("int openingRangeEnd = AddMinutesToHhmm(RthOpenHhmm, OpeningRangeMinutes);", advanced_context)
+        self.assertIn("AddStructureLevel(StructureLevelKind.PriorDayHigh, _priorRthHigh, \"PDH\");", advanced_context)
         self.assertNotIn("PriorDayClose", advanced_context)
         self.assertNotIn("UpdateRelativeVolumeState", advanced_context)
 

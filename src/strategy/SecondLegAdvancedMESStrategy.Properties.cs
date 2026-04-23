@@ -43,7 +43,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         [NinjaScriptProperty]
         [Range(0.25, 5.0)]
         [Display(Name = "Max Stop ATR Multiple", GroupName = "Volatility", Order = 4)]
-        public double MaxStopAtrMultiple { get; set; } = 1.25;
+        public double MaxStopAtrMultiple { get; set; } = 1.50;
 
         [NinjaScriptProperty]
         [Range(0.5, 5.0)]
@@ -51,28 +51,23 @@ namespace NinjaTrader.NinjaScript.Strategies
         public double MinImpulseAtrMultiple { get; set; } = 1.25;
 
         [NinjaScriptProperty]
-        [Range(1, 20)]
-        [Display(Name = "Min Pullback Bars", GroupName = "Pullback", Order = 0)]
-        public int MinPullbackBars { get; set; } = 3;
-
-        [NinjaScriptProperty]
         [Range(2, 50)]
-        [Display(Name = "Max Pullback Bars", GroupName = "Pullback", Order = 1)]
+        [Display(Name = "Max Pullback Bars", GroupName = "Pullback", Order = 0)]
         public int MaxPullbackBars { get; set; } = 12;
 
         [NinjaScriptProperty]
         [Range(0.1, 1.0)]
-        [Display(Name = "Min Pullback Retracement", GroupName = "Pullback", Order = 2)]
+        [Display(Name = "Min Pullback Retracement", GroupName = "Pullback", Order = 1)]
         public double MinPullbackRetracement { get; set; } = 0.236;
 
         [NinjaScriptProperty]
         [Range(0.1, 1.0)]
-        [Display(Name = "Max Pullback Retracement", GroupName = "Pullback", Order = 3)]
+        [Display(Name = "Max Pullback Retracement", GroupName = "Pullback", Order = 2)]
         public double MaxPullbackRetracement { get; set; } = 0.618;
 
         [NinjaScriptProperty]
         [Range(0.1, 2.0)]
-        [Display(Name = "Second Leg Max Momentum Ratio", GroupName = "Pullback", Order = 4)]
+        [Display(Name = "Second Leg Max Momentum Ratio", GroupName = "Pullback", Order = 3)]
         public double SecondLegMaxMomentumRatio { get; set; } = 0.80;
 
         [NinjaScriptProperty]
@@ -84,10 +79,6 @@ namespace NinjaTrader.NinjaScript.Strategies
         [Range(1, 20)]
         [Display(Name = "Max Trigger Bars", GroupName = "Entry", Order = 1)]
         public int MaxTriggerBars { get; set; } = 3;
-
-        [NinjaScriptProperty]
-        [Display(Name = "Cancel If Opposite Signal", GroupName = "Entry", Order = 2)]
-        public bool CancelIfOppositeSignal { get; set; } = true;
 
         [NinjaScriptProperty]
         [Range(0, 20)]
@@ -102,7 +93,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         [NinjaScriptProperty]
         [Range(0.1, 5.0)]
         [Display(Name = "Min Room To Structure (R)", GroupName = "Risk", Order = 2)]
-        public double MinRoomToStructureR { get; set; } = 1.20;
+        public double MinRoomToStructureR { get; set; } = 1.00;
 
         [NinjaScriptProperty]
         [Range(5, 100)]
@@ -166,40 +157,12 @@ namespace NinjaTrader.NinjaScript.Strategies
         public int OpeningRangeMinutes { get; set; } = 30;
 
         [NinjaScriptProperty]
-        [Display(Name = "Use Session Filter", GroupName = "Session", Order = 0)]
-        public bool UseSessionFilter { get; set; } = true;
-
-        [NinjaScriptProperty]
-        [Display(Name = "Trade RTH Only", GroupName = "Session", Order = 1)]
-        public bool TradeRthOnly { get; set; } = true;
-
-        [NinjaScriptProperty]
-        [Range(0, 2359)]
-        [Display(Name = "Start Trading HHmm", GroupName = "Session", Order = 2)]
-        public int StartTradingTimeHhmm { get; set; } = 940;
-
-        [NinjaScriptProperty]
-        [Range(0, 2359)]
-        [Display(Name = "End Morning HHmm", GroupName = "Session", Order = 3)]
-        public int EndMorningTimeHhmm { get; set; } = 1130;
-
-        [NinjaScriptProperty]
-        [Range(0, 2359)]
-        [Display(Name = "Start Afternoon HHmm", GroupName = "Session", Order = 4)]
-        public int StartAfternoonTimeHhmm { get; set; } = 1345;
-
-        [NinjaScriptProperty]
-        [Range(0, 2359)]
-        [Display(Name = "Last Entry HHmm", GroupName = "Session", Order = 5)]
-        public int LastEntryTimeHhmm { get; set; } = 1530;
-
-        [NinjaScriptProperty]
-        [Display(Name = "Flatten Before Close", GroupName = "Session", Order = 6)]
+        [Display(Name = "Flatten Before Close", GroupName = "Session", Order = 0)]
         public bool FlattenBeforeClose { get; set; } = true;
 
         [NinjaScriptProperty]
         [Range(0, 2359)]
-        [Display(Name = "Flatten Time HHmm", GroupName = "Session", Order = 7)]
+        [Display(Name = "Flatten Time HHmm", GroupName = "Session", Order = 1)]
         public int FlattenTimeHhmm { get; set; } = 1555;
     }
 }

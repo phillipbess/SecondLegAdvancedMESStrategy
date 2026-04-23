@@ -29,13 +29,7 @@ def evaluate_trend_context(case: dict) -> dict:
 
 
 def evaluate_session_and_regime(case: dict) -> dict:
-    if not case.get("use_session_filter", True) or not case.get("trade_rth_only", True):
-        session_valid = True
-    else:
-        hhmm = case["hhmm"]
-        morning = case["start_trading_time_hhmm"] <= hhmm <= case["end_morning_time_hhmm"]
-        afternoon = case["start_afternoon_time_hhmm"] <= hhmm <= case["last_entry_time_hhmm"]
-        session_valid = morning or afternoon
+    session_valid = True
 
     flatten_window_active = case.get("flatten_window_active")
     if flatten_window_active is None:
@@ -93,8 +87,8 @@ def evaluate_entry_qualification(case: dict) -> dict:
     point_value = case.get("point_value", 5.0)
     risk_per_trade = case.get("risk_per_trade", 200.0)
     atr_value = case.get("atr_value", 0.0)
-    max_stop_atr_multiple = case.get("max_stop_atr_multiple", 1.25)
-    min_room_r = case.get("min_room_to_structure_r", 1.2)
+    max_stop_atr_multiple = case.get("max_stop_atr_multiple", 1.50)
+    min_room_r = case.get("min_room_to_structure_r", 1.0)
     bias = case["bias"]
 
     if bias == "Short":
@@ -244,13 +238,6 @@ def evaluate_golden_case(case: dict) -> dict:
             "stage": "session_regime",
             "block_reason": "FlattenWindow",
         }
-    if not session_result["session_valid"]:
-        return {
-            "accepted": False,
-            "armed": False,
-            "stage": "session_regime",
-            "block_reason": "SessionBlocked",
-        }
     if not session_result.get("hard_risk_valid", True):
         return {
             "accepted": False,
@@ -339,38 +326,6 @@ def evaluate_armed_entry_lifecycle(case: dict) -> dict:
             return {
                 "final_state": "Reset",
                 "block_reason": "FlattenWindow",
-                "trail_armed": False,
-                "final_stop": initial_stop_price,
-                "target_used": False,
-            }
-        if not bar.get("session_valid", True):
-            return {
-                "final_state": "Reset",
-                "block_reason": "SessionBlocked",
-                "trail_armed": False,
-                "final_stop": initial_stop_price,
-                "target_used": False,
-            }
-        if not bar.get("trend_valid", True):
-            return {
-                "final_state": "Reset",
-                "block_reason": "TrendInvalid",
-                "trail_armed": False,
-                "final_stop": initial_stop_price,
-                "target_used": False,
-            }
-        if not bar.get("atr_regime_valid", True):
-            return {
-                "final_state": "Reset",
-                "block_reason": "AtrRegimeInvalid",
-                "trail_armed": False,
-                "final_stop": initial_stop_price,
-                "target_used": False,
-            }
-        if bar.get("opposite_signal", False):
-            return {
-                "final_state": "Reset",
-                "block_reason": "OppositeSignal",
                 "trail_armed": False,
                 "final_stop": initial_stop_price,
                 "target_used": False,

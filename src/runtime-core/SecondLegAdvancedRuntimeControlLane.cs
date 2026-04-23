@@ -37,7 +37,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             internal void SubmitPrimaryEntry(PlannedEntry plannedEntry)
             {
-                if (plannedEntry == null || !plannedEntry.IsReady)
+                if (plannedEntry == null || !plannedEntry.IsValid)
                     return;
 
                 TransportResult result = _strategy.SubmitPrimaryEntryBridge(plannedEntry);
@@ -166,7 +166,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                     "mode=replace",
                     $"qty={effQty}",
                     $"stop={roundedStop:F2}",
-                    $"oco={string.IsNullOrEmpty(replaceResult.Oco) ? freshOco : replaceResult.Oco}");
+                    $"oco={(string.IsNullOrEmpty(replaceResult.Oco) ? freshOco : replaceResult.Oco)}");
                 _strategy.RefreshRuntimeSnapshot(replaceContext);
                 _strategy.WriteDebugLog(
                     $"[RUNTIME_EXIT_CTL] protective replace submit | tag={stopTag} reason={reason} ctx={replaceContext} qty={effQty} stop={roundedStop:F2}");
@@ -286,7 +286,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                         "mode=initial",
                         $"qty={effQty}",
                         $"stop={roundedStop:F2}",
-                        $"oco={string.IsNullOrEmpty(submitResult.Oco) ? oco : submitResult.Oco}");
+                        $"oco={(string.IsNullOrEmpty(submitResult.Oco) ? oco : submitResult.Oco)}");
                     _strategy.RefreshRuntimeSnapshot("ExitController.EnsureProtectiveExit");
                     _strategy.WriteDebugLog(
                         $"[RUNTIME_EXIT_CTL] ensure protective submit | tag={stopTag} reason={reason} qty={effQty} stop={stopPx:F2}");

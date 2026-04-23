@@ -48,7 +48,8 @@ Included in strict `v1`:
 - fixed-dollar sizing from initial stop distance
 - stop-width rejection
 - minimal structure-room gate
-- session and hard risk guardrails
+- hard risk guardrails
+- end-of-day flatten boundary
 - long and short support
 
 Excluded from strict `v1`:
@@ -92,7 +93,7 @@ The entry brain must not:
 
 The filter order is fixed:
 
-1. Session and hard risk gates
+1. Hard risk gates
 2. Trend context
 3. ATR regime
 4. Impulse qualification
@@ -125,7 +126,7 @@ The entry engine uses these states:
 Meaning:
 
 - `Blocked`
-  Session, flatten window, cooldown, or risk rails block new setups.
+  Flatten window, cooldown, or hard risk rails block new setups.
 - `SeekingBias`
   Trend and ATR regime are checked and side is chosen.
 - `SeekingImpulse`
@@ -423,19 +424,14 @@ Armed entries expire if not triggered within `MaxTriggerBars`.
 Cancel and reset if any of these occur before fill:
 
 - expiry reached
-- trend context fails
-- ATR regime fails
 - setup becomes too deep
 - setup exceeds `MaxPullbackBars`
-- opposite-side setup invalidates the current setup
-- session/flatten rules block fresh entries
+- flatten-only window reached
 
 ## Session And Hard Guardrails
 
 The entry brain must honor these gates before arming a setup:
 
-- session window valid
-- not past `LastEntryTime`
 - not in flatten-only window
 - max trades per session not exceeded
 - max consecutive losses not exceeded
@@ -493,7 +489,7 @@ These remain configurable in `v1`:
 The following strategy-logic families must exist and stay green:
 
 - trend context
-- ATR regime and session guards
+- ATR regime and hard-risk guards
 - impulse qualification
 - pullback state machine
 - entry qualification
@@ -507,10 +503,7 @@ The following strategy-logic families must exist and stay green:
 
 At minimum, diagnostics should distinguish:
 
-- `SessionBlocked`
 - `FlattenWindow`
-- `TrendInvalid`
-- `AtrRegimeInvalid`
 - `ImpulseInvalid`
 - `PullbackTooDeep`
 - `PullbackTooLong`
@@ -520,11 +513,10 @@ At minimum, diagnostics should distinguish:
 - `RiskTooSmall`
 - `StructureRoom`
 - `EntryExpired`
-- `OppositeSignal`
 
 ## Final V1 Rule Stack
 
-1. Session valid
+1. Hard risk valid
 2. Trend valid
 3. ATR regime valid
 4. Impulse valid

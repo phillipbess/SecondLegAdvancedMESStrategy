@@ -1,3 +1,4 @@
+using System;
 using NinjaTrader.Data;
 
 namespace NinjaTrader.NinjaScript.Strategies

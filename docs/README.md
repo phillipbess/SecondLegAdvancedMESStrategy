@@ -13,9 +13,11 @@ ordered path below.
    Honest handoff note for what is done, what is not yet proven, and what the next operator should do.
 3. [Entry_Brain_V1_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Entry_Brain_V1_Contract.md)
    Canonical source of truth for the setup logic.
-4. [Host_Shell_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Host_Shell_Contract.md)
+4. [Video_Idea_To_Strategy_Mapping.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Video_Idea_To_Strategy_Mapping.md)
+   Plain-English bridge from the original discretionary setup idea to the coded entry brain.
+5. [Host_Shell_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Host_Shell_Contract.md)
    Canonical source of truth for the donor-shaped runtime shell and authority boundaries.
-5. [Parity_Signoff_Checklist.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Parity_Signoff_Checklist.md)
+6. [Parity_Signoff_Checklist.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Parity_Signoff_Checklist.md)
    The only document that defines what counts as real completion.
 
 ## What Each Section Is For

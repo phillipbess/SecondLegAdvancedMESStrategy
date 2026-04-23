@@ -6,7 +6,7 @@ namespace NinjaTrader.NinjaScript.Strategies
     {
         private void RefreshContext()
         {
-            _sessionFilterValid = EvaluateSessionFilter();
+            _sessionFilterValid = true;
 
             if (_atr == null || _emaFast == null || _emaSlow == null)
                 return;
@@ -28,7 +28,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             _trendContextValid = longTrendValid || shortTrendValid;
 
-            if (!_sessionFilterValid || !_volatilityRegimeValid)
+            if (!_volatilityRegimeValid)
                 _activeBias = SecondLegBias.Neutral;
             else if (longTrendValid && !shortTrendValid)
                 _activeBias = SecondLegBias.Long;
@@ -40,7 +40,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         private void TryAdvanceFromTrendContext()
         {
-            if (!_sessionFilterValid || !_trendContextValid || !_volatilityRegimeValid)
+            if (!_trendContextValid || !_volatilityRegimeValid)
                 return;
 
             SecondLegSetupState previousState = _setupState;
@@ -170,13 +170,16 @@ namespace NinjaTrader.NinjaScript.Strategies
             SecondLegSetupState previousState = _setupState;
             _setupState = SecondLegSetupState.WaitingForSignalBar;
             _lastStateTransitionUtc = DateTime.UtcNow;
-            LogSetupStateTransition(previousState, _setupState, "PullbackLeg2Candidate");
-            TryWaitForSignalBar();
+            LogSetupStateTransition(
+                previousState,
+                _setupState,
+                "PullbackLeg2Candidate",
+                $"leg2Start={_pullbackLeg2.StartBar} leg2End={_pullbackLeg2.EndBar} nextSignalBar={_pullbackLeg2.EndBar + 1} retracement={_lastImpulseRetracement:F3} leg2Momentum={_lastLeg2Momentum:F3}");
         }
 
         private void TryWaitForSignalBar()
         {
-            if (!_volatilityRegimeValid || !_sessionFilterValid)
+            if (!_volatilityRegimeValid)
             {
                 ResetSetupState(GetEntryInvalidationReason());
                 return;
@@ -188,13 +191,13 @@ namespace NinjaTrader.NinjaScript.Strategies
                 return;
             }
 
-            bool extendsLeg2Extreme = false;
+            bool leg2Refreshed = false;
             if (_impulse.Bias == SecondLegBias.Long)
             {
                 bool continuesCountertrend = ClosedBarLow() < _pullbackLeg2.Low || ClosedBarClose() < ClosedBarClose(1);
                 if (continuesCountertrend)
                 {
-                    extendsLeg2Extreme = ClosedBarLow() < _pullbackLeg2.Low;
+                    leg2Refreshed = true;
                     _pullbackLeg2.EndBar = ClosedBarIndex();
                     _pullbackLeg2.High = Math.Max(_pullbackLeg2.High, ClosedBarHigh());
                     _pullbackLeg2.Low = Math.Min(_pullbackLeg2.Low, ClosedBarLow());
@@ -206,7 +209,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 bool continuesCountertrend = ClosedBarHigh() > _pullbackLeg2.High || ClosedBarClose() > ClosedBarClose(1);
                 if (continuesCountertrend)
                 {
-                    extendsLeg2Extreme = ClosedBarHigh() > _pullbackLeg2.High;
+                    leg2Refreshed = true;
                     _pullbackLeg2.EndBar = ClosedBarIndex();
                     _pullbackLeg2.High = Math.Max(_pullbackLeg2.High, ClosedBarHigh());
                     _pullbackLeg2.Low = Math.Min(_pullbackLeg2.Low, ClosedBarLow());
@@ -228,12 +231,12 @@ namespace NinjaTrader.NinjaScript.Strategies
                 return;
             }
 
-            if (extendsLeg2Extreme)
+            if (leg2Refreshed)
             {
-                RecordEntryBlock("SignalInvalid", "signal bar deepened leg2 extreme");
-                _setupState = SecondLegSetupState.TrackingPullbackLeg2;
                 _lastStateTransitionUtc = DateTime.UtcNow;
-                LogSetupStateTransition(SecondLegSetupState.WaitingForSignalBar, _setupState, "SignalInvalid");
+                WriteEntryObservation(
+                    "ENTRY_STATE",
+                    $"from={SecondLegSetupState.WaitingForSignalBar} to={SecondLegSetupState.WaitingForSignalBar} reason=PullbackLeg2CandidateRefresh | leg2Start={_pullbackLeg2.StartBar} leg2End={_pullbackLeg2.EndBar} nextSignalBar={_pullbackLeg2.EndBar + 1} retracement={_lastImpulseRetracement:F3} leg2Momentum={_lastLeg2Momentum:F3}");
                 return;
             }
 
@@ -249,15 +252,6 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         private void TryWaitForTrigger()
         {
-            if (!_trendContextValid || !_volatilityRegimeValid || !_sessionFilterValid)
-            {
-                string invalidationReason = GetEntryInvalidationReason();
-                CancelPendingEntry(invalidationReason);
-                if (_entryOrder == null && !_entryPending && !_hasWorkingEntry)
-                    ResetSetupState(invalidationReason);
-                return;
-            }
-
             string armedEntryInvalidationReason = GetArmedEntryInvalidationReason();
             if (!string.IsNullOrEmpty(armedEntryInvalidationReason))
             {
@@ -286,24 +280,10 @@ namespace NinjaTrader.NinjaScript.Strategies
             _lastStateTransitionUtc = DateTime.UtcNow;
         }
 
-        private bool EvaluateSessionFilter()
-        {
-            if (!UseSessionFilter || !TradeRthOnly)
-                return true;
-
-            int hhmm = ClosedBarTimeHhmm();
-            bool morningWindow = hhmm >= StartTradingTimeHhmm && hhmm <= EndMorningTimeHhmm;
-            bool afternoonWindow = hhmm >= StartAfternoonTimeHhmm && hhmm <= LastEntryTimeHhmm;
-            return morningWindow || afternoonWindow;
-        }
-
         private string GetEntryInvalidationReason()
         {
             if (FlattenBeforeClose && ClosedBarTimeHhmm() >= FlattenTimeHhmm)
                 return "FlattenWindow";
-
-            if (!_sessionFilterValid)
-                return "SessionBlocked";
 
             if (!_volatilityRegimeValid)
                 return "AtrRegimeInvalid";
@@ -318,13 +298,6 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             if (FlattenBeforeClose && ClosedBarTimeHhmm() >= FlattenTimeHhmm)
                 return "FlattenWindow";
-
-            if (CancelIfOppositeSignal
-                && _activeBias != SecondLegBias.Neutral
-                && _activeBias != _plannedEntry.Bias)
-            {
-                return "OppositeSignal";
-            }
 
             int totalPullbackBars = _pullbackLeg1.StartBar > 0
                 ? ClosedBarIndex() - _pullbackLeg1.StartBar + 1
@@ -447,9 +420,6 @@ namespace NinjaTrader.NinjaScript.Strategies
                 ResetSetupState("PullbackTooDeep");
                 return false;
             }
-
-            if (bars < MinPullbackBars)
-                return false;
 
             return retracement >= MinPullbackRetracement;
         }
@@ -577,7 +547,9 @@ namespace NinjaTrader.NinjaScript.Strategies
         {
             if (ClosedBarIndex() <= _pullbackLeg2.EndBar)
             {
-                RecordEntryBlock("SignalInvalid", "same-bar signal disallowed");
+                RecordEntryBlock(
+                    "SignalInvalid",
+                    $"same-bar signal disallowed bar={ClosedBarIndex()} leg2EndBar={_pullbackLeg2.EndBar} nextEligibleBar={_pullbackLeg2.EndBar + 1}");
                 return false;
             }
 
@@ -587,7 +559,11 @@ namespace NinjaTrader.NinjaScript.Strategies
                 : (ClosedBarHigh() <= _pullbackLeg2.High && ClosedBarClose() <= midpoint);
             if (!directionalSignal)
             {
-                RecordEntryBlock("SignalInvalid", "signal bar midpoint/directional test failed");
+                RecordEntryBlock(
+                    "SignalInvalid",
+                    _impulse.Bias == SecondLegBias.Long
+                        ? $"signal bar midpoint/directional test failed close={ClosedBarClose():F2} midpoint={midpoint:F2} low={ClosedBarLow():F2} leg2Low={_pullbackLeg2.Low:F2}"
+                        : $"signal bar midpoint/directional test failed close={ClosedBarClose():F2} midpoint={midpoint:F2} high={ClosedBarHigh():F2} leg2High={_pullbackLeg2.High:F2}");
                 return false;
             }
 
@@ -629,7 +605,9 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             if (_atrValue > 0.0 && stopDistance / _atrValue > MaxStopAtrMultiple)
             {
-                RecordEntryBlock("StopTooWide", $"stopDistance={stopDistance:F2} atr={_atrValue:F2}");
+                RecordEntryBlock(
+                    "StopTooWide",
+                    $"entry={plannedEntryPrice:F2} stop={plannedStopPrice:F2} stopDistance={stopDistance:F2} atr={_atrValue:F2} ratio={(stopDistance / _atrValue):F3} cap={MaxStopAtrMultiple:F3}");
                 return false;
             }
 
@@ -643,7 +621,12 @@ namespace NinjaTrader.NinjaScript.Strategies
             _structureRoomValid = EvaluateStructureRoom(plannedEntryPrice, plannedStopPrice, plannedEntryBias);
             if (!_structureRoomValid)
             {
-                RecordEntryBlock("StructureRoom", $"required={_lastStructureRequiredRoom:F2} room={_lastStructureRoom:F2} level={_lastStructureLabel}");
+                double roomR = (!double.IsNaN(_lastStructureRoom) && stopDistance > 0.0)
+                    ? _lastStructureRoom / stopDistance
+                    : double.NaN;
+                RecordEntryBlock(
+                    "StructureRoom",
+                    $"entry={plannedEntryPrice:F2} stop={plannedStopPrice:F2} risk={stopDistance:F2} required={_lastStructureRequiredRoom:F2} room={_lastStructureRoom:F2} roomR={roomR:F2} level={_lastStructureLabel} structurePrice={_lastStructurePrice:F2}");
                 return false;
             }
 

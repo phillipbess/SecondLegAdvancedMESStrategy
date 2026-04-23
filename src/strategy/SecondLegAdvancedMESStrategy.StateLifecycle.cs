@@ -125,6 +125,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         private void UpdateSessionAnchor()
         {
             bool sessionBoundary = ClosedBarIsFirstBarOfSession();
+            bool rthBoundary = ClosedBarStartsRthSession();
             if (_sessionAnchor == DateTime.MinValue)
                 _sessionAnchor = ClosedBarTime().Date;
 
@@ -137,18 +138,34 @@ namespace NinjaTrader.NinjaScript.Strategies
                     CancelPendingEntry("NewSession");
             }
 
-            if (!_sessionResetPending)
-                return;
+            if (rthBoundary)
+            {
+                if (_hasWorkingEntry && !_entryFilledForActiveSignal)
+                    CancelPendingEntry("RthOpen");
 
-            if (_hasWorkingEntry || Position.Quantity != 0 || _entryFilledForActiveSignal)
-                return;
+                if (_hasWorkingEntry || Position.Quantity != 0 || _entryFilledForActiveSignal)
+                    _rthOpenResetPending = true;
+                else
+                    ResetSetupState("RthOpen");
+            }
 
-            _tradesThisSession = 0;
-            _consecutiveLosses = 0;
-            _sessionRealizedR = 0.0;
-            _lossCooldownUntilBar = -1;
-            _sessionResetPending = false;
-            ResetSetupState("NewSession");
+            bool idleSetupContext = !_hasWorkingEntry && Position.Quantity == 0 && !_entryFilledForActiveSignal;
+
+            if (_sessionResetPending && idleSetupContext)
+            {
+                _tradesThisSession = 0;
+                _consecutiveLosses = 0;
+                _sessionRealizedR = 0.0;
+                _lossCooldownUntilBar = -1;
+                _sessionResetPending = false;
+                ResetSetupState("NewSession");
+            }
+
+            if (_rthOpenResetPending && idleSetupContext)
+            {
+                _rthOpenResetPending = false;
+                ResetSetupState("RthOpen");
+            }
         }
 
         private void ResetSetupState(string reason)
@@ -189,7 +206,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             _setupState = nextState;
             _activeBias = SecondLegBias.Neutral;
             _trendContextValid = false;
-            _sessionFilterValid = false;
+            _sessionFilterValid = true;
             _volatilityRegimeValid = false;
             _structureRoomValid = false;
             _signalBarIndex = -1;

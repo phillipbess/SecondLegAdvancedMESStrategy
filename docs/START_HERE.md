@@ -34,7 +34,8 @@ The current strict `v1` includes:
 - fixed-dollar sizing from the initial stop
 - structure-room gate
 - donor-style simple trail
-- session and hard risk rails
+- hard risk rails
+- end-of-day flatten rule
 - long and short symmetry
 
 The current strict `v1` excludes:
@@ -75,6 +76,7 @@ It does not own:
 Canonical doc:
 
 - [Entry_Brain_V1_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Entry_Brain_V1_Contract.md)
+- [Video_Idea_To_Strategy_Mapping.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Video_Idea_To_Strategy_Mapping.md)
 
 ### 2. Runtime Shell
 
@@ -199,3 +201,8 @@ Use this exact operator path:
 1. `Entry_Brain_V1_Contract.md`
 2. `Host_Shell_Contract.md`
 3. `CURRENT_STATE.md`
+
+If you want the shortest bridge from the original discretionary idea to the coded
+strategy, read:
+
+- [Video_Idea_To_Strategy_Mapping.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Video_Idea_To_Strategy_Mapping.md)

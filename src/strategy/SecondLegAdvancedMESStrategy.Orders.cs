@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using NinjaTrader.Cbi;
 
 namespace NinjaTrader.NinjaScript.Strategies
@@ -44,14 +45,16 @@ namespace NinjaTrader.NinjaScript.Strategies
             string orderName = order?.Name ?? string.Empty;
             string orderId = order?.OrderId ?? string.Empty;
             string orderState = order?.OrderState.ToString() ?? string.Empty;
-            string fields = JoinStructuredFields(
+            string[] baseFields =
+            {
                 $"signal={signal}",
                 $"trade={trade}",
                 $"role={role}",
                 !string.IsNullOrEmpty(orderName) ? $"order={orderName}" : string.Empty,
                 !string.IsNullOrEmpty(orderId) ? $"orderId={orderId}" : string.Empty,
                 !string.IsNullOrEmpty(orderState) ? $"state={orderState}" : string.Empty,
-                detailFields);
+            };
+            string fields = JoinStructuredFields(baseFields.Concat(detailFields ?? Array.Empty<string>()).ToArray());
             WriteTradeLog($"[{eventName}] {fields}");
         }
 
@@ -129,19 +132,6 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             if (State != State.Realtime)
                 UpdateManagedTradeProtection();
-
-            if (CancelIfOppositeSignal
-                && _hasWorkingEntry
-                && !_entryFilledForActiveSignal
-                && _activeBias != SecondLegBias.Neutral
-                && HasPlannedEntry()
-                && _activeBias != _plannedEntry.Bias)
-            {
-                CancelPendingEntry("OppositeSignal");
-                if (_entryOrder == null && !_entryPending && !_hasWorkingEntry)
-                    ResetSetupState("OppositeSignal");
-                return;
-            }
 
             if (_hasWorkingEntry && !_entryFilledForActiveSignal)
             {

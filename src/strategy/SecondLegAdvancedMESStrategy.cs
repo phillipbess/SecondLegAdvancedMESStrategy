@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NinjaTrader.Cbi;
 using NinjaTrader.NinjaScript;
 using NinjaTrader.NinjaScript.Indicators;
@@ -12,6 +13,8 @@ namespace NinjaTrader.NinjaScript.Strategies
         public const int V1ImpulseBars = 3;
         public const double V1StrongBodyPct = 0.50;
         public const int V1MinStrongBars = 2;
+        public const int RthOpenHhmm = 930;
+        public const int RthCloseHhmm = 1600;
 
         private readonly List<StructureLevel> _structureLevels = new List<StructureLevel>();
         private readonly Dictionary<string, DateTime> _decisionDebounce = new Dictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
@@ -19,7 +22,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         private SecondLegBias _activeBias = SecondLegBias.Neutral;
 
         private DateTime _sessionAnchor = DateTime.MinValue;
-        private DateTime _contextTradingDate = DateTime.MinValue;
+        private DateTime _rthTradingDate = DateTime.MinValue;
         private DateTime _lastStateTransitionUtc = DateTime.MinValue;
 
         private double _atrValue;
@@ -27,10 +30,10 @@ namespace NinjaTrader.NinjaScript.Strategies
         private double _emaSlowValue;
         private double _emaFastSlopeAtrPct;
         private double _atrRegimeRatio;
-        private double _priorSessionHigh = double.NaN;
-        private double _priorSessionLow = double.NaN;
-        private double _currentSessionHigh = double.NaN;
-        private double _currentSessionLow = double.NaN;
+        private double _priorRthHigh = double.NaN;
+        private double _priorRthLow = double.NaN;
+        private double _currentRthHigh = double.NaN;
+        private double _currentRthLow = double.NaN;
         private double _openingRangeHigh = double.NaN;
         private double _openingRangeLow = double.NaN;
         private double _separationHigh = double.NaN;
@@ -71,6 +74,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         private int _lastProcessedTradeCount;
         private int _lossCooldownUntilBar = -1;
         private bool _sessionResetPending;
+        private bool _rthOpenResetPending;
         private double _bestFavorablePrice;
         private bool _simpleTrailArmed;
     }
