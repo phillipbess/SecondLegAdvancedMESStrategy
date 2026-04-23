@@ -42,7 +42,8 @@ Record whether defaults are used for:
 - pullback thresholds
 - trigger expiry
 - room-to-structure gate
-- session window
+- flatten boundary / end-of-day settings
+- RTH reset / prior-RTH structure assumptions
 - hard risk rails
 
 If anything differs from the locked defaults, write it down before the run.

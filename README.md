@@ -60,8 +60,7 @@ The first-pass deterministic ladder is now in place:
 - strategy logic tests for trend, impulse, pullback, entry, regime/session
 - canonical golden cases for valid and invalid `v1` sequences
 
-The next practical milestone is NT8 compile plus disciplined Playback validation, not
-more filter expansion.
+The next practical milestone is broader NT8 proof, not more filter expansion.
 
 The canonical setup definition now lives in:
 
@@ -96,16 +95,20 @@ The canonical signoff definition now lives in:
 
 ## Honest Posture
 
-The repo is strong in source shape, but the signoff checklist still requires:
+The repo is strong in source shape, and Playback has already produced coherent trade
+lifecycle evidence plus usable logs and analysis artifacts.
 
-- NT8 compile evidence
-- playback smoke evidence
+The signoff checklist still requires broader platform proof:
+
+- NT8 compile evidence captured in a dated artifact pack
+- broader Playback coverage across the scenario matrix
 - harness evidence where parity is claimed
 
 So the right current claim is:
 
 - code and docs are advanced
-- the next phase is proof, not more strategy expansion
+- playback has started and is producing useful evidence
+- the next phase is proof breadth, not more strategy expansion
 
 ## Guiding Principle
 

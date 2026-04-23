@@ -66,6 +66,22 @@ The logging is designed to answer two different questions:
 - Why did the setup advance, block, or expire?
 - What did the runtime do with orders, protection, flattening, and recovery?
 
+### Playback And Analysis
+
+Playback is no longer hypothetical in this repo.
+
+We now have dated artifact packs, emitted `Patterns_` / `Trades_` / `Risk_` / `Debug_`
+logs, and two operator-facing analysis scripts:
+
+- [trade_narrative.py](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/src/scripts/trade_narrative.py)
+- [metrics.ps1](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/src/scripts/metrics.ps1)
+
+Those tools make the current posture much more honest:
+
+- trade narratives can now be reconstructed from real log output
+- order-management readiness can now be evaluated from real log output
+- playback findings are now being captured as dated evidence instead of ad hoc notes
+
 ### Tests
 
 The repo has a meaningful deterministic ladder:
@@ -86,8 +102,8 @@ source-level correctness is not the same as platform proof.
 
 The project still needs:
 
-- NT8 compile evidence
-- NT8 playback smoke evidence
+- NT8 compile evidence captured cleanly in-platform
+- broader NT8 Playback coverage across the scenario matrix
 - runtime-harness evidence for the touched parity lanes
 
 Those requirements are not optional, and they are the reason the signoff checklist
@@ -104,7 +120,8 @@ The strongest honest claim today is:
 - entry contract is well-defined and implemented in source
 - runtime shell parity is strong in source shape
 - logging and diagnostics are strong in source shape
-- the repo is ready for compile/playback/harness proof
+- playback is active and producing useful evidence
+- the repo still needs broader compile/playback/harness proof
 
 What should not be claimed yet:
 
@@ -118,13 +135,14 @@ If you are picking this up now, do the work in this order.
 
 1. Run local tests and preserve the current green baseline.
 2. Compile in NinjaTrader 8 and record the result in a dated evidence folder.
-3. Run playback smoke for:
-   - one valid long lifecycle
-   - one valid short lifecycle
+3. Continue Playback against the scenario matrix, especially:
+   - clean short symmetry
    - stale trigger expiry
    - flatten-before-close
-   - protective stop presence and trail changes
-4. Review the emitted `Patterns_`, `Trades_`, `Risk_`, and `Debug_` logs.
+   - protective replace / recovery breadth
+4. Review the emitted `Patterns_`, `Trades_`, `Risk_`, and `Debug_` logs with:
+   - [trade_narrative.py](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/src/scripts/trade_narrative.py)
+   - [metrics.ps1](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/src/scripts/metrics.ps1)
 5. Run or extend the runtime harness for the touched parity lanes.
 6. Only then update signoff language.
 
@@ -151,5 +169,5 @@ If you are changing observability, start with:
 
 This repo is no longer in the “what should this be?” phase.
 
-It is in the “prove the current implementation in the platform, with logs and evidence”
+It is in the “expand platform proof and scenario coverage, with logs and evidence”
 phase.

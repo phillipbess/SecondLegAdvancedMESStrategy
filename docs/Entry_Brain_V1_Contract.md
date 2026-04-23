@@ -280,6 +280,11 @@ For short:
 - track:
   - `leg2High = highest high after separation`
 
+If leg 2 extends but still remains corrective and valid, the candidate may refresh
+instead of being treated as a dead setup. That refresh must still preserve the rule
+that a valid signal bar comes after the bar that most recently completed the leg-2
+candidate.
+
 ## Retracement Rules
 
 For long:
@@ -337,6 +342,13 @@ For short:
 - signal bar must be later than the bar that completed the leg-2 candidate
 - `Close[0] <= midpoint of bar`
 - bar must not make a new deeper leg-2 high
+
+Important:
+
+- same-bar signal qualification remains disallowed
+- if the leg-2 candidate refreshes, the next eligible signal bar moves forward with it
+- the goal is to avoid noisy `SignalInvalid` churn while the same basic setup is still
+  alive
 
 Midpoint rule:
 
@@ -481,7 +493,8 @@ These remain configurable in `v1`:
 - `MaxStopAtrMultiple`
 - `MinRoomToStructureR`
 - `SwingLookbackBars`
-- session times
+- `FlattenBeforeClose`
+- `FlattenTimeHhmm`
 - hard risk guardrails
 
 ## Required Deterministic Tests
