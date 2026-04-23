@@ -157,17 +157,17 @@ The code should not mark leg 2 as "failed" before the trigger actually confirms.
 Long trend context:
 
 - `Close[0] > EMA200`
-- `EMA50 slope per bar >= SlopeMinAtrPctPerBar * ATR`
+- `atrNormalizedSlope >= SlopeMinAtrPctPerBar`
 
 Short trend context:
 
 - `Close[0] < EMA200`
-- `EMA50 slope per bar <= -SlopeMinAtrPctPerBar * ATR`
+- `atrNormalizedSlope <= -SlopeMinAtrPctPerBar`
 
 ATR-normalized slope:
 
 - `emaSlopePerBar = (EMA50[0] - EMA50[SlopeLookbackBars]) / SlopeLookbackBars`
-- `atrNormalizedSlope = emaSlopePerBar / ATR`
+- `atrNormalizedSlope = emaSlopePerBar / max(ATR, TickSize)`
 
 ## ATR Regime Rules
 
@@ -230,13 +230,22 @@ After a valid impulse, price must begin a countertrend pullback.
 
 For long:
 
-- leg 1 is a meaningful move down from the impulse high
+- leg 1 starts on the first closed bar after the impulse that makes either:
+  - `Low[0] < Low[1]`
+  - `Close[0] < Close[1]`
 - track `pullbackLeg1Low`
 
 For short:
 
-- leg 1 is a meaningful move up from the impulse low
+- leg 1 starts on the first closed bar after the impulse that makes either:
+  - `High[0] > High[1]`
+  - `Close[0] > Close[1]`
 - track `pullbackLeg1High`
+
+Persist and measure:
+
+- `pullbackStartBar = leg1.StartBar`
+- `totalPullbackBars = CurrentBar - pullbackStartBar + 1`
 
 Leg 1 remains valid only if:
 
@@ -261,6 +270,26 @@ For short, after leg 1 up, require at least one bar that:
 
 If price simply continues the same pullback without a valid separation bar, it is
 still one continuous leg, not two legs.
+
+Freeze separation consistently:
+
+For long:
+
+- `TrackingSeparation` begins on the first valid bounce bar
+- `separationHigh = highest high made during the separation phase`
+- `separationLow = lowest low made during the separation phase`
+
+For short:
+
+- `TrackingSeparation` begins on the first valid bounce bar
+- `separationHigh = highest high made during the separation phase`
+- `separationLow = lowest low made during the separation phase`
+
+Leg 2 begins on the first renewed countertrend bar after at least one valid
+separation bar.
+
+At that moment, `separationHigh` / `separationLow` are frozen and become the reference
+points for leg-2 momentum.
 
 ## Pullback Leg 2 Rules
 
@@ -362,8 +391,15 @@ Once a valid signal bar exists, compute:
 - `SignalName`
 - `EntryPrice`
 - `InitialStopPrice`
+- `StopDistance`
+- `RiskPerContract`
+- `AtrAtPlan`
 - `Quantity`
 - `ExpiryBar`
+- `StructureLevelUsed`
+- `RoomAtPlan`
+- `RequiredRoomAtPlan`
+- `StructurePriceAtPlan`
 - `Reason`
 
 For long:
@@ -389,6 +425,28 @@ Reject if:
 
 - `riskPerContract <= 0`
 - `Quantity <= 0`
+
+Once the entry is armed and the strategy enters `WaitingForTrigger`, the plan snapshot
+is frozen for `v1`.
+
+Freeze at arm time:
+
+- `EntryPrice`
+- `InitialStopPrice`
+- `StopDistance`
+- `RiskPerContract`
+- `Quantity`
+- `ExpiryBar`
+- `AtrAtPlan`
+- `StructureLevelUsed`
+- `RoomAtPlan`
+- `RequiredRoomAtPlan`
+- `StructurePriceAtPlan`
+
+Do not recompute size, stop-width validity, or structure-room validity while the armed
+entry waits to trigger.
+
+Only invalidate the armed entry on the explicit pre-fill cancellation rules.
 
 ## Structure-Room Gate
 
@@ -428,6 +486,16 @@ Pass only if:
 - `room >= MinRoomToStructureR * stopDistance`
 
 If no valid candidate exists, structure is treated as clear.
+
+For `v1`, use a simple deterministic swing definition:
+
+- `recentSwingHigh = highest high of the prior SwingLookbackBars closed bars, excluding the current signal bar`
+- `recentSwingLow = lowest low of the prior SwingLookbackBars closed bars, excluding the current signal bar`
+
+Only use the swing if it is actually opposing the planned entry:
+
+- long: swing high must be above `EntryPrice`
+- short: swing low must be below `EntryPrice`
 
 ## Entry Expiry And Cancellation
 
@@ -538,8 +606,9 @@ At minimum, diagnostics should distinguish:
 7. Pullback leg 2 valid
 8. Leg 2 remains corrective
 9. Signal bar appears
-10. Stop entry triggers
-11. Room to structure is sufficient
-12. Risk is acceptable
+10. Entry / stop / size are planned
+11. Risk is acceptable
+12. Room to structure is sufficient
+13. Stop entry triggers
 
 Everything else is deferred until this base version proves itself.

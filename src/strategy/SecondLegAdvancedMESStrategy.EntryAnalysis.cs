@@ -641,12 +641,19 @@ namespace NinjaTrader.NinjaScript.Strategies
                 Reason = entryReason,
                 EntryPrice = plannedEntryPrice,
                 InitialStopPrice = plannedStopPrice,
+                StopDistance = stopDistance,
+                RiskPerContract = riskPerContract,
+                AtrAtPlan = _atrValue,
+                StructureLevelUsed = _lastStructureLabel,
+                RoomAtPlan = _lastStructureRoom,
+                RequiredRoomAtPlan = _lastStructureRequiredRoom,
+                StructurePriceAtPlan = _lastStructurePrice,
                 Quantity = pendingEntryQuantity,
                 ExpiryBar = expiryBar,
             };
             WriteEntryObservation(
                 "ENTRY_ARMED",
-                $"signal={pendingEntrySignal} bias={plannedEntryBias} entry={plannedEntryPrice:F2} stop={plannedStopPrice:F2} qty={pendingEntryQuantity} expiry={expiryBar}");
+                $"signal={pendingEntrySignal} bias={plannedEntryBias} entry={plannedEntryPrice:F2} stop={plannedStopPrice:F2} qty={pendingEntryQuantity} expiry={expiryBar} stopDistance={stopDistance:F2} atr={_atrValue:F2} structure={_lastStructureLabel} room={_lastStructureRoom:F2} required={_lastStructureRequiredRoom:F2}");
             return true;
         }
 

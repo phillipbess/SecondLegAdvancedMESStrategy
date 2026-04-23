@@ -73,6 +73,13 @@ namespace NinjaTrader.NinjaScript.Strategies
         public string Reason { get; set; }
         public double EntryPrice { get; set; }
         public double InitialStopPrice { get; set; }
+        public double StopDistance { get; set; }
+        public double RiskPerContract { get; set; }
+        public double AtrAtPlan { get; set; }
+        public string StructureLevelUsed { get; set; }
+        public double RoomAtPlan { get; set; }
+        public double RequiredRoomAtPlan { get; set; }
+        public double StructurePriceAtPlan { get; set; }
         public int Quantity { get; set; }
         public int ExpiryBar { get; set; }
 
@@ -80,8 +87,15 @@ namespace NinjaTrader.NinjaScript.Strategies
         {
             SignalName = string.Empty;
             Reason = string.Empty;
+            StructureLevelUsed = string.Empty;
             Bias = SecondLegBias.Neutral;
             ExpiryBar = -1;
+            StopDistance = double.NaN;
+            RiskPerContract = double.NaN;
+            AtrAtPlan = double.NaN;
+            RoomAtPlan = double.NaN;
+            RequiredRoomAtPlan = double.NaN;
+            StructurePriceAtPlan = double.NaN;
         }
 
         public bool IsValid =>
