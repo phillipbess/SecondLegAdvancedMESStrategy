@@ -1,0 +1,6 @@
+variant,side,leg2MomentumMax,minRoomToStructureR,triggered,win2R,stops,timeouts,netR,avgR,backtestId
+short_leg2_0_60,short,0.60,1.00,19,8,9,2,8.25,0.43,18ff9c64b0dbac3712b19693f6d9a2a9
+short_leg2_0_65,short,0.65,1.00,20,8,10,2,7.25,0.36,8f191561ffc70e1afb9d1763cd6bbb13
+short_leg2_0_70,short,0.70,1.00,20,8,10,2,7.25,0.36,105b347d60f58c470e25c0d173ffe3b5
+short_leg2_0_65_room_0_75,short,0.65,0.75,25,9,13,3,5.84,0.23,f221e29b98eb1af92c4fb5b5fa5d489a
+short_leg2_0_65_room_1_25,short,0.65,1.25,9,2,6,1,-0.65,-0.07,66698032ba8ef079bd80087c31c1d708

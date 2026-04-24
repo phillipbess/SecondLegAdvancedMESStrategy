@@ -63,3 +63,7 @@ Run a short-only refinement pass around the best zone:
 - optional structure-room sensitivity only on shorts
 
 Then inspect the short trade rows for clustering, year-by-year stability, and whether the profits are dominated by one market regime.
+
+Follow-up completed:
+
+- `docs/research/quantconnect-short-refinement-2026-04-24.md`

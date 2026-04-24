@@ -1,0 +1,86 @@
+Started compiling project 'SecondLegQCSpike'
+Build Request Successful for Project ID: 30595690, with CompileID: 
+a7917312e822a6640929914911326a82-309c03d506ef7d145211d5a2500a58ae, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike'
+Started backtest named 'SecondLeg short 0.60 2025-2026' for project 
+'SecondLegQCSpike'
+Backtest url: 
+https://www.quantconnect.com/project/30595690/58b133790ae1803f3c584c6f8ab63ee2
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 5m Bars           | 22839            | Armed             | 6                |
+| Avg R             | 1.09             | Block 1           | SecondLegTooShal |
+|                   |                  |                   | low:219          |
+| Block 2           | SecondLegTooDeep | Block 3           | PullbackTooDeep: |
+|                   | :92              |                   | 83               |
+| Block 4           | PullbackTooLong: | Block 5           | SecondLegTooStro |
+|                   | 68               |                   | ng:52            |
+| Block Types       | 9                | Equity            | $100,000.00      |
+| Expired           | 2                | Export Key        | 30595690/secondl |
+|                   |                  |                   | eg_trade_export_ |
+|                   |                  |                   | 20250424_2026042 |
+|                   |                  |                   | 3_side_short_leg |
+|                   |                  |                   | 2_0p6_imp_1p25_r |
+|                   |                  |                   | oom_1.csv        |
+| Fees              | -$0.00           | Holdings          | $0.00            |
+| Impulses          | 234              | Leg1              | 148              |
+| Leg2 Candidates   | 19               | Long Armed        | 0                |
+| Net Profit        | $0.00            | Net R             | 4.35             |
+| Params            | side=short       | Probabilistic     | 0%               |
+|                   | imp=1.25         | Sharpe Ratio      |                  |
+|                   | retr=0.236-0.618 |                   |                  |
+|                   | leg2=0.6 room=1  |                   |                  |
+| Return            | 0.00 %           | RiskTooSmall      | 4                |
+| RTH 5m Bars       | 19602            | Separations       | 79               |
+| Short Armed       | 6                | SignalInvalid     | 1                |
+| Stops             | 1                | StopTooWide       | 8                |
+| StructureRoom     | 5                | T01               | 25-05-22 11:20 S |
+|                   |                  |                   | Stop r=-1        |
+|                   |                  |                   | l2=0.3824        |
+|                   |                  |                   | room=1.0701      |
+|                   |                  |                   | retr=0.4353      |
+|                   |                  |                   | bars=3           |
+| T02               | 25-07-29 14:55 S | T03               | 25-08-19 14:05 S |
+|                   | TwoR r=2         |                   | Timeout r=1.3536 |
+|                   | l2=0.1636        |                   | l2=0.554         |
+|                   | room=1.0249      |                   | room=1.3536      |
+|                   | retr=0.6 bars=10 |                   | retr=0.5122      |
+|                   |                  |                   | bars=23          |
+| T04               | 26-03-18 11:20 S | Timeouts          | 1                |
+|                   | TwoR r=2         |                   |                  |
+|                   | l2=0.3831        |                   |                  |
+|                   | room=2.1766      |                   |                  |
+|                   | retr=0.3871      |                   |                  |
+|                   | bars=17          |                   |                  |
+| Touch 1R          | 3                | Trend Bars        | 4087             |
+| Triggered         | 4                | Unrealized        | $0.00            |
+| Virtual Trades    | 4                | Volume            | $0.00            |
+| Win 2R            | 2                |                   |                  |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -2.049           |
+| Tracking Error    | 0.104            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 58b133790ae1803f3c584c6f8ab63ee2
+Backtest name: SecondLeg short 0.60 2025-2026
+Backtest url: 
+https://www.quantconnect.com/project/30595690/58b133790ae1803f3c584c6f8ab63ee2
