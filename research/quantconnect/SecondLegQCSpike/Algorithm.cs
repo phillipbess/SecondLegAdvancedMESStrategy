@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using QuantConnect;
 using QuantConnect.Algorithm;
@@ -24,18 +25,18 @@ namespace QuantConnect.Algorithm.CSharp
         private const int AtrRegimeLookback = 50;
         private const double MinAtrRegimeRatio = 0.75;
         private const double MaxAtrRegimeRatio = 2.25;
-        private const double MinImpulseAtrMultiple = 1.25;
-        private const int MaxPullbackBars = 12;
-        private const double MinPullbackRetracement = 0.236;
-        private const double MaxPullbackRetracement = 0.618;
-        private const double SecondLegMaxMomentumRatio = 0.80;
+        private double MinImpulseAtrMultiple = 1.25;
+        private int MaxPullbackBars = 12;
+        private double MinPullbackRetracement = 0.236;
+        private double MaxPullbackRetracement = 0.618;
+        private double SecondLegMaxMomentumRatio = 0.80;
         private const int EntryOffsetTicks = 1;
         private const int MaxTriggerBars = 3;
         private const int StopBufferTicks = 2;
-        private const double RiskPerTrade = 150.0;
+        private double RiskPerTrade = 150.0;
         private const double MaxStopAtrMultiple = 1.50;
         private const int SwingLookbackBars = 20;
-        private const double MinRoomToStructureR = 1.00;
+        private double MinRoomToStructureR = 1.00;
         private const int OpeningRangeMinutes = 30;
         private const int MaxOutcomeBars = 24;
 
@@ -88,8 +89,18 @@ namespace QuantConnect.Algorithm.CSharp
 
         public override void Initialize()
         {
-            SetStartDate(2025, 4, 24);
-            SetEndDate(2026, 4, 23);
+            DateTime startDate = DateParameter("startDate", new DateTime(2025, 4, 24));
+            DateTime endDate = DateParameter("endDate", new DateTime(2026, 4, 23));
+            MinImpulseAtrMultiple = DoubleParameter("minImpulseAtr", MinImpulseAtrMultiple);
+            MaxPullbackBars = IntParameter("maxPullbackBars", MaxPullbackBars);
+            MinPullbackRetracement = DoubleParameter("minPullbackRetracement", MinPullbackRetracement);
+            MaxPullbackRetracement = DoubleParameter("maxPullbackRetracement", MaxPullbackRetracement);
+            SecondLegMaxMomentumRatio = DoubleParameter("secondLegMaxMomentumRatio", SecondLegMaxMomentumRatio);
+            MinRoomToStructureR = DoubleParameter("minRoomToStructureR", MinRoomToStructureR);
+            RiskPerTrade = DoubleParameter("riskPerTrade", RiskPerTrade);
+
+            SetStartDate(startDate.Year, startDate.Month, startDate.Day);
+            SetEndDate(endDate.Year, endDate.Month, endDate.Day);
             SetCash(100000);
             SetTimeZone(TimeZones.NewYork);
 
@@ -103,7 +114,7 @@ namespace QuantConnect.Algorithm.CSharp
             _continuousSymbol = _future.Symbol;
             Consolidate<TradeBar>(_continuousSymbol, TimeSpan.FromMinutes(5), OnFiveMinuteBar);
 
-            Debug("SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders.");
+            Debug($"SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders. startDate={startDate:yyyy-MM-dd} endDate={endDate:yyyy-MM-dd} minImpulseAtr={MinImpulseAtrMultiple:0.###} minPullbackRetracement={MinPullbackRetracement:0.###} maxPullbackRetracement={MaxPullbackRetracement:0.###} secondLegMaxMomentumRatio={SecondLegMaxMomentumRatio:0.###} minRoomToStructureR={MinRoomToStructureR:0.###} riskPerTrade={RiskPerTrade:0.##}");
         }
 
         private void OnFiveMinuteBar(TradeBar input)
@@ -191,6 +202,7 @@ namespace QuantConnect.Algorithm.CSharp
             SetRuntimeStatistic("Timeouts", _timeouts.ToString());
             SetRuntimeStatistic("Net R", _netR.ToString("0.00"));
             SetRuntimeStatistic("Avg R", _virtualTrades > 0 ? (_netR / _virtualTrades).ToString("0.00") : "0.00");
+            SetRuntimeStatistic("Params", $"imp={MinImpulseAtrMultiple:0.###} retr={MinPullbackRetracement:0.###}-{MaxPullbackRetracement:0.###} leg2={SecondLegMaxMomentumRatio:0.###} room={MinRoomToStructureR:0.###}");
             SetRuntimeStatistic("Block Types", _blocks.Count.ToString());
             SetRuntimeStatistic("SignalInvalid", BlockCount("SignalInvalid").ToString());
             SetRuntimeStatistic("StopTooWide", BlockCount("StopTooWide").ToString());
@@ -816,6 +828,36 @@ namespace QuantConnect.Algorithm.CSharp
         private int BlockCount(string reason)
         {
             return _blocks.TryGetValue(reason, out int count) ? count : 0;
+        }
+
+        private DateTime DateParameter(string key, DateTime fallback)
+        {
+            string raw = GetParameter(key);
+            if (string.IsNullOrWhiteSpace(raw))
+                return fallback;
+            return DateTime.TryParseExact(raw, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime value)
+                ? value
+                : fallback;
+        }
+
+        private double DoubleParameter(string key, double fallback)
+        {
+            string raw = GetParameter(key);
+            if (string.IsNullOrWhiteSpace(raw))
+                return fallback;
+            return double.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out double value)
+                ? value
+                : fallback;
+        }
+
+        private int IntParameter(string key, int fallback)
+        {
+            string raw = GetParameter(key);
+            if (string.IsNullOrWhiteSpace(raw))
+                return fallback;
+            return int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out int value)
+                ? value
+                : fallback;
         }
 
         private MonthStats GetMonth(DateTime time)

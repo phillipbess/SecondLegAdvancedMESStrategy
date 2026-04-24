@@ -42,6 +42,7 @@ Behavior:
 - models MES risk using `$5` per point and `RiskPerTrade = $150`
 - observes virtual outcomes after a trigger without placing orders
 - reports detector funnel counts, block reasons, and simple R-multiple outcome stats
+- accepts LEAN CLI parameters for date range and key entry thresholds
 
 ## Cloud Data Plumbing Result
 
@@ -151,6 +152,10 @@ What it does not prove:
 - Seven triggered trades is far too small to claim an edge.
 - The virtual outcome model is a research proxy, not live order-management parity.
 - The next pass needs longer history, parameter sweeps, and eventually trade/order simulation.
+
+Follow-up 5-year sweep:
+
+- `docs/research/quantconnect-5y-sweep-2026-04-24.md`
 
 ## Next Step
 

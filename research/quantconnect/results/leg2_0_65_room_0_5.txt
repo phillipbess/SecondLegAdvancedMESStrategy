@@ -1,0 +1,64 @@
+Started compiling project 'SecondLegQCSpike'
+Build Request Successful for Project ID: 30595690, with CompileID: 
+f22ae0e09001c2c2436903f004af6f18-94208456a4814883f473caec75d56e4c, Lean 
+Version: 2.5.0.0.17679
+Successfully compiled project 'SecondLegQCSpike'
+Started backtest named 'SecondLeg 5y sweep leg2 0.65 room 0.5' for project 
+'SecondLegQCSpike'
+Backtest url: 
+https://www.quantconnect.com/project/30595690/c3f13a65c39bd85d988795deebbaf03f
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 5m Bars           | 114201           | Armed             | 55               |
+| Avg R             | 0.08             | Block 1           | SecondLegTooShal |
+|                   |                  |                   | low:1870         |
+| Block 2           | PullbackTooDeep: | Block 3           | SecondLegTooDeep |
+|                   | 950              |                   | :789             |
+| Block 4           | PullbackTooLong: | Block 5           | SecondLegTooStro |
+|                   | 650              |                   | ng:463           |
+| Block Types       | 9                | Equity            | $100,000.00      |
+| Expired           | 8                | Fees              | -$0.00           |
+| Holdings          | $0.00            | Impulses          | 2760             |
+| Leg1              | 1534             | Leg2 Candidates   | 248              |
+| Long Armed        | 23               | Net Profit        | $0.00            |
+| Net R             | 3.82             | Params            | imp=1.25         |
+|                   |                  |                   | retr=0.236-0.618 |
+|                   |                  |                   | leg2=0.65        |
+|                   |                  |                   | room=0.5         |
+| Probabilistic     | 0%               | Return            | 0.00 %           |
+| Sharpe Ratio      |                  |                   |                  |
+| RiskTooSmall      | 20               | RTH 5m Bars       | 97951            |
+| Separations       | 762              | Short Armed       | 32               |
+| SignalInvalid     | 61               | Stops             | 26               |
+| StopTooWide       | 164              | StructureRoom     | 45               |
+| Timeouts          | 6                | Touch 1R          | 22               |
+| Trend Bars        | 46913            | Triggered         | 46               |
+| Unrealized        | $0.00            | Virtual Trades    | 46               |
+| Volume            | $0.00            | Win 2R            | 14               |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -0.685           |
+| Tracking Error    | 0.142            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: c3f13a65c39bd85d988795deebbaf03f
+Backtest name: SecondLeg 5y sweep leg2 0.65 room 0.5
+Backtest url: 
+https://www.quantconnect.com/project/30595690/c3f13a65c39bd85d988795deebbaf03f

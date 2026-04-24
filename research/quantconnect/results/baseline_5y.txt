@@ -1,0 +1,40 @@
+Backtest name: SecondLeg MES 5y baseline
+Backtest id: b68aa58944a6d95c0ff93b6a36ef5339
+Backtest url: https://www.quantconnect.com/project/30595690/b68aa58944a6d95c0ff93b6a36ef5339
+
+Window:
+startDate=2021-04-24
+endDate=2026-04-23
+
+Runtime statistics:
+5m Bars=114201
+RTH 5m Bars=97951
+Trend Bars=46963
+Impulses=2757
+Leg1=1532
+Separations=759
+Leg2 Candidates=275
+Armed=43
+Long Armed=14
+Short Armed=29
+Triggered=37
+Expired=5
+Virtual Trades=37
+Touch 1R=13
+Win 2R=10
+Stops=23
+Timeouts=4
+Net R=-2.32
+Avg R=-0.06
+Params=imp=1.25 retr=0.236-0.618 leg2=0.8 room=1
+
+Top blockers:
+SecondLegTooShallow=1860
+PullbackTooDeep=950
+SecondLegTooDeep=769
+PullbackTooLong=658
+SecondLegTooStrong=320
+RiskTooSmall=27
+SignalInvalid=74
+StopTooWide=187
+StructureRoom=94
