@@ -40,6 +40,7 @@ namespace QuantConnect.Algorithm.CSharp
         private double MinRoomToStructureR = 1.00;
         private const int OpeningRangeMinutes = 30;
         private const int MaxOutcomeBars = 24;
+        private string SideFilter = "both";
 
         private Future _future;
         private Symbol _continuousSymbol;
@@ -102,6 +103,7 @@ namespace QuantConnect.Algorithm.CSharp
             SecondLegMaxMomentumRatio = DoubleParameter("secondLegMaxMomentumRatio", SecondLegMaxMomentumRatio);
             MinRoomToStructureR = DoubleParameter("minRoomToStructureR", MinRoomToStructureR);
             RiskPerTrade = DoubleParameter("riskPerTrade", RiskPerTrade);
+            SideFilter = TextParameter("sideFilter", SideFilter).ToLowerInvariant();
 
             SetStartDate(startDate.Year, startDate.Month, startDate.Day);
             SetEndDate(endDate.Year, endDate.Month, endDate.Day);
@@ -117,10 +119,10 @@ namespace QuantConnect.Algorithm.CSharp
 
             _continuousSymbol = _future.Symbol;
             Consolidate<TradeBar>(_continuousSymbol, TimeSpan.FromMinutes(5), OnFiveMinuteBar);
-            _tradeExportKey = $"{ProjectId}/secondleg_trade_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_leg2_{ParamToken(SecondLegMaxMomentumRatio)}_imp_{ParamToken(MinImpulseAtrMultiple)}_room_{ParamToken(MinRoomToStructureR)}.csv";
+            _tradeExportKey = $"{ProjectId}/secondleg_trade_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_side_{SideFilter}_leg2_{ParamToken(SecondLegMaxMomentumRatio)}_imp_{ParamToken(MinImpulseAtrMultiple)}_room_{ParamToken(MinRoomToStructureR)}.csv";
             _tradeExport.AppendLine("tradeId,signalTime,triggerTime,closeTime,side,entry,stop,oneR,twoR,riskPts,riskDollars,quantity,atrAtPlan,stopAtrMultiple,impulseAtrMultiple,leg1Retracement,leg2Retracement,leg2MomentumRatio,totalPullbackBars,leg1Bars,leg2Bars,structure,roomToStructureR,outcome,rMultiple,touched1R,barsHeld");
 
-            Debug($"SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders. startDate={startDate:yyyy-MM-dd} endDate={endDate:yyyy-MM-dd} minImpulseAtr={MinImpulseAtrMultiple:0.###} minPullbackRetracement={MinPullbackRetracement:0.###} maxPullbackRetracement={MaxPullbackRetracement:0.###} secondLegMaxMomentumRatio={SecondLegMaxMomentumRatio:0.###} minRoomToStructureR={MinRoomToStructureR:0.###} riskPerTrade={RiskPerTrade:0.##}");
+            Debug($"SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders. startDate={startDate:yyyy-MM-dd} endDate={endDate:yyyy-MM-dd} sideFilter={SideFilter} minImpulseAtr={MinImpulseAtrMultiple:0.###} minPullbackRetracement={MinPullbackRetracement:0.###} maxPullbackRetracement={MaxPullbackRetracement:0.###} secondLegMaxMomentumRatio={SecondLegMaxMomentumRatio:0.###} minRoomToStructureR={MinRoomToStructureR:0.###} riskPerTrade={RiskPerTrade:0.##}");
         }
 
         private void OnFiveMinuteBar(TradeBar input)
@@ -209,7 +211,7 @@ namespace QuantConnect.Algorithm.CSharp
             SetRuntimeStatistic("Timeouts", _timeouts.ToString());
             SetRuntimeStatistic("Net R", _netR.ToString("0.00"));
             SetRuntimeStatistic("Avg R", _virtualTrades > 0 ? (_netR / _virtualTrades).ToString("0.00") : "0.00");
-            SetRuntimeStatistic("Params", $"imp={MinImpulseAtrMultiple:0.###} retr={MinPullbackRetracement:0.###}-{MaxPullbackRetracement:0.###} leg2={SecondLegMaxMomentumRatio:0.###} room={MinRoomToStructureR:0.###}");
+            SetRuntimeStatistic("Params", $"side={SideFilter} imp={MinImpulseAtrMultiple:0.###} retr={MinPullbackRetracement:0.###}-{MaxPullbackRetracement:0.###} leg2={SecondLegMaxMomentumRatio:0.###} room={MinRoomToStructureR:0.###}");
             SetRuntimeStatistic("Export Key", _tradeExportKey);
             foreach (string row in _tradeRuntimeRows)
             {
@@ -771,6 +773,9 @@ namespace QuantConnect.Algorithm.CSharp
                 _activeBias = Bias.Short;
             else
                 _activeBias = Bias.Neutral;
+
+            if (!SideAllowed(_activeBias))
+                _activeBias = Bias.Neutral;
         }
 
         private bool HasStructureRoom(double entry, double stop, Bias bias, BarSnapshot bar, out string label, out double roomToStructureR)
@@ -966,6 +971,23 @@ namespace QuantConnect.Algorithm.CSharp
             return int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out int value)
                 ? value
                 : fallback;
+        }
+
+        private string TextParameter(string key, string fallback)
+        {
+            string raw = GetParameter(key);
+            return string.IsNullOrWhiteSpace(raw) ? fallback : raw.Trim();
+        }
+
+        private bool SideAllowed(Bias bias)
+        {
+            if (bias == Bias.Neutral)
+                return true;
+            if (SideFilter == "long")
+                return bias == Bias.Long;
+            if (SideFilter == "short")
+                return bias == Bias.Short;
+            return true;
         }
 
         private MonthStats GetMonth(DateTime time)

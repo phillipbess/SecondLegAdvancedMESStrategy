@@ -77,6 +77,10 @@ Candidate trade rows:
 
 - `research/quantconnect/exports/leg2_0_65_trade_rows.csv`
 
+Side-split follow-up:
+
+- `docs/research/quantconnect-side-split-2026-04-24.md`
+
 Object Store note:
 
 - The harness writes a full CSV string to QuantConnect Object Store.
@@ -120,6 +124,8 @@ Side split:
 - short average R: `+0.36R`
 
 This is useful but not yet conclusive. It says the promising 5-year result is concentrated on the short side, so the next research pass should not average long and short behavior together.
+
+Follow-up side-split testing confirmed this asymmetry: the short side was positive across all tested `SecondLegMaxMomentumRatio` values, while the long side was only break-even at `0.55` and negative at `0.65`, `0.75`, and `0.80`.
 
 ## Current Best Candidate
 
