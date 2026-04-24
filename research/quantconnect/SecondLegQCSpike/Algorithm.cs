@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using QuantConnect;
 using QuantConnect.Algorithm;
 using QuantConnect.Data.Market;
@@ -47,6 +48,8 @@ namespace QuantConnect.Algorithm.CSharp
         private readonly List<double> _atrValues = new List<double>();
         private readonly Dictionary<string, MonthStats> _monthly = new Dictionary<string, MonthStats>();
         private readonly Dictionary<string, int> _blocks = new Dictionary<string, int>();
+        private readonly StringBuilder _tradeExport = new StringBuilder();
+        private readonly List<string> _tradeRuntimeRows = new List<string>();
 
         private DateTime _sessionDate = DateTime.MinValue;
         private double _sessionHigh = double.NaN;
@@ -86,6 +89,7 @@ namespace QuantConnect.Algorithm.CSharp
         private int _stops;
         private int _timeouts;
         private double _netR;
+        private string _tradeExportKey = string.Empty;
 
         public override void Initialize()
         {
@@ -113,6 +117,8 @@ namespace QuantConnect.Algorithm.CSharp
 
             _continuousSymbol = _future.Symbol;
             Consolidate<TradeBar>(_continuousSymbol, TimeSpan.FromMinutes(5), OnFiveMinuteBar);
+            _tradeExportKey = $"{ProjectId}/secondleg_trade_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_leg2_{ParamToken(SecondLegMaxMomentumRatio)}_imp_{ParamToken(MinImpulseAtrMultiple)}_room_{ParamToken(MinRoomToStructureR)}.csv";
+            _tradeExport.AppendLine("tradeId,signalTime,triggerTime,closeTime,side,entry,stop,oneR,twoR,riskPts,riskDollars,quantity,atrAtPlan,stopAtrMultiple,impulseAtrMultiple,leg1Retracement,leg2Retracement,leg2MomentumRatio,totalPullbackBars,leg1Bars,leg2Bars,structure,roomToStructureR,outcome,rMultiple,touched1R,barsHeld");
 
             Debug($"SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders. startDate={startDate:yyyy-MM-dd} endDate={endDate:yyyy-MM-dd} minImpulseAtr={MinImpulseAtrMultiple:0.###} minPullbackRetracement={MinPullbackRetracement:0.###} maxPullbackRetracement={MaxPullbackRetracement:0.###} secondLegMaxMomentumRatio={SecondLegMaxMomentumRatio:0.###} minRoomToStructureR={MinRoomToStructureR:0.###} riskPerTrade={RiskPerTrade:0.##}");
         }
@@ -182,6 +188,7 @@ namespace QuantConnect.Algorithm.CSharp
         {
             if (_virtualTrade.IsActive)
                 CloseVirtualTrade(_bars[_bars.Count - 1], "AlgorithmEnd");
+            SaveTradeExport();
 
             SetRuntimeStatistic("5m Bars", _fiveMinuteBars.ToString());
             SetRuntimeStatistic("RTH 5m Bars", _rthFiveMinuteBars.ToString());
@@ -203,6 +210,13 @@ namespace QuantConnect.Algorithm.CSharp
             SetRuntimeStatistic("Net R", _netR.ToString("0.00"));
             SetRuntimeStatistic("Avg R", _virtualTrades > 0 ? (_netR / _virtualTrades).ToString("0.00") : "0.00");
             SetRuntimeStatistic("Params", $"imp={MinImpulseAtrMultiple:0.###} retr={MinPullbackRetracement:0.###}-{MaxPullbackRetracement:0.###} leg2={SecondLegMaxMomentumRatio:0.###} room={MinRoomToStructureR:0.###}");
+            SetRuntimeStatistic("Export Key", _tradeExportKey);
+            foreach (string row in _tradeRuntimeRows)
+            {
+                int colon = row.IndexOf(':');
+                if (colon > 0)
+                    SetRuntimeStatistic(row.Substring(0, colon), row.Substring(colon + 1));
+            }
             SetRuntimeStatistic("Block Types", _blocks.Count.ToString());
             SetRuntimeStatistic("SignalInvalid", BlockCount("SignalInvalid").ToString());
             SetRuntimeStatistic("StopTooWide", BlockCount("StopTooWide").ToString());
@@ -489,6 +503,15 @@ namespace QuantConnect.Algorithm.CSharp
             return true;
         }
 
+        private double ComputeLeg2MomentumRatio()
+        {
+            double impulseMomentum = _impulse.Range / ImpulseBars;
+            double leg2Move = _impulse.Bias == Bias.Long ? _separationHigh - _leg2.Low : _leg2.High - _separationLow;
+            int leg2Bars = Math.Max(1, _leg2.EndBar - _leg2.StartBar + 1);
+            double leg2Momentum = leg2Move / leg2Bars;
+            return impulseMomentum > 0.0 ? leg2Momentum / impulseMomentum : 0.0;
+        }
+
         private void BuildPlannedSignal(BarSnapshot bar)
         {
             double entry;
@@ -506,7 +529,8 @@ namespace QuantConnect.Algorithm.CSharp
 
             double stopDistance = Math.Abs(entry - stop);
             double riskPerContract = stopDistance * PointValue;
-            if (riskPerContract <= 0.0 || Math.Floor(RiskPerTrade / riskPerContract) <= 0)
+            double quantity = riskPerContract > 0.0 ? Math.Floor(RiskPerTrade / riskPerContract) : 0.0;
+            if (riskPerContract <= 0.0 || quantity <= 0)
             {
                 Block("RiskTooSmall");
                 return;
@@ -516,11 +540,15 @@ namespace QuantConnect.Algorithm.CSharp
                 Block("StopTooWide");
                 return;
             }
-            if (!HasStructureRoom(entry, stop, _impulse.Bias, bar, out string structure))
+            if (!HasStructureRoom(entry, stop, _impulse.Bias, bar, out string structure, out double roomToStructureR))
             {
                 Block("StructureRoom");
                 return;
             }
+
+            double leg1Retracement = ComputeRetracement(_impulse.Bias == Bias.Long ? _leg1.Low : _leg1.High);
+            double leg2Retracement = ComputeRetracement(_impulse.Bias == Bias.Long ? _leg2.Low : _leg2.High);
+            double leg2MomentumRatio = ComputeLeg2MomentumRatio();
 
             _planned = new PlannedSignal
             {
@@ -529,7 +557,20 @@ namespace QuantConnect.Algorithm.CSharp
                 Stop = stop,
                 SignalBar = bar.Index,
                 ExpiryBar = bar.Index + MaxTriggerBars,
-                Structure = structure
+                SignalTime = bar.EndTime,
+                Structure = structure,
+                RiskDollars = riskPerContract,
+                Quantity = quantity,
+                AtrAtPlan = bar.Atr,
+                StopAtrMultiple = bar.Atr > 0.0 ? stopDistance / bar.Atr : 0.0,
+                ImpulseAtrMultiple = bar.Atr > 0.0 ? _impulse.Range / bar.Atr : 0.0,
+                Leg1Retracement = leg1Retracement,
+                Leg2Retracement = leg2Retracement,
+                Leg2MomentumRatio = leg2MomentumRatio,
+                TotalPullbackBars = bar.Index - _leg1.StartBar + 1,
+                Leg1Bars = _leg1.EndBar - _leg1.StartBar + 1,
+                Leg2Bars = _leg2.EndBar - _leg2.StartBar + 1,
+                RoomToStructureR = roomToStructureR
             };
 
             _armedSignals++;
@@ -592,7 +633,22 @@ namespace QuantConnect.Algorithm.CSharp
                 TwoR = _planned.Bias == Bias.Long ? _planned.Entry + 2.0 * risk : _planned.Entry - 2.0 * risk,
                 TriggerBar = bar.Index,
                 ExpiryBar = bar.Index + MaxOutcomeBars,
-                Structure = _planned.Structure
+                TriggerTime = bar.EndTime,
+                Structure = _planned.Structure,
+                RiskDollars = _planned.RiskDollars,
+                Quantity = _planned.Quantity,
+                AtrAtPlan = _planned.AtrAtPlan,
+                StopAtrMultiple = _planned.StopAtrMultiple,
+                ImpulseAtrMultiple = _planned.ImpulseAtrMultiple,
+                Leg1Retracement = _planned.Leg1Retracement,
+                Leg2Retracement = _planned.Leg2Retracement,
+                Leg2MomentumRatio = _planned.Leg2MomentumRatio,
+                TotalPullbackBars = _planned.TotalPullbackBars,
+                Leg1Bars = _planned.Leg1Bars,
+                Leg2Bars = _planned.Leg2Bars,
+                RoomToStructureR = _planned.RoomToStructureR,
+                SignalTime = _planned.SignalTime,
+                TradeId = _virtualTrades + 1
             };
 
             _virtualTrades++;
@@ -651,8 +707,57 @@ namespace QuantConnect.Algorithm.CSharp
                 _timeouts++;
 
             _netR += realizedR;
+            AppendTradeExport(bar, reason, realizedR);
             Debug($"VIRTUAL_TRADE_CLOSE time={bar.EndTime:yyyy-MM-dd HH:mm} reason={reason} side={_virtualTrade.Bias} r={realizedR:0.00} touched1R={_virtualTrade.TouchedOneR}");
             _virtualTrade = new VirtualTrade();
+        }
+
+        private void AppendTradeExport(BarSnapshot bar, string outcome, double rMultiple)
+        {
+            int barsHeld = Math.Max(0, bar.Index - _virtualTrade.TriggerBar + 1);
+            _tradeExport.AppendLine(string.Join(",", new[]
+            {
+                _virtualTrade.TradeId.ToString(CultureInfo.InvariantCulture),
+                CsvTime(_virtualTrade.SignalTime),
+                CsvTime(_virtualTrade.TriggerTime),
+                CsvTime(bar.EndTime),
+                _virtualTrade.Bias.ToString(),
+                N(_virtualTrade.Entry),
+                N(_virtualTrade.Stop),
+                N(_virtualTrade.OneR),
+                N(_virtualTrade.TwoR),
+                N(Math.Abs(_virtualTrade.Entry - _virtualTrade.Stop)),
+                N(_virtualTrade.RiskDollars),
+                N(_virtualTrade.Quantity),
+                N(_virtualTrade.AtrAtPlan),
+                N(_virtualTrade.StopAtrMultiple),
+                N(_virtualTrade.ImpulseAtrMultiple),
+                N(_virtualTrade.Leg1Retracement),
+                N(_virtualTrade.Leg2Retracement),
+                N(_virtualTrade.Leg2MomentumRatio),
+                _virtualTrade.TotalPullbackBars.ToString(CultureInfo.InvariantCulture),
+                _virtualTrade.Leg1Bars.ToString(CultureInfo.InvariantCulture),
+                _virtualTrade.Leg2Bars.ToString(CultureInfo.InvariantCulture),
+                CsvText(_virtualTrade.Structure),
+                N(_virtualTrade.RoomToStructureR),
+                outcome,
+                N(rMultiple),
+                _virtualTrade.TouchedOneR ? "true" : "false",
+                barsHeld.ToString(CultureInfo.InvariantCulture)
+            }));
+
+            string side = _virtualTrade.Bias == Bias.Long ? "L" : "S";
+            _tradeRuntimeRows.Add(
+                $"T{_virtualTrade.TradeId:00}:{CsvTime(_virtualTrade.TriggerTime).Substring(2)} {side} {outcome} r={N(rMultiple)} l2={N(_virtualTrade.Leg2MomentumRatio)} room={N(_virtualTrade.RoomToStructureR)} retr={N(_virtualTrade.Leg2Retracement)} bars={barsHeld}");
+        }
+
+        private void SaveTradeExport()
+        {
+            if (string.IsNullOrWhiteSpace(_tradeExportKey))
+                return;
+
+            bool saved = ObjectStore.Save(_tradeExportKey, _tradeExport.ToString());
+            Debug($"TRADE_EXPORT_SAVE key={_tradeExportKey} rows={_virtualTrades} saved={saved}");
         }
 
         private void RefreshTrendContext(BarSnapshot bar)
@@ -668,9 +773,10 @@ namespace QuantConnect.Algorithm.CSharp
                 _activeBias = Bias.Neutral;
         }
 
-        private bool HasStructureRoom(double entry, double stop, Bias bias, BarSnapshot bar, out string label)
+        private bool HasStructureRoom(double entry, double stop, Bias bias, BarSnapshot bar, out string label, out double roomToStructureR)
         {
             label = "clear";
+            roomToStructureR = 999.0;
             double risk = Math.Max(TickSize, Math.Abs(entry - stop));
             double required = risk * MinRoomToStructureR;
             var levels = BuildStructureLevels(bar);
@@ -683,6 +789,7 @@ namespace QuantConnect.Algorithm.CSharp
                 if (resistance == null)
                     return true;
                 label = resistance.Label;
+                roomToStructureR = (resistance.Price - entry) / risk;
                 return resistance.Price - entry >= required;
             }
 
@@ -692,6 +799,7 @@ namespace QuantConnect.Algorithm.CSharp
             if (support == null)
                 return true;
             label = support.Label;
+            roomToStructureR = (entry - support.Price) / risk;
             return entry - support.Price >= required;
         }
 
@@ -904,6 +1012,30 @@ namespace QuantConnect.Algorithm.CSharp
             return sum / take;
         }
 
+        private static string N(double value)
+        {
+            return value.ToString("0.####", CultureInfo.InvariantCulture);
+        }
+
+        private static string CsvTime(DateTime value)
+        {
+            return value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+        }
+
+        private static string CsvText(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return string.Empty;
+            return value.Contains(",") || value.Contains("\"")
+                ? $"\"{value.Replace("\"", "\"\"")}\""
+                : value;
+        }
+
+        private static string ParamToken(double value)
+        {
+            return value.ToString("0.###", CultureInfo.InvariantCulture).Replace(".", "p");
+        }
+
         private enum Bias { Neutral, Long, Short }
         private enum SetupState { SeekingImpulse, TrackingPullbackLeg1, TrackingSeparation, TrackingPullbackLeg2, WaitingForSignalBar, WaitingForTrigger }
         private enum StructureKind { Support, Resistance }
@@ -969,12 +1101,26 @@ namespace QuantConnect.Algorithm.CSharp
             public double Stop;
             public int SignalBar = -1;
             public int ExpiryBar = -1;
+            public DateTime SignalTime;
             public string Structure = string.Empty;
+            public double RiskDollars;
+            public double Quantity;
+            public double AtrAtPlan;
+            public double StopAtrMultiple;
+            public double ImpulseAtrMultiple;
+            public double Leg1Retracement;
+            public double Leg2Retracement;
+            public double Leg2MomentumRatio;
+            public int TotalPullbackBars;
+            public int Leg1Bars;
+            public int Leg2Bars;
+            public double RoomToStructureR;
             public bool IsActive => SignalBar >= 0 && Bias != Bias.Neutral;
         }
 
         private sealed class VirtualTrade
         {
+            public int TradeId;
             public Bias Bias = Bias.Neutral;
             public double Entry;
             public double Stop;
@@ -982,7 +1128,21 @@ namespace QuantConnect.Algorithm.CSharp
             public double TwoR;
             public int TriggerBar = -1;
             public int ExpiryBar = -1;
+            public DateTime SignalTime;
+            public DateTime TriggerTime;
             public string Structure = string.Empty;
+            public double RiskDollars;
+            public double Quantity;
+            public double AtrAtPlan;
+            public double StopAtrMultiple;
+            public double ImpulseAtrMultiple;
+            public double Leg1Retracement;
+            public double Leg2Retracement;
+            public double Leg2MomentumRatio;
+            public int TotalPullbackBars;
+            public int Leg1Bars;
+            public int Leg2Bars;
+            public double RoomToStructureR;
             public bool TouchedOneR;
             public bool IsActive => TriggerBar >= 0 && Bias != Bias.Neutral;
         }

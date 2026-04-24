@@ -73,6 +73,17 @@ Raw CLI outputs are saved under:
 
 - `research/quantconnect/results/`
 
+Candidate trade rows:
+
+- `research/quantconnect/exports/leg2_0_65_trade_rows.csv`
+
+Object Store note:
+
+- The harness writes a full CSV string to QuantConnect Object Store.
+- The current account can save the object, but CLI download is blocked by QuantConnect account-tier restrictions.
+- To keep the workflow moving, the harness also emits compact `T01`, `T02`, etc. runtime-stat trade rows that are captured in `research/quantconnect/results/leg2_0_65_trade_rows.txt`.
+- The clean CSV above was transcribed from those runtime-stat rows.
+
 ## Research Read
 
 The useful clue is very specific:
@@ -87,6 +98,28 @@ That aligns with the original market idea:
 trend -> impulse -> controlled two-legged correction -> failed second countertrend attempt -> continuation
 
 When leg 2 is too forceful, it may no longer be a controlled correction. It may be early reversal pressure.
+
+## Candidate Trade Row Read
+
+The `leg2=0.65` candidate produced:
+
+- trades: `27`
+- net R: `+6.25R`
+- average R: `+0.23R`
+- 2R wins: `10`
+- stops: `15`
+- timeouts: `2`
+
+Side split:
+
+- long trades: `7`
+- long net R: `-1.00R`
+- long average R: `-0.14R`
+- short trades: `20`
+- short net R: `+7.25R`
+- short average R: `+0.36R`
+
+This is useful but not yet conclusive. It says the promising 5-year result is concentrated on the short side, so the next research pass should not average long and short behavior together.
 
 ## Current Best Candidate
 
