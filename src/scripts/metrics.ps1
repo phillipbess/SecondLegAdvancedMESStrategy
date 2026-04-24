@@ -26,14 +26,17 @@ function Test-SegmentActive([string[]]$segment) {
 }
 
 $files = Get-ChildItem -Recurse -File -Path $Path -Include Trades_*.txt, Risk_*.txt -ErrorAction SilentlyContinue
+$csvFiles = Get-ChildItem -Recurse -File -Path $Path -Include TradesCsv_*.csv, StopEvents_*.csv -ErrorAction SilentlyContinue
 if ($files.Count -eq 0) { Write-Host "No log files found under $Path"; exit 1 }
 
 if ($RunId) {
   $files = $files | Where-Object { $_.Name -like ("*{0}*" -f $RunId) }
+  $csvFiles = $csvFiles | Where-Object { $_.Name -like ("*{0}*" -f $RunId) }
   if ($files.Count -eq 0) { Write-Host "No files matched the specified RunId."; exit 1 }
 }
 elseif ($LogDate) {
   $files = $files | Where-Object { $_.Name -like ("*{0}*" -f $LogDate) }
+  $csvFiles = $csvFiles | Where-Object { $_.Name -like ("*{0}*" -f $LogDate) }
   if ($files.Count -eq 0) { Write-Host "No files matched the specified LogDate."; exit 1 }
 }
 elseif ($Latest) {
@@ -41,6 +44,7 @@ elseif ($Latest) {
   if ($null -ne $latestFile) {
     $latestDate = $latestFile.LastWriteTime.Date
     $files = $files | Where-Object { $_.LastWriteTime.Date -eq $latestDate }
+    $csvFiles = $csvFiles | Where-Object { $_.LastWriteTime.Date -eq $latestDate }
     Write-Host ("Using latest log date: {0:yyyy-MM-dd} (files={1})" -f $latestDate, ($files.Count))
   }
 }
@@ -110,6 +114,8 @@ $postFlatSignals = 0
 $leakage = 0
 $firstStopSla = @()
 $firstStopSlaFails = 0
+$tradesCsvFiles = @($csvFiles | Where-Object { $_.Name -like 'TradesCsv_*' })
+$stopEventsCsvFiles = @($csvFiles | Where-Object { $_.Name -like 'StopEvents_*' })
 
 foreach ($line in $all) {
   if ($line -notmatch '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} \| \[[A-Z0-9_ ]+\]') { continue }
@@ -282,6 +288,8 @@ $summary = [PSCustomObject]@{
   OmHealth = $omHealth
   PostFlatSignals = $postFlatSignals
   ManagedLeakage = $leakage
+  TradesCsvFiles = $tradesCsvFiles.Count
+  StopEventsCsvFiles = $stopEventsCsvFiles.Count
   Score = $score
   OverallStatus = $(if ($hardFail -or $score -lt 90) { "FAIL" } else { "PASS" })
 }

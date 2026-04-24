@@ -71,7 +71,8 @@ The logging is designed to answer two different questions:
 Playback is no longer hypothetical in this repo.
 
 We now have dated artifact packs, emitted `Patterns_` / `Trades_` / `Risk_` / `Debug_`
-logs, and two operator-facing analysis scripts:
+text logs, Mancini-compatible `TradesCsv_` / `StopEvents_` CSV outputs, and two
+operator-facing analysis scripts:
 
 - [trade_narrative.py](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/src/scripts/trade_narrative.py)
 - [metrics.ps1](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/src/scripts/metrics.ps1)
@@ -79,6 +80,8 @@ logs, and two operator-facing analysis scripts:
 Those tools make the current posture much more honest:
 
 - trade narratives can now be reconstructed from real log output
+- completed trades now have one-row CSV summaries for spreadsheet/pipeline review
+- stop and protective events now have Mancini-shaped CSV rows for order-management review
 - order-management readiness can now be evaluated from real log output
 - playback findings are now being captured as dated evidence instead of ad hoc notes
 
@@ -140,7 +143,7 @@ If you are picking this up now, do the work in this order.
    - stale trigger expiry
    - flatten-before-close
    - protective replace / recovery breadth
-4. Review the emitted `Patterns_`, `Trades_`, `Risk_`, and `Debug_` logs with:
+4. Review the emitted `Patterns_`, `Trades_`, `Risk_`, `Debug_`, `TradesCsv_`, and `StopEvents_` logs with:
    - [trade_narrative.py](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/src/scripts/trade_narrative.py)
    - [metrics.ps1](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/src/scripts/metrics.ps1)
 5. Run or extend the runtime harness for the touched parity lanes.

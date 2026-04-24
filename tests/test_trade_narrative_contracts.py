@@ -19,6 +19,8 @@ def test_find_log_files_uses_single_latest_session_when_date_omitted(tmp_path, m
     touch(tmp_path / "Patterns_20260423_MES_Playback101.txt", "patterns new", 200)
     touch(tmp_path / "Trades_20260423_MES_Playback101.txt", "trades new", 210)
     touch(tmp_path / "Risk_20260423_MES_Playback101.txt", "risk new", 220)
+    touch(tmp_path / "TradesCsv_20260423_MES_Playback101.csv", "trade csv new", 221)
+    touch(tmp_path / "StopEvents_20260423_MES_Playback101.csv", "stop events new", 222)
 
     files, selected = trade_narrative.find_log_files()
 
@@ -26,6 +28,8 @@ def test_find_log_files_uses_single_latest_session_when_date_omitted(tmp_path, m
     assert files["Patterns"].name == "Patterns_20260423_MES_Playback101.txt"
     assert files["Trades"].name == "Trades_20260423_MES_Playback101.txt"
     assert files["Risk"].name == "Risk_20260423_MES_Playback101.txt"
+    assert files["TradesCsv"].name == "TradesCsv_20260423_MES_Playback101.csv"
+    assert files["StopEvents"].name == "StopEvents_20260423_MES_Playback101.csv"
 
 
 def test_build_trade_narratives_recovers_setup_and_trade_story(tmp_path, monkeypatch) -> None:

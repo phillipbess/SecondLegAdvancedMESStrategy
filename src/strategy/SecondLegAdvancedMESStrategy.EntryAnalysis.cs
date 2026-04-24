@@ -397,7 +397,16 @@ namespace NinjaTrader.NinjaScript.Strategies
                     Low = ClosedBarLow(),
                     Range = ClosedBarHigh() - ClosedBarLow(),
                 };
-                return false;
+
+                double startingRetracement = ComputeRetracement(_impulse.Bias == SecondLegBias.Long ? _pullbackLeg1.Low : _pullbackLeg1.High);
+                _lastImpulseRetracement = startingRetracement;
+                if (startingRetracement > MaxPullbackRetracement)
+                {
+                    ResetSetupState("PullbackTooDeep");
+                    return false;
+                }
+
+                return startingRetracement >= MinPullbackRetracement;
             }
 
             _pullbackLeg1.EndBar = ClosedBarIndex();
@@ -445,13 +454,14 @@ namespace NinjaTrader.NinjaScript.Strategies
                     Low = ClosedBarLow(),
                     Range = ClosedBarHigh() - ClosedBarLow(),
                 };
-                return false;
             }
-
-            _pullbackLeg2.EndBar = ClosedBarIndex();
-            _pullbackLeg2.High = Math.Max(_pullbackLeg2.High, ClosedBarHigh());
-            _pullbackLeg2.Low = Math.Min(_pullbackLeg2.Low, ClosedBarLow());
-            _pullbackLeg2.Range = _pullbackLeg2.High - _pullbackLeg2.Low;
+            else
+            {
+                _pullbackLeg2.EndBar = ClosedBarIndex();
+                _pullbackLeg2.High = Math.Max(_pullbackLeg2.High, ClosedBarHigh());
+                _pullbackLeg2.Low = Math.Min(_pullbackLeg2.Low, ClosedBarLow());
+                _pullbackLeg2.Range = _pullbackLeg2.High - _pullbackLeg2.Low;
+            }
 
             int totalBars = ClosedBarIndex() - _pullbackLeg1.StartBar + 1;
             double retracement = ComputeRetracement(_impulse.Bias == SecondLegBias.Long ? _pullbackLeg2.Low : _pullbackLeg2.High);
@@ -668,7 +678,8 @@ namespace NinjaTrader.NinjaScript.Strategies
                 return 0.0;
 
             double delta = ClosedBarFastEma() - ClosedBarFastEma(SlopeLookbackBars);
-            return (delta / SlopeLookbackBars) / _atrValue;
+            double slopeDenominator = Math.Max(_atrValue, TickSize);
+            return (delta / SlopeLookbackBars) / slopeDenominator;
         }
 
         private double ComputeAtrRegimeRatio()

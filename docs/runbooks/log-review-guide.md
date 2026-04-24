@@ -17,6 +17,10 @@ If the question is:
   - start with `Risk_`
 - "What exact internal runtime step happened around the anomaly?"
   - use `Debug_`
+- "What machine-readable row summarizes the completed trade?"
+  - use `TradesCsv_`
+- "What machine-readable row captures stop/protective events?"
+  - use `StopEvents_`
 
 ## `Patterns_`
 
@@ -56,6 +60,16 @@ Questions it should answer:
 
 If `Trades_` and `Risk_` disagree, trust neither blindly. Reconcile them with `Debug_`.
 
+## `TradesCsv_`
+
+Use `TradesCsv_` as the Mancini-compatible trade summary lane.
+
+It emits one CSV row per completed trade with the stable header:
+
+`TradeID,Signal,Side,Qty,Entry,EntryTime,Exit,ExitTime,PnL_USD,PnL_pts_per_ct,R,PeakProfit_pts,MaxDrawdown_pts,CapturePct,DurationMin,Reason,TrailArmPx,TrailExitPx,TOD,VolRegime,Risk_USD,SupportLevel,BreakdownDepth_pts,BreakdownLow`
+
+For SecondLeg, Mancini-specific breakdown fields and true MAE/max-drawdown are intentionally blank for now rather than guessed. The key fields for playback review are trade id, side, size, entry, stop-derived risk, exit, PnL, R, duration, exit reason, volatility regime, and structure level used at plan time.
+
 ## `Risk_`
 
 Use `Risk_` for order-management truth.
@@ -91,6 +105,16 @@ High-value tokens to recognize quickly:
 - `EXIT_OP_END`
 - `EXIT_OP_TIMEOUT_RELEASE`
 
+## `StopEvents_`
+
+Use `StopEvents_` as the Mancini-compatible stop/protection CSV lane.
+
+It mirrors stop and protective events from `Risk_` with this header:
+
+`EVENT,Context,Final,Tape,Baseline,Bar,Time`
+
+`Final` is the current controller/working stop when available, `Tape` is the current close/tape price, and `Baseline` is the original protective stop for the trade. If a field is not available yet, it is left blank instead of guessing.
+
 ## `Debug_`
 
 Use `Debug_` when the higher-level story is not enough.
@@ -117,11 +141,15 @@ Canonical references:
 
 1. `Trades_`
    Confirm the lifecycle spine.
-2. `Patterns_`
+2. `TradesCsv_`
+   Confirm the completed trade row exists and has sane PnL/R/duration.
+3. `Patterns_`
    Confirm the setup should have existed.
-3. `Risk_`
+4. `Risk_`
    Confirm protection/flatten/runtime truth.
-4. `Debug_`
+5. `StopEvents_`
+   Confirm machine-readable stop/protection rows exist for the same sequence.
+6. `Debug_`
    Resolve the remaining ambiguity.
 
 ## What To Write Down

@@ -247,6 +247,10 @@ Persist and measure:
 - `pullbackStartBar = leg1.StartBar`
 - `totalPullbackBars = CurrentBar - pullbackStartBar + 1`
 
+If the leg-1 start bar already meets `MinPullbackRetracement` without violating
+`MaxPullbackRetracement`, it can qualify immediately. There is no hidden minimum
+pullback-bar count in `v1`.
+
 Leg 1 remains valid only if:
 
 - total pullback duration does not exceed `MaxPullbackBars`
@@ -308,6 +312,10 @@ For short:
   - `High[0] > High[1]` or `Close[0] > Close[1]`
 - track:
   - `leg2High = highest high after separation`
+
+If the leg-2 start bar already meets retracement and corrective-leg requirements, it
+can become a candidate immediately. The following closed bar is then eligible to be
+the signal bar.
 
 If leg 2 extends but still remains corrective and valid, the candidate may refresh
 instead of being treated as a dead setup. That refresh must still preserve the rule

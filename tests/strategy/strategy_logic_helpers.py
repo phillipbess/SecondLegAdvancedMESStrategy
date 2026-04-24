@@ -418,7 +418,6 @@ def evaluate_pullback_state_machine(case: dict) -> dict:
     impulse_high = case["impulse_high"]
     impulse_low = case["impulse_low"]
     impulse_bars = case.get("impulse_bars", 3)
-    min_pullback_bars = case.get("min_pullback_bars", 3)
     max_pullback_bars = case.get("max_pullback_bars", 12)
     min_pullback_retracement = case.get("min_pullback_retracement", 0.236)
     max_pullback_retracement = case.get("max_pullback_retracement", 0.618)
@@ -484,6 +483,12 @@ def evaluate_pullback_state_machine(case: dict) -> dict:
                     "low": bar["l"],
                 }
                 pullback_bars = 1
+                extreme = pullback_leg1["low"] if bias == "Long" else pullback_leg1["high"]
+                current_retracement = retracement(extreme)
+                if current_retracement > max_pullback_retracement:
+                    return fail("PullbackTooDeep")
+                if current_retracement >= min_pullback_retracement:
+                    advance_state("TrackingSeparation")
                 continue
 
             pullback_leg1["end"] = index
@@ -497,7 +502,7 @@ def evaluate_pullback_state_machine(case: dict) -> dict:
                 return fail("PullbackTooLong")
             if current_retracement > max_pullback_retracement:
                 return fail("PullbackTooDeep")
-            if pullback_bars >= min_pullback_bars and current_retracement >= min_pullback_retracement:
+            if current_retracement >= min_pullback_retracement:
                 advance_state("TrackingSeparation")
             continue
 

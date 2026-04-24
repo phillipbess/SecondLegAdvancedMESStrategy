@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NinjaTrader.Cbi;
 
 namespace NinjaTrader.NinjaScript.Strategies
 {
@@ -15,9 +16,13 @@ namespace NinjaTrader.NinjaScript.Strategies
         private string _patternLogPath = string.Empty;
         private string _riskLogPath = string.Empty;
         private string _debugLogPath = string.Empty;
+        private string _tradeCsvPath = string.Empty;
+        private string _stopEventsFilePath = string.Empty;
         private bool _loggingInitialized;
         private readonly object _logFileLock = new object();
         private readonly HashSet<string> _logHeadersWritten = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private bool _tradeCsvHeaderWritten;
+        private bool _stopEventsHeaderWritten;
         private bool _firstStopSlaLogged;
         private bool _firstStopSlaMissLogged;
         private static readonly string[] TradeLogEvents =
@@ -132,16 +137,22 @@ namespace NinjaTrader.NinjaScript.Strategies
             _patternLogPath = Path.Combine(_loggingBasePath, $"Patterns_{_loggingRunId}.txt");
             _riskLogPath = Path.Combine(_loggingBasePath, $"Risk_{_loggingRunId}.txt");
             _debugLogPath = Path.Combine(_loggingBasePath, $"Debug_{_loggingRunId}.txt");
+            _tradeCsvPath = Path.Combine(_loggingBasePath, $"TradesCsv_{_loggingRunId}.csv");
+            _stopEventsFilePath = Path.Combine(_loggingBasePath, $"StopEvents_{_loggingRunId}.csv");
 
             EnsureLogHeader(_tradeLogPath, "TRADE");
             EnsureLogHeader(_patternLogPath, "PATTERN");
             EnsureLogHeader(_riskLogPath, "RISK");
             EnsureLogHeader(_debugLogPath, "DEBUG");
+            EnsureTradeCsvHeader();
+            EnsureStopEventsFile();
             _loggingInitialized = true;
 
             WriteDebugLog($"[LOG PATHS] Trades={_tradeLogPath}");
+            WriteDebugLog($"[LOG PATHS] TradesCsv={_tradeCsvPath}");
             WriteDebugLog($"[LOG PATHS] Patterns={_patternLogPath}");
             WriteDebugLog($"[LOG PATHS] Risk={_riskLogPath}");
+            WriteDebugLog($"[LOG PATHS] StopEvents={_stopEventsFilePath}");
             WriteDebugLog($"[LOG PATHS] Debug={_debugLogPath}");
         }
 
@@ -159,6 +170,10 @@ namespace NinjaTrader.NinjaScript.Strategies
             _patternLogPath = string.Empty;
             _riskLogPath = string.Empty;
             _debugLogPath = string.Empty;
+            _tradeCsvPath = string.Empty;
+            _stopEventsFilePath = string.Empty;
+            _tradeCsvHeaderWritten = false;
+            _stopEventsHeaderWritten = false;
         }
 
         private void EnsureLogHeader(string filePath, string logType)
@@ -285,6 +300,295 @@ namespace NinjaTrader.NinjaScript.Strategies
         private void WriteRiskLog(string message)
         {
             WriteToLogFile(_riskLogPath, "RISK", message);
+            MirrorRiskMessageToStopEventsCsv(message);
+        }
+
+        private void EnsureTradeCsvHeader()
+        {
+            if (string.IsNullOrWhiteSpace(_tradeCsvPath))
+                return;
+
+            lock (_logFileLock)
+            {
+                if (_tradeCsvHeaderWritten)
+                    return;
+
+                bool firstWrite = !File.Exists(_tradeCsvPath);
+                using (var writer = new StreamWriter(_tradeCsvPath, true, Encoding.UTF8, 64 * 1024))
+                {
+                    if (firstWrite)
+                    {
+                        writer.WriteLine("TradeID,Signal,Side,Qty,Entry,EntryTime,Exit,ExitTime,PnL_USD,PnL_pts_per_ct,R,PeakProfit_pts,MaxDrawdown_pts,CapturePct,DurationMin,Reason,TrailArmPx,TrailExitPx,TOD,VolRegime,Risk_USD,SupportLevel,BreakdownDepth_pts,BreakdownLow");
+                    }
+                }
+
+                _tradeCsvHeaderWritten = true;
+            }
+        }
+
+        private void EnsureStopEventsFile()
+        {
+            if (string.IsNullOrWhiteSpace(_stopEventsFilePath))
+                return;
+
+            lock (_logFileLock)
+            {
+                if (_stopEventsHeaderWritten)
+                    return;
+
+                bool firstWrite = !File.Exists(_stopEventsFilePath);
+                using (var writer = new StreamWriter(_stopEventsFilePath, true, Encoding.UTF8, 64 * 1024))
+                {
+                    if (firstWrite)
+                        writer.WriteLine("EVENT,Context,Final,Tape,Baseline,Bar,Time");
+                }
+
+                _stopEventsHeaderWritten = true;
+            }
+        }
+
+        private void WriteTradeCsvSummaryLine(
+            string tradeId,
+            string signal,
+            MarketPosition side,
+            int quantity,
+            double entry,
+            DateTime entryTime,
+            double exit,
+            DateTime exitTime,
+            double pnlCurrency,
+            double riskBasis,
+            string reason)
+        {
+            try
+            {
+                if (!_loggingInitialized)
+                    InitializeLogging();
+
+                EnsureTradeCsvHeader();
+                if (string.IsNullOrWhiteSpace(_tradeCsvPath))
+                    return;
+
+                int safeQuantity = Math.Max(1, Math.Abs(quantity));
+                double pointValue = Instrument != null && Instrument.MasterInstrument != null
+                    ? Instrument.MasterInstrument.PointValue
+                    : 0.0;
+                double pnlPointsPerContract = pointValue > 0.0
+                    ? pnlCurrency / (pointValue * safeQuantity)
+                    : 0.0;
+                double realizedR = riskBasis > 0.0 ? pnlCurrency / riskBasis : 0.0;
+                double peakProfitPoints = ComputePeakProfitPoints(side, entry);
+                double capturePct = peakProfitPoints > TickSize
+                    ? Math.Max(0.0, Math.Min(100.0, pnlPointsPerContract / peakProfitPoints * 100.0))
+                    : 0.0;
+                double durationMinutes = entryTime != DateTime.MinValue && exitTime != DateTime.MinValue
+                    ? Math.Max(0.0, (exitTime - entryTime).TotalMinutes)
+                    : 0.0;
+                double riskUsd = riskBasis > 0.0 ? riskBasis : Math.Max(0.0, tradeRiskPerContract * safeQuantity);
+                string supportLevel = FormatCsvNumber(
+                    HasPlannedEntry() && IsFinitePrice(_plannedEntry.StructurePriceAtPlan)
+                        ? _plannedEntry.StructurePriceAtPlan
+                        : double.NaN,
+                    "0.00");
+
+                string[] fields =
+                {
+                    CsvField(tradeId),
+                    CsvField(signal),
+                    CsvField(side.ToString()),
+                    safeQuantity.ToString(CultureInfo.InvariantCulture),
+                    FormatCsvNumber(entry, "0.00"),
+                    CsvField(FormatCsvTime(entryTime)),
+                    FormatCsvNumber(exit, "0.00"),
+                    CsvField(FormatCsvTime(exitTime)),
+                    FormatCsvNumber(pnlCurrency, "0.00"),
+                    FormatCsvNumber(pnlPointsPerContract, "0.00"),
+                    FormatCsvNumber(realizedR, "0.00"),
+                    FormatCsvNumber(peakProfitPoints, "0.00"),
+                    string.Empty,
+                    FormatCsvNumber(capturePct, "0.0"),
+                    FormatCsvNumber(durationMinutes, "0.0"),
+                    CsvField(reason),
+                    FormatCsvNumber(_simpleTrailArmed ? _bestFavorablePrice : double.NaN, "0.00"),
+                    FormatCsvNumber(currentControllerStopPrice > 0.0 ? currentControllerStopPrice : workingStopPrice, "0.00"),
+                    CsvField(ClassifyTimeOfDay(exitTime)),
+                    CsvField(ClassifyVolatilityRegime()),
+                    FormatCsvNumber(riskUsd, "0.00"),
+                    supportLevel,
+                    string.Empty,
+                    string.Empty,
+                };
+
+                lock (_logFileLock)
+                {
+                    using (var writer = new StreamWriter(_tradeCsvPath, true, Encoding.UTF8, 64 * 1024))
+                        writer.WriteLine(string.Join(",", fields));
+                }
+            }
+            catch (Exception ex)
+            {
+                Print($"[TRADES CSV ERROR] msg={ex.Message}");
+            }
+        }
+
+        private void AppendStopEventCsv(string eventName, string context, bool flushImmediately = false)
+        {
+            try
+            {
+                if (!_loggingInitialized)
+                    InitializeLogging();
+
+                EnsureStopEventsFile();
+                if (string.IsNullOrWhiteSpace(_stopEventsFilePath))
+                    return;
+
+                string[] fields =
+                {
+                    CsvField(eventName),
+                    CsvField(context),
+                    FormatCsvNumber(ResolveCurrentStopForCsv(), "0.00"),
+                    FormatCsvNumber(ResolveTapePriceForCsv(), "0.00"),
+                    FormatCsvNumber(initialStopPrice > 0.0 ? initialStopPrice : double.NaN, "0.00"),
+                    CurrentBar >= 0 ? CurrentBar.ToString(CultureInfo.InvariantCulture) : string.Empty,
+                    CsvField(StampLoggingTime()),
+                };
+
+                lock (_logFileLock)
+                {
+                    using (var writer = new StreamWriter(_stopEventsFilePath, true, Encoding.UTF8, 64 * 1024))
+                    {
+                        writer.WriteLine(string.Join(",", fields));
+                        if (flushImmediately)
+                            writer.Flush();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Print($"[STOP EVENTS CSV ERROR] msg={ex.Message}");
+            }
+        }
+
+        private void MirrorRiskMessageToStopEventsCsv(string message)
+        {
+            string eventName = ExtractLogEventName(message);
+            if (!ShouldMirrorRiskEventToStopEvents(eventName))
+                return;
+
+            bool flushImmediately =
+                string.Equals(eventName, "STOP_ACK", StringComparison.Ordinal)
+                || string.Equals(eventName, "STOP_CONFIRMED", StringComparison.Ordinal)
+                || string.Equals(eventName, "STOP_FILLED_ACK", StringComparison.Ordinal)
+                || string.Equals(eventName, "FIRST_STOP_SLA", StringComparison.Ordinal);
+            AppendStopEventCsv(eventName, message, flushImmediately);
+        }
+
+        private static string ExtractLogEventName(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+                return string.Empty;
+
+            int open = message.IndexOf('[');
+            int close = open >= 0 ? message.IndexOf(']', open + 1) : -1;
+            if (open < 0 || close <= open)
+                return string.Empty;
+
+            return message.Substring(open + 1, close - open - 1).Trim();
+        }
+
+        private static bool ShouldMirrorRiskEventToStopEvents(string eventName)
+        {
+            if (string.IsNullOrWhiteSpace(eventName))
+                return false;
+
+            return eventName.StartsWith("STOP", StringComparison.Ordinal)
+                || string.Equals(eventName, "FIRST_STOP_SLA", StringComparison.Ordinal)
+                || string.Equals(eventName, "DOUBLE STOP DETECTED", StringComparison.Ordinal)
+                || string.Equals(eventName, "ORPHAN_CHECK", StringComparison.Ordinal)
+                || string.Equals(eventName, "ORPHAN_SWEEP", StringComparison.Ordinal)
+                || string.Equals(eventName, "ADOPT", StringComparison.Ordinal)
+                || string.Equals(eventName, "OCO_RESUBMIT", StringComparison.Ordinal)
+                || string.Equals(eventName, "COVERAGE_STATE", StringComparison.Ordinal)
+                || string.Equals(eventName, "PROTECTIVE_COVERAGE", StringComparison.Ordinal);
+        }
+
+        private double ResolveCurrentStopForCsv()
+        {
+            if (currentControllerStopPrice > 0.0)
+                return currentControllerStopPrice;
+            if (workingStopPrice > 0.0)
+                return workingStopPrice;
+            if (initialStopPrice > 0.0)
+                return initialStopPrice;
+            return double.NaN;
+        }
+
+        private double ResolveTapePriceForCsv()
+        {
+            if (Bars != null && Bars.Count > 0 && CurrentBar >= 0)
+                return Close[0];
+            return double.NaN;
+        }
+
+        private double ComputePeakProfitPoints(MarketPosition side, double entry)
+        {
+            if (!IsFinitePrice(entry) || !IsFinitePrice(_bestFavorablePrice))
+                return 0.0;
+
+            if (side == MarketPosition.Long)
+                return Math.Max(0.0, _bestFavorablePrice - entry);
+            if (side == MarketPosition.Short)
+                return Math.Max(0.0, entry - _bestFavorablePrice);
+            return 0.0;
+        }
+
+        private static bool IsFinitePrice(double value)
+        {
+            return !double.IsNaN(value) && !double.IsInfinity(value) && value > 0.0;
+        }
+
+        private string ClassifyVolatilityRegime()
+        {
+            if (double.IsNaN(_atrRegimeRatio) || double.IsInfinity(_atrRegimeRatio) || _atrRegimeRatio <= 0.0)
+                return "Unknown";
+            if (_atrRegimeRatio >= 1.25)
+                return "High";
+            if (_atrRegimeRatio <= 0.75)
+                return "Low";
+            return "Normal";
+        }
+
+        private static string ClassifyTimeOfDay(DateTime time)
+        {
+            if (time == DateTime.MinValue)
+                return string.Empty;
+            return time.Hour < 12 ? "AM" : "PM";
+        }
+
+        private static string FormatCsvTime(DateTime time)
+        {
+            return time == DateTime.MinValue
+                ? string.Empty
+                : time.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
+        }
+
+        private static string FormatCsvNumber(double value, string format)
+        {
+            return double.IsNaN(value) || double.IsInfinity(value)
+                ? string.Empty
+                : value.ToString(format, CultureInfo.InvariantCulture);
+        }
+
+        private static string CsvField(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return string.Empty;
+
+            bool mustQuote = value.IndexOfAny(new[] { ',', '"', '\r', '\n' }) >= 0;
+            if (!mustQuote)
+                return value;
+
+            return $"\"{value.Replace("\"", "\"\"")}\"";
         }
 
         private void WriteRiskEvent(string eventName, params string[] detailFields)

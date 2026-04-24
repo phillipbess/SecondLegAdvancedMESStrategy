@@ -7,6 +7,8 @@ Reconstructs trade stories from the strategy's text logs:
 - Trades_*.txt
 - Risk_*.txt
 - Debug_*.txt
+- TradesCsv_*.csv
+- StopEvents_*.csv
 
 Usage:
     python trade_narrative.py
@@ -97,6 +99,7 @@ ACTIVE_MARKERS = (
     "[TRADE_CLOSE]",
     "[EXIT_FILL]",
 )
+CSV_LOG_TYPES = {"TradesCsv", "StopEvents"}
 
 
 def extract_session_token(path: Path) -> Optional[str]:
@@ -105,13 +108,14 @@ def extract_session_token(path: Path) -> Optional[str]:
 
 
 def find_log_files(date_str: Optional[str] = None) -> Tuple[Dict[str, Path], Optional[str]]:
-    log_types = ("Patterns", "Trades", "Risk", "Debug")
+    log_types = ("Patterns", "Trades", "Risk", "Debug", "TradesCsv", "StopEvents")
     anchor_types = {"Trades", "Risk", "Debug"}
     files: Dict[str, Path] = {}
 
     if date_str:
         for log_type in log_types:
-            matches = list(LOG_DIR.glob(f"{log_type}_*{date_str}*.txt"))
+            extension = "csv" if log_type in CSV_LOG_TYPES else "txt"
+            matches = list(LOG_DIR.glob(f"{log_type}_*{date_str}*.{extension}"))
             if matches:
                 files[log_type] = max(matches, key=lambda p: p.stat().st_mtime)
         return files, date_str
@@ -119,7 +123,8 @@ def find_log_files(date_str: Optional[str] = None) -> Tuple[Dict[str, Path], Opt
     grouped: Dict[str, Dict[str, Path]] = {}
     newest_anchor: Optional[Path] = None
     for log_type in log_types:
-        for match in LOG_DIR.glob(f"{log_type}_*.txt"):
+        extension = "csv" if log_type in CSV_LOG_TYPES else "txt"
+        for match in LOG_DIR.glob(f"{log_type}_*.{extension}"):
             token = extract_session_token(match)
             if not token:
                 continue

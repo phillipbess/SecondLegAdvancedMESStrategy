@@ -109,6 +109,8 @@ class EdgeFiltersContractTests(unittest.TestCase):
 
         self.assertIn("bool longTrendValid = ClosedBarClose() > _emaSlowValue", entry_analysis)
         self.assertIn("bool shortTrendValid = ClosedBarClose() < _emaSlowValue", entry_analysis)
+        self.assertIn("double slopeDenominator = Math.Max(_atrValue, TickSize);", entry_analysis)
+        self.assertIn("return (delta / SlopeLookbackBars) / slopeDenominator;", entry_analysis)
         self.assertIn("ClosedBarCount() < V1ImpulseBars", entry_analysis)
         self.assertIn("const int lookback = V1ImpulseBars;", entry_analysis)
         self.assertIn("bodyPct >= V1StrongBodyPct", entry_analysis)
@@ -126,6 +128,8 @@ class EdgeFiltersContractTests(unittest.TestCase):
         self.assertIn("&& ClosedBarClose() < ClosedBarClose(1)", entry_analysis)
         self.assertIn("&& ClosedBarLow() < ClosedBarLow(1)", entry_analysis)
         self.assertIn("if (!HasPullbackLeg2Candidate())", entry_analysis)
+        self.assertIn("return startingRetracement >= MinPullbackRetracement;", entry_analysis)
+        self.assertIn("return retracement >= MinPullbackRetracement;", entry_analysis)
         self.assertIn('_setupState = SecondLegSetupState.TrackingPullbackLeg2;', entry_analysis)
         self.assertIn("bool leg2Refreshed = false;", entry_analysis)
         self.assertIn("if (leg2Refreshed)", entry_analysis)

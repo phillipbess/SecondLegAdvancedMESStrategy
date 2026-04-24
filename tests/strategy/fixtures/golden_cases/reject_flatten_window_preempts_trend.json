@@ -42,7 +42,6 @@
     "impulse_high": 106.0,
     "impulse_low": 100.0,
     "impulse_bars": 3,
-    "min_pullback_bars": 3,
     "max_pullback_bars": 12,
     "min_pullback_retracement": 0.236,
     "max_pullback_retracement": 0.618,

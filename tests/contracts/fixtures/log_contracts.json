@@ -130,6 +130,19 @@
       ],
       "notes": "Trades_ now covers entry, exit, flatten, and reconnect lifecycle breadcrumbs."
     },
+    "tradesCsv": {
+      "schema_marker": "TradeID,Signal,Side,Qty,Entry,EntryTime,Exit,ExitTime,PnL_USD,PnL_pts_per_ct,R,PeakProfit_pts,MaxDrawdown_pts,CapturePct,DurationMin,Reason,TrailArmPx,TrailExitPx,TOD,VolRegime,Risk_USD,SupportLevel,BreakdownDepth_pts,BreakdownLow",
+      "filename_marker": "Path.Combine(_loggingBasePath, $\"TradesCsv_{_loggingRunId}.csv\")",
+      "log_type_marker": "EnsureTradeCsvHeader();",
+      "writer_marker": "WriteTradeCsvSummaryLine(",
+      "writer_source": "logging",
+      "event_markers": [
+        "WriteLatestClosedTradeCsv(order, price, time);",
+        "TradeID,Signal,Side,Qty,Entry,EntryTime,Exit,ExitTime",
+        "PnL_USD,PnL_pts_per_ct,R,PeakProfit_pts,MaxDrawdown_pts,CapturePct"
+      ],
+      "notes": "TradesCsv_ is Mancini-compatible machine-readable trade summary output emitted on completed trades."
+    },
     "pattern": {
       "schema_marker": "\"PATTERN\" => \"timestamp | [EVENT] bar=<index> time=<hh:mm:ss> state=<state> bias=<side> trend=<bool> session=<bool> atrRegime=<bool> atr=<value> atrRatio=<value> slopeAtrPct=<value> impulseRange=<value> impulseStrongBars=<n> retracement=<value> leg2Momentum=<value> impulseMomentum=<value> structure=<label> signalBar=<index|none> planned=<summary> | detail\"",
       "filename_marker": "Path.Combine(_loggingBasePath, $\"Patterns_{_loggingRunId}.txt\")",
@@ -224,6 +237,21 @@
         "WriteRiskEvent(\"SUBMISSION_AUTHORITY\", $\"detail={message.Trim()}\")"
       ],
       "notes": "Risk_ is a routed runtime sink with pinned header vocabulary markers, Mancini-compatible OM checklist tokens, and host routing."
+    },
+    "stopEvents": {
+      "schema_marker": "EVENT,Context,Final,Tape,Baseline,Bar,Time",
+      "filename_marker": "Path.Combine(_loggingBasePath, $\"StopEvents_{_loggingRunId}.csv\")",
+      "log_type_marker": "EnsureStopEventsFile();",
+      "writer_marker": "AppendStopEventCsv(",
+      "writer_source": "logging",
+      "event_markers": [
+        "MirrorRiskMessageToStopEventsCsv(message);",
+        "ShouldMirrorRiskEventToStopEvents",
+        "STOP_ACK",
+        "STOP_CONFIRMED",
+        "FIRST_STOP_SLA"
+      ],
+      "notes": "StopEvents_ mirrors stop/protective risk events into the Mancini-compatible stop event CSV shape."
     },
     "debug": {
       "schema_marker": "\"DEBUG\" => \"timestamp | [EVENT] key=value ...\"",

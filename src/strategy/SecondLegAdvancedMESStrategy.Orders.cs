@@ -73,6 +73,77 @@ namespace NinjaTrader.NinjaScript.Strategies
             return $" pnlCurrency={trade.ProfitCurrency:F2} pnlR={realizedR:F2}";
         }
 
+        private void WriteLatestClosedTradeCsv(Order order, double exitPrice, DateTime exitTime)
+        {
+            if (_lastProcessedTradeCount <= 0 || _lastTradeCsvProcessedTradeCount >= _lastProcessedTradeCount)
+                return;
+
+            int lastProcessedTradeIndex = _lastProcessedTradeCount - 1;
+            if (lastProcessedTradeIndex < 0 || lastProcessedTradeIndex >= SystemPerformance.AllTrades.Count)
+                return;
+
+            Trade trade = SystemPerformance.AllTrades[lastProcessedTradeIndex];
+            if (trade == null)
+                return;
+
+            string signal = ResolveTradeLifecycleSignal(order);
+            string tradeId = !string.IsNullOrWhiteSpace(currentTradeID) ? currentTradeID : signal;
+            string reason = ResolveTradeCsvExitReason(order);
+            int quantity = entryQuantity > 0 ? entryQuantity : Math.Abs(order?.Filled ?? 0);
+            double entry = avgEntryPrice > 0.0 ? avgEntryPrice : (entryFillPrice > 0.0 ? entryFillPrice : entryPrice);
+            double safeExitPrice = ResolveTradeCsvExitPrice(exitPrice, entry, quantity, trade.ProfitCurrency);
+            double riskBasis = initialTradeRisk > 0.0 ? initialTradeRisk : Math.Max(1.0, RiskPerTrade);
+
+            WriteTradeCsvSummaryLine(
+                tradeId,
+                signal,
+                entryPositionSide,
+                quantity,
+                entry,
+                entryFillTime,
+                safeExitPrice,
+                exitTime,
+                trade.ProfitCurrency,
+                riskBasis,
+                reason);
+            _lastTradeCsvProcessedTradeCount = _lastProcessedTradeCount;
+        }
+
+        private double ResolveTradeCsvExitPrice(double exitPrice, double entry, int quantity, double pnlCurrency)
+        {
+            if (exitPrice > 0.0)
+                return exitPrice;
+
+            int safeQuantity = Math.Max(1, Math.Abs(quantity));
+            double pointValue = Instrument != null && Instrument.MasterInstrument != null
+                ? Instrument.MasterInstrument.PointValue
+                : 0.0;
+            if (entry <= 0.0 || pointValue <= 0.0)
+                return exitPrice;
+
+            double realizedPointsPerContract = pnlCurrency / (pointValue * safeQuantity);
+            if (entryPositionSide == MarketPosition.Short)
+                return entry - realizedPointsPerContract;
+            if (entryPositionSide == MarketPosition.Long)
+                return entry + realizedPointsPerContract;
+
+            return exitPrice;
+        }
+
+        private string ResolveTradeCsvExitReason(Order order)
+        {
+            if (IsStrategyProtectiveStopOrder(order))
+                return "ProtectiveStop";
+            if (IsStrategyFlattenOrder(order))
+                return "Flatten";
+
+            string role = ResolveTradeLifecycleRole(order);
+            if (!string.IsNullOrWhiteSpace(role) && !string.Equals(role, "unknown", StringComparison.OrdinalIgnoreCase))
+                return role;
+
+            return order?.Name ?? "UnknownExit";
+        }
+
         private bool HasPendingOrWorkingEntryLifecycle()
         {
             return _entryPending || _hasWorkingEntry;
@@ -512,6 +583,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                     $"fillPrice={price:F2}",
                     $"marketPosition={marketPosition}");
                 UpdateSessionRiskFromCompletedTrades();
+                WriteLatestClosedTradeCsv(order, price, time);
                 WriteTradeLifecycleLog(
                     "TRADE_CLOSE",
                     order,
@@ -554,6 +626,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 || !string.IsNullOrEmpty(currentTradeID)))
                 {
                     UpdateSessionRiskFromCompletedTrades();
+                    WriteLatestClosedTradeCsv(null, averagePrice, Bars != null && Bars.Count > 0 && CurrentBar >= 0 ? Time[0] : DateTime.Now);
                     _tradeJustClosed = true;
                     if (!_flattenInFlight && !isFinalizingTrade)
                         ResetTradeState();

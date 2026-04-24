@@ -72,6 +72,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         private bool _tradeJustClosed;
         private int _pullbackBounceBar = -1;
         private int _lastProcessedTradeCount;
+        private int _lastTradeCsvProcessedTradeCount;
         private int _lossCooldownUntilBar = -1;
         private bool _sessionResetPending;
         private bool _rthOpenResetPending;
