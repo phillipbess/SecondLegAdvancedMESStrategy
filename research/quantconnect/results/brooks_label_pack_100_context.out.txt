@@ -1,0 +1,75 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+a71f7435b3bba5ac81369f46594609e9-969909f5556453b0ffa0f2d9fde56200, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'Brooks label pack 100 context' for project 
+'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/6bcd9219fdf9738ca49ef1409083f543
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 5m Bars           | 114201           | Armed             | 0                |
+| Avg R             | 0.00             | Block 1           | LabelContext:13  |
+| Block 2           | LabelNoTfo:4     | Block Types       | 2                |
+| Entry Mode        | OpeningDrive     | Equity            | $100,000.00      |
+| Expired           | 0                | Export Key        | 30609547/brooks_ |
+|                   |                  |                   | label_pack_20210 |
+|                   |                  |                   | 424_20260423_bar |
+|                   |                  |                   | _5_setups_100_me |
+|                   |                  |                   | asure_60_move_0p |
+|                   |                  |                   | 75_strong_3_ctx_ |
+|                   |                  |                   | 1_0p25.csv       |
+| Fees              | -$0.00           | Holdings          | $0.00            |
+| Impulses          | 0                | Leg1              | 0                |
+| Leg2 Candidates   | 0                | Long Armed        | 0                |
+| Net Profit        | $0.00            | Net R             | 0.00             |
+| Params            | mode=OpeningDriv | Probabilistic     | 0%               |
+|                   | e bar=5          | Sharpe Ratio      |                  |
+|                   | side=both        |                   |                  |
+|                   | imp=1.25         |                   |                  |
+|                   | leg2Retr=0.95    |                   |                  |
+|                   | sig=0.5 target=2 |                   |                  |
+|                   | hold=24 trig=3   |                   |                  |
+|                   | liq=False        |                   |                  |
+|                   | roomMax=-1       |                   |                  |
+|                   | struct=none      |                   |                  |
+|                   | block=none       |                   |                  |
+|                   | blockS=none      |                   |                  |
+| Return            | 0.00 %           | RiskTooSmall      | 0                |
+| RTH 5m Bars       | 97951            | Runtime Trade     | 0/0              |
+|                   |                  | Rows              |                  |
+| Separations       | 0                | Short Armed       | 0                |
+| SignalInvalid     | 0                | Stops             | 0                |
+| StopTooWide       | 0                | StructureRoom     | 0                |
+| Timeouts          | 0                | Touch 1R          | 0                |
+| Trend Bars        | 0                | Triggered         | 0                |
+| Unrealized        | $0.00            | Virtual Trades    | 0                |
+| Volume            | $0.00            | Win 2R            | 0                |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -0.685           |
+| Tracking Error    | 0.142            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 6bcd9219fdf9738ca49ef1409083f543
+Backtest name: Brooks label pack 100 context
+Backtest url: 
+https://www.quantconnect.com/project/30609547/6bcd9219fdf9738ca49ef1409083f543

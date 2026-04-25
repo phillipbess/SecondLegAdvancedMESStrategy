@@ -40,7 +40,8 @@ namespace QuantConnect.Algorithm.CSharp
                 || string.Equals(EntryMode, "brookstfo", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(EntryMode, "brookstrendpullback", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(EntryMode, "brooksopenreversal", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(EntryMode, "brooksor", StringComparison.OrdinalIgnoreCase);
+                || string.Equals(EntryMode, "brooksor", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(EntryMode, "brookslabelpack", StringComparison.OrdinalIgnoreCase);
         }
 
         private void ConfigureOpeningDriveResearch(DateTime startDate, DateTime endDate)
@@ -69,10 +70,13 @@ namespace QuantConnect.Algorithm.CSharp
             if (string.Equals(EntryMode, "brooksopenreversal", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(EntryMode, "brooksor", StringComparison.OrdinalIgnoreCase))
                 MomentumResearchMode = "brooksor";
+            if (string.Equals(EntryMode, "brookslabelpack", StringComparison.OrdinalIgnoreCase))
+                MomentumResearchMode = "labelpack";
             ConfigureAfternoonCompressionResearch(startDate, endDate);
             ConfigureBrooksTrendPullbackResearch(startDate, endDate);
             ConfigureBrooksOpeningReversalResearch(startDate, endDate);
-            if (MomentumResearchMode != "compression" && MomentumResearchMode != "brooks" && MomentumResearchMode != "brooksor")
+            ConfigureBrooksLabelPackResearch(startDate, endDate);
+            if (MomentumResearchMode != "compression" && MomentumResearchMode != "brooks" && MomentumResearchMode != "brooksor" && MomentumResearchMode != "labelpack")
                 _tradeExportKey = $"{ProjectId}/opening_drive_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_or_{OpeningRangeMinutes}_minatr_{ParamToken(OpeningDriveMinRangeAtr)}_close_{ParamToken(OpeningDriveClosePct)}_pb_{ParamToken(OpeningDrivePullbackAtr)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}.csv";
         }
 
@@ -98,6 +102,11 @@ namespace QuantConnect.Algorithm.CSharp
             if (MomentumResearchMode == "brooksor")
             {
                 TryBrooksOpeningReversalResearch(bar);
+                return;
+            }
+            if (MomentumResearchMode == "labelpack")
+            {
+                TryBrooksLabelPackResearch(bar);
                 return;
             }
 
@@ -147,6 +156,7 @@ namespace QuantConnect.Algorithm.CSharp
             ResetAfternoonCompressionSession();
             ResetBrooksTrendPullbackSession();
             ResetBrooksOpeningReversalSession();
+            ResetBrooksLabelPackSession();
         }
 
         private void TryAfternoonMomentumResearch(BarSnapshot bar)
