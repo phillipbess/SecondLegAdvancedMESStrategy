@@ -1,0 +1,182 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+ddcb56a492b091e0e2ab098ee3be3b05-e2d9019f53a2c51a5282011c25f587a5, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'SecondLeg V2 long quality 5y' for project 
+'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/1bf053015078ab405d473c778af418e5
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic        | Value             | Statistic        | Value             |
+|------------------+-------------------+------------------+-------------------|
+| 5m Bars          | 114201            | Armed            | 158               |
+| Avg R            | 0.08              | Block 1          | LitePullbackTooSm |
+|                  |                   |                  | all:7061          |
+| Block 2          | LiteImpulseBreak: | Block 3          | PullbackTooDeep:2 |
+|                  | 2511              |                  | 020               |
+| Block 4          | SecondLegTooDeep: | Block 5          | PullbackTooLong:7 |
+|                  | 2010              |                  | 88                |
+| Block Types      | 10                | Entry Mode       | VideoSecondEntryL |
+|                  |                   |                  | ite               |
+| Equity           | $100,000.00       | Expired          | 27                |
+| Export Key       | 30609547/secondle | Fees             | -$0.00            |
+|                  | g_trade_export_Vi |                  |                   |
+|                  | deoSecondEntryLit |                  |                   |
+|                  | e_20210424_202604 |                  |                   |
+|                  | 23_side_long_leg2 |                  |                   |
+|                  | _0p8_leg2retr_0p6 |                  |                   |
+|                  | 18_imp_1_pbatr_0p |                  |                   |
+|                  | 1_l2atr_0p05_sig_ |                  |                   |
+|                  | 0p6_room_1_hrs_13 |                  |                   |
+|                  | .csv              |                  |                   |
+| Holdings         | $0.00             | Impulses         | 6759              |
+| Leg1             | 4637              | Leg2 Candidates  | 465               |
+| Long Armed       | 158               | Net Profit       | $0.00             |
+| Net R            | 10.93             | Params           | mode=VideoSecondE |
+|                  |                   |                  | ntryLite          |
+|                  |                   |                  | side=long imp=1   |
+|                  |                   |                  | retr=0-0.95       |
+|                  |                   |                  | leg2Retr=0.618    |
+|                  |                   |                  | leg2=0.8 sig=0.6  |
+|                  |                   |                  | forbidNeg=True    |
+|                  |                   |                  | hoursBlock=13     |
+|                  |                   |                  | room=1            |
+|                  |                   |                  | liteStructureVeto |
+|                  |                   |                  | =False            |
+| Probabilistic    | 0%                | Return           | 0.00 %            |
+| Sharpe Ratio     |                   |                  |                   |
+| RiskTooSmall     | 6                 | RTH 5m Bars      | 97951             |
+| Runtime Trade    | 30/130            | Separations      | 708               |
+| Rows             |                   |                  |                   |
+| Short Armed      | 0                 | SignalInvalid    | 184               |
+| Stops            | 70                | StopTooWide      | 175               |
+| StructureRoom    | 0                 | T01              | 21-05-10 12:20 L  |
+|                  |                   |                  | Stop r=-1         |
+|                  |                   |                  | l2=0.8571         |
+|                  |                   |                  | room=0.7411       |
+|                  |                   |                  | retr=0.1714       |
+|                  |                   |                  | bars=3            |
+| T02              | 21-05-21 11:25 L  | T03              | 21-05-27 10:40 L  |
+|                  | Stop r=-1 l2=0.9  |                  | Stop r=-1         |
+|                  | room=3.8748       |                  | l2=0.3243         |
+|                  | retr=0.4 bars=2   |                  | room=0.3266       |
+|                  |                   |                  | retr=0.1622       |
+|                  |                   |                  | bars=4            |
+| T04              | 21-06-02 11:35 L  | T05              | 21-06-24 11:10 L  |
+|                  | Stop r=-1         |                  | Stop r=-1 l2=0.5  |
+|                  | l2=0.825          |                  | room=0.395        |
+|                  | room=0.2764       |                  | retr=0.5238       |
+|                  | retr=0.25 bars=6  |                  | bars=3            |
+| T06              | 21-06-28 10:55 L  | T07              | 21-07-01 10:35 L  |
+|                  | Stop r=-1         |                  | Stop r=-1         |
+|                  | l2=0.4839         |                  | l2=0.1319         |
+|                  | room=0.8593       |                  | room=0.1541       |
+|                  | retr=0.5161       |                  | retr=0.1731       |
+|                  | bars=3            |                  | bars=10           |
+| T08              | 21-07-13 10:40 L  | T09              | 21-07-22 10:35 L  |
+|                  | Stop r=-1         |                  | Stop r=-1         |
+|                  | l2=0.6383         |                  | l2=0.5455         |
+|                  | room=999          |                  | room=0.592        |
+|                  | retr=0.3404       |                  | retr=0.5455       |
+|                  | bars=3            |                  | bars=12           |
+| T10              | 21-07-26 10:10 L  | T11              | 21-08-03 12:40 L  |
+|                  | Stop r=-1 l2=0.5  |                  | TwoR r=2          |
+|                  | room=0.8186       |                  | l2=0.2325         |
+|                  | retr=0.4286       |                  | room=0.5596       |
+|                  | bars=1            |                  | retr=0.325        |
+|                  |                   |                  | bars=20           |
+| T12              | 21-08-05 11:25 L  | T13              | 21-08-06 10:25 L  |
+|                  | Stop r=-1         |                  | Stop r=-1         |
+|                  | l2=1.5714         |                  | l2=0.6164         |
+|                  | room=0.3127       |                  | room=1.4302       |
+|                  | retr=0.0476       |                  | retr=0.4384       |
+|                  | bars=8            |                  | bars=6            |
+| T14              | 21-08-13 11:15 L  | T15              | 21-09-02 10:50 L  |
+|                  | Timeout r=-0.0685 |                  | Stop r=-1         |
+|                  | l2=0.675          |                  | l2=0.6154         |
+|                  | room=0.6459       |                  | room=0.961        |
+|                  | retr=0.5 bars=26  |                  | retr=0.1795       |
+|                  |                   |                  | bars=19           |
+| T16              | 21-10-15 11:15 L  | T17              | 21-10-19 11:50 L  |
+|                  | Stop r=-1         |                  | Timeout r=0.5669  |
+|                  | l2=0.2979         |                  | l2=0.2419         |
+|                  | room=0.7027       |                  | room=0.4141       |
+|                  | retr=0.3191       |                  | retr=0.3226       |
+|                  | bars=6            |                  | bars=26           |
+| T18              | 21-10-25 15:10 L  | T19              | 21-11-03 14:45 L  |
+|                  | Stop r=-1         |                  | TwoR r=2 l2=0.44  |
+|                  | l2=0.9692         |                  | room=0.0011       |
+|                  | room=1.1828       |                  | retr=0.36 bars=3  |
+|                  | retr=0.4615       |                  |                   |
+|                  | bars=2            |                  |                   |
+| T20              | 21-11-18 14:05 L  | T21              | 21-12-10 10:35 L  |
+|                  | Stop r=-1         |                  | Stop r=-1         |
+|                  | l2=1.7143         |                  | l2=0.3953         |
+|                  | room=2.1967       |                  | room=0.3953       |
+|                  | retr=0.5714       |                  | retr=0.5736       |
+|                  | bars=1            |                  | bars=2            |
+| T22              | 22-03-29 10:30 L  | T23              | 22-04-21 10:35 L  |
+|                  | TwoR r=2          |                  | Stop r=-1         |
+|                  | l2=0.3249         |                  | l2=0.1526         |
+|                  | room=3.4806       |                  | room=1.1146       |
+|                  | retr=0.5848       |                  | retr=0.3805       |
+|                  | bars=17           |                  | bars=3            |
+| T24              | 22-05-16 15:10 L  | T25              | 22-05-17 15:35 L  |
+|                  | Stop r=-1         |                  | Stop r=-1         |
+|                  | l2=0.7857         |                  | l2=0.9545         |
+|                  | room=0.7686       |                  | room=0.1482       |
+|                  | retr=0.4603       |                  | retr=0.4242       |
+|                  | bars=2            |                  | bars=1            |
+| T26              | 22-05-25 10:20 L  | T27              | 22-05-30 10:50 L  |
+|                  | Timeout r=-0.7072 |                  | TwoR r=2          |
+|                  | l2=0.6829         |                  | l2=1.6552         |
+|                  | room=0.0255       |                  | room=0.1212       |
+|                  | retr=0.4634       |                  | retr=0.5862       |
+|                  | bars=26           |                  | bars=9            |
+| T28              | 22-05-31 13:00 L  | T29              | 22-07-07 12:05 L  |
+|                  | Stop r=-1         |                  | Stop r=-1         |
+|                  | l2=0.9438         |                  | l2=1.3714         |
+|                  | room=3.5243       |                  | room=0.27         |
+|                  | retr=0.2697       |                  | retr=0.4286       |
+|                  | bars=2            |                  | bars=15           |
+| T30              | 22-07-15 11:50 L  | Timeouts         | 29                |
+|                  | Stop r=-1         |                  |                   |
+|                  | l2=0.2974         |                  |                   |
+|                  | room=0.1046       |                  |                   |
+|                  | retr=0.1552       |                  |                   |
+|                  | bars=3            |                  |                   |
+| Touch 1R         | 57                | Trend Bars       | 44776             |
+| Triggered        | 130               | Unrealized       | $0.00             |
+| Virtual Trades   | 130               | Volume           | $0.00             |
+| Win 2R           | 31                |                  |                   |
+|------------------+-------------------+------------------+-------------------|
+| Total Orders     | 0                 | Average Win      | 0%                |
+| Average Loss     | 0%                | Compounding      | 0%                |
+|                  |                   | Annual Return    |                   |
+| Drawdown         | 0%                | Expectancy       | 0                 |
+| Start Equity     | 100000            | End Equity       | 100000            |
+| Net Profit       | 0%                | Sharpe Ratio     | 0                 |
+| Sortino Ratio    | 0                 | Probabilistic    | 0%                |
+|                  |                   | Sharpe Ratio     |                   |
+| Loss Rate        | 0%                | Win Rate         | 0%                |
+| Profit-Loss      | 0                 | Alpha            | 0                 |
+| Ratio            |                   |                  |                   |
+| Beta             | 0                 | Annual Standard  | 0                 |
+|                  |                   | Deviation        |                   |
+| Annual Variance  | 0                 | Information      | -0.685            |
+|                  |                   | Ratio            |                   |
+| Tracking Error   | 0.142             | Treynor Ratio    | 0                 |
+| Total Fees       | $0.00             | Estimated        | $0                |
+|                  |                   | Strategy         |                   |
+|                  |                   | Capacity         |                   |
+| Lowest Capacity  |                   | Portfolio        | 0%                |
+| Asset            |                   | Turnover         |                   |
+| Drawdown         | 0                 |                  |                   |
+| Recovery         |                   |                  |                   |
++-----------------------------------------------------------------------------+
+Backtest id: 1bf053015078ab405d473c778af418e5
+Backtest name: SecondLeg V2 long quality 5y
+Backtest url: 
+https://www.quantconnect.com/project/30609547/1bf053015078ab405d473c778af418e5

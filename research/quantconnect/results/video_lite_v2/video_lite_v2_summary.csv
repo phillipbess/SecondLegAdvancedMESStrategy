@@ -1,0 +1,6 @@
+"variant","triggered","approx_trades_per_month","win_2r","stops","timeouts","net_r","avg_r","armed","long_armed","short_armed","structure_room_blocks","backtest_id"
+"v2_both_frequency_5y","1532","25.5","371","895","266","-24.22","-0.02","1791","1066","725","0","848e5919d9e35650c82d972acba0683d"
+"v2_both_frequency_block13_5y","1313","21.9","318","745","250","17.11","0.01","1538","915","623","0","399ebaaa47af8e7c68b403ccd36d64ad"
+"v2_both_frequency_block13_short11_5y","1218","20.3","296","682","240","34.37","0.03","1423","915","508","0","f7679219b36718a01ab06f45cc9d8521"
+"v2_long_frequency_5y","907","15.1","222","514","171","27.76","0.03","1067","1067","0","0","7943cc5c2c3aa6d30320857af07b9957"
+"v2_long_quality_5y","130","2.2","31","70","29","10.93","0.08","158","158","0","0","1bf053015078ab405d473c778af418e5"
