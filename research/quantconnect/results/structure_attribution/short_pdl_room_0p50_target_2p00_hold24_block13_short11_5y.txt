@@ -1,0 +1,137 @@
+=== RUN short_pdl_room_0p50_target_2p00_hold24_block13_short11_5y ===
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+1b800ef0a9179ff2e0c35a868393906a-9f21181a4e2379afb17cc7975620343c, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'SecondLeg structure PDL short 5y' for project 
+'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/f17b295ab9f07add91ab8b630a2fa03c
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic        | Value             | Statistic        | Value             |
+|------------------+-------------------+------------------+-------------------|
+| 5m Bars          | 114291            | Armed            | 35                |
+| Avg R            | 0.13              | Block 1          | PullbackTooDeep:1 |
+|                  |                   |                  | 219               |
+| Block 2          | PullbackTooLong:1 | Block 3          | SecondLegTooDeep: |
+|                  | 218               |                  | 1201              |
+| Block 4          | StopTooWide:981   | Block 5          | LiteTimeFilter:89 |
+|                  |                   |                  | 1                 |
+| Block Types      | 9                 | Entry Mode       | VideoSecondEntryL |
+|                  |                   |                  | ite               |
+| Equity           | $100,000.00       | Expired          | 5                 |
+| Export Key       | 30609547/secondle | Fees             | -$0.00            |
+|                  | g_trade_export_Vi |                  |                   |
+|                  | deoSecondEntryLit |                  |                   |
+|                  | e_20210401_202604 |                  |                   |
+|                  | 01_side_short_leg |                  |                   |
+|                  | 2_0p8_leg2retr_0p |                  |                   |
+|                  | 95_imp_0p75_pbatr |                  |                   |
+|                  | _0_l2atr_0_sig_0p |                  |                   |
+|                  | 55_target_2_hold_ |                  |                   |
+|                  | 24_room_1_rmin_-1 |                  |                   |
+|                  | _rmax_0p5_struct_ |                  |                   |
+|                  | PDL_hrs_13_hL_non |                  |                   |
+|                  | e_hS_11.csv       |                  |                   |
+| H10 S            | n=16 avg=0.40     | H12 S            | n=6 avg=-0.50     |
+|                  | net=6.3 2R=6 st=7 |                  | net=-3.0 2R=1     |
+|                  | to=3 t1=8         |                  | st=5 to=0 t1=3    |
+|                  | mfe=1.38          |                  | mfe=1.04          |
+|                  | mae=-0.83         |                  | mae=-1.29         |
+| H14 S            | n=4 avg=-0.25     | H15 S            | n=4 avg=0.37      |
+|                  | net=-1.0 2R=1     |                  | net=1.5 2R=1 st=2 |
+|                  | st=3 to=0 t1=2    |                  | to=1 t1=2         |
+|                  | mfe=0.93          |                  | mfe=1.22          |
+|                  | mae=-1.00         |                  | mae=-0.95         |
+| Holdings         | $0.00             | Impulses         | 3888              |
+| Leg1             | 2732              | Leg2 Candidates  | 1591              |
+| Long Armed       | 0                 | Net Profit       | $0.00             |
+| Net R            | 3.81              | Params           | mode=VideoSecondE |
+|                  |                   |                  | ntryLite          |
+|                  |                   |                  | side=short        |
+|                  |                   |                  | imp=0.75          |
+|                  |                   |                  | leg2Retr=0.95     |
+|                  |                   |                  | sig=0.55 target=2 |
+|                  |                   |                  | hold=24           |
+|                  |                   |                  | roomMax=0.5       |
+|                  |                   |                  | struct=PDL        |
+|                  |                   |                  | block=13          |
+|                  |                   |                  | blockS=11         |
+| Probabilistic    | 0%                | Return           | 0.00 %            |
+| Sharpe Ratio     |                   |                  |                   |
+| RiskTooSmall     | 142               | Room <0.25R      | n=21 avg=0.02     |
+|                  |                   |                  | net=0.5 2R=6      |
+|                  |                   |                  | st=13 to=2 t1=8   |
+|                  |                   |                  | mfe=1.12          |
+|                  |                   |                  | mae=-1.00         |
+| Room <0.50R      | n=9 avg=0.37      | RTH 5m Bars      | 98028             |
+|                  | net=3.3 2R=3 st=4 |                  |                   |
+|                  | to=2 t1=7         |                  |                   |
+|                  | mfe=1.48          |                  |                   |
+|                  | mae=-0.87         |                  |                   |
+| Runtime Trade    | 5/30              | Separations      | 1687              |
+| Rows             |                   |                  |                   |
+| Short Armed      | 35                | Side S           | n=30 avg=0.13     |
+|                  |                   |                  | net=3.8 2R=9      |
+|                  |                   |                  | st=17 to=4 t1=15  |
+|                  |                   |                  | mfe=1.23          |
+|                  |                   |                  | mae=-0.96         |
+| SignalInvalid    | 765               | Stops            | 17                |
+| StopTooWide      | 981               | Struct PDL       | n=30 avg=0.13     |
+|                  |                   |                  | net=3.8 2R=9      |
+|                  |                   |                  | st=17 to=4 t1=15  |
+|                  |                   |                  | mfe=1.23          |
+|                  |                   |                  | mae=-0.96         |
+| StructureRoom    | 0                 | T01              | 21-04-20 10:35 S  |
+|                  |                   |                  | Target r=2        |
+|                  |                   |                  | mfe=2.2024        |
+|                  |                   |                  | mae=-0.3149       |
+|                  |                   |                  | room=0.0176       |
+|                  |                   |                  | bars=3            |
+| T02              | 21-09-10 10:35 S  | T03              | 22-01-03 12:05 S  |
+|                  | Target r=2        |                  | Stop r=-1         |
+|                  | mfe=2.5253        |                  | mfe=0.2097        |
+|                  | mae=-0.1037       |                  | mae=-1.1475       |
+|                  | room=0.4678       |                  | room=0.3141       |
+|                  | bars=1            |                  | bars=5            |
+| T04              | 22-02-21 10:40 S  | T05              | 22-06-29 11:00 S  |
+|                  | Target r=2        |                  | Target r=2        |
+|                  | mfe=2.6158        |                  | mfe=2.0816        |
+|                  | mae=-0.3146       |                  | mae=-0.4202       |
+|                  | room=0.0022       |                  | room=0.3666       |
+|                  | bars=3            |                  | bars=19           |
+| Timeouts         | 4                 | Touch 1R         | 15                |
+| Trend Bars       | 32890             | Triggered        | 30                |
+| Unrealized       | $0.00             | Virtual Trades   | 30                |
+| Volume           | $0.00             | Win 2R           | 9                 |
+|------------------+-------------------+------------------+-------------------|
+| Total Orders     | 0                 | Average Win      | 0%                |
+| Average Loss     | 0%                | Compounding      | 0%                |
+|                  |                   | Annual Return    |                   |
+| Drawdown         | 0%                | Expectancy       | 0                 |
+| Start Equity     | 100000            | End Equity       | 100000            |
+| Net Profit       | 0%                | Sharpe Ratio     | 0                 |
+| Sortino Ratio    | 0                 | Probabilistic    | 0%                |
+|                  |                   | Sharpe Ratio     |                   |
+| Loss Rate        | 0%                | Win Rate         | 0%                |
+| Profit-Loss      | 0                 | Alpha            | 0                 |
+| Ratio            |                   |                  |                   |
+| Beta             | 0                 | Annual Standard  | 0                 |
+|                  |                   | Deviation        |                   |
+| Annual Variance  | 0                 | Information      | -0.645            |
+|                  |                   | Ratio            |                   |
+| Tracking Error   | 0.141             | Treynor Ratio    | 0                 |
+| Total Fees       | $0.00             | Estimated        | $0                |
+|                  |                   | Strategy         |                   |
+|                  |                   | Capacity         |                   |
+| Lowest Capacity  |                   | Portfolio        | 0%                |
+| Asset            |                   | Turnover         |                   |
+| Drawdown         | 0                 |                  |                   |
+| Recovery         |                   |                  |                   |
++-----------------------------------------------------------------------------+
+Backtest id: f17b295ab9f07add91ab8b630a2fa03c
+Backtest name: SecondLeg structure PDL short 5y
+Backtest url: 
+https://www.quantconnect.com/project/30609547/f17b295ab9f07add91ab8b630a2fa03c

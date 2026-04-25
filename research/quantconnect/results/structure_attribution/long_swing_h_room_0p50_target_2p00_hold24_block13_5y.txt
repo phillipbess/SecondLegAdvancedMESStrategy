@@ -1,0 +1,133 @@
+=== RUN long_swing_h_room_0p50_target_2p00_hold24_block13_5y ===
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+b452c9c6320799a87ae0f0de8598661f-9f21181a4e2379afb17cc7975620343c, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'SecondLeg structure SWING_H long 5y' for project 
+'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/8656f96c9bec6650d4fc406b6cdfd712
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 5m Bars           | 114291           | Armed             | 334              |
+| Avg R             | 0.27             | Block 1           | StopTooWide:1841 |
+| Block 2           | PullbackTooDeep: | Block 3           | SecondLegTooDeep |
+|                   | 1566             |                   | :1497            |
+| Block 4           | PullbackTooLong: | Block 5           | SignalInvalid:10 |
+|                   | 1480             |                   | 62               |
+| Block Types       | 9                | Entry Mode        | VideoSecondEntry |
+|                   |                  |                   | Lite             |
+| Equity            | $100,000.00      | Expired           | 45               |
+| Export Key        | 30609547/secondl | Fees              | -$0.00           |
+|                   | eg_trade_export_ |                   |                  |
+|                   | VideoSecondEntry |                   |                  |
+|                   | Lite_20210401_20 |                   |                  |
+|                   | 260401_side_long |                   |                  |
+|                   | _leg2_0p8_leg2re |                   |                  |
+|                   | tr_0p95_imp_0p75 |                   |                  |
+|                   | _pbatr_0_l2atr_0 |                   |                  |
+|                   | _sig_0p55_target |                   |                  |
+|                   | _2_hold_24_room_ |                   |                  |
+|                   | 1_rmin_-1_rmax_0 |                   |                  |
+|                   | p5_struct_SWING_ |                   |                  |
+|                   | H_hrs_13_hL_none |                   |                  |
+|                   | _hS_none.csv     |                   |                  |
+| H10 L             | n=69 avg=0.33    | H11 L             | n=65 avg=0.08    |
+|                   | net=22.7 2R=20   |                   | net=5.3 2R=15    |
+|                   | st=28 to=21      |                   | st=36 to=14      |
+|                   | t1=37 mfe=1.13   |                   | t1=35 mfe=1.18   |
+|                   | mae=-0.84        |                   | mae=-1.00        |
+| H12 L             | n=51 avg=0.35    | H14 L             | n=58 avg=0.23    |
+|                   | net=18.0 2R=19   |                   | net=13.3 2R=21   |
+|                   | st=26 to=6 t1=31 |                   | st=32 to=5 t1=33 |
+|                   | mfe=1.35         |                   | mfe=1.31         |
+|                   | mae=-0.96        |                   | mae=-0.98        |
+| H15 L             | n=44 avg=0.38    | Holdings          | $0.00            |
+|                   | net=16.8 2R=9    |                   |                  |
+|                   | st=10 to=25      |                   |                  |
+|                   | t1=21 mfe=1.17   |                   |                  |
+|                   | mae=-0.77        |                   |                  |
+| Impulses          | 4897             | Leg1              | 3585             |
+| Leg2 Candidates   | 2205             | Long Armed        | 334              |
+| Net Profit        | $0.00            | Net R             | 76.11            |
+| Params            | mode=VideoSecond | Probabilistic     | 0%               |
+|                   | EntryLite        | Sharpe Ratio      |                  |
+|                   | side=long        |                   |                  |
+|                   | imp=0.75         |                   |                  |
+|                   | leg2Retr=0.95    |                   |                  |
+|                   | sig=0.55         |                   |                  |
+|                   | target=2 hold=24 |                   |                  |
+|                   | roomMax=0.5      |                   |                  |
+|                   | struct=SWING_H   |                   |                  |
+|                   | block=13         |                   |                  |
+|                   | blockS=none      |                   |                  |
+| Return            | 0.00 %           | RiskTooSmall      | 74               |
+| Room <0.25R       | n=160 avg=0.36   | Room <0.50R       | n=127 avg=0.15   |
+|                   | net=57.5 2R=50   |                   | net=18.6 2R=34   |
+|                   | st=68 to=42      |                   | st=64 to=29      |
+|                   | t1=94 mfe=1.29   |                   | t1=63 mfe=1.13   |
+|                   | mae=-0.89        |                   | mae=-0.94        |
+| RTH 5m Bars       | 98028            | Runtime Trade     | 5/287            |
+|                   |                  | Rows              |                  |
+| Separations       | 2326             | Short Armed       | 0                |
+| Side L            | n=287 avg=0.27   | SignalInvalid     | 1062             |
+|                   | net=76.1 2R=84   |                   |                  |
+|                   | st=132 to=71     |                   |                  |
+|                   | t1=157 mfe=1.22  |                   |                  |
+|                   | mae=-0.92        |                   |                  |
+| Stops             | 132              | StopTooWide       | 1841             |
+| Struct SWING_H    | n=287 avg=0.27   | StructureRoom     | 0                |
+|                   | net=76.1 2R=84   |                   |                  |
+|                   | st=132 to=71     |                   |                  |
+|                   | t1=157 mfe=1.22  |                   |                  |
+|                   | mae=-0.92        |                   |                  |
+| T01               | 21-04-08 12:40 L | T02               | 21-04-12 13:00 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.0674       |                   | mfe=0.1541       |
+|                   | mae=-1.0725      |                   | mae=-1.7457      |
+|                   | room=0.2302      |                   | room=0.2807      |
+|                   | bars=3           |                   | bars=4           |
+| T03               | 21-04-13 10:50 L | T04               | 21-04-21 11:35 L |
+|                   | Stop r=-1        |                   | Timeout r=1.2156 |
+|                   | mfe=0.0216       |                   | mfe=1.5006       |
+|                   | mae=-1.1183      |                   | mae=-0.3232      |
+|                   | room=0.3065      |                   | room=0.1327      |
+|                   | bars=2           |                   | bars=26          |
+| T05               | 21-04-27 12:25 L | Timeouts          | 71               |
+|                   | Stop r=-1        |                   |                  |
+|                   | mfe=0.1883       |                   |                  |
+|                   | mae=-1.0466      |                   |                  |
+|                   | room=0.2833      |                   |                  |
+|                   | bars=6           |                   |                  |
+| Touch 1R          | 157              | Trend Bars        | 43278            |
+| Triggered         | 287              | Unrealized        | $0.00            |
+| Virtual Trades    | 287              | Volume            | $0.00            |
+| Win 2R            | 84               |                   |                  |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -0.645           |
+| Tracking Error    | 0.141            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 8656f96c9bec6650d4fc406b6cdfd712
+Backtest name: SecondLeg structure SWING_H long 5y
+Backtest url: 
+https://www.quantconnect.com/project/30609547/8656f96c9bec6650d4fc406b6cdfd712

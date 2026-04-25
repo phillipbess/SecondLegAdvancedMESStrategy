@@ -43,6 +43,23 @@ namespace QuantConnect.Algorithm.CSharp
             return result;
         }
 
+        private HashSet<string> TextSetParameter(string key)
+        {
+            var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            string raw = GetParameter(key);
+            if (string.IsNullOrWhiteSpace(raw))
+                return result;
+
+            foreach (string token in raw.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string value = token.Trim();
+                if (!string.IsNullOrWhiteSpace(value))
+                    result.Add(value.ToUpperInvariant());
+            }
+
+            return result;
+        }
+
         private bool PassesLiteTimeFilter(BarSnapshot bar)
         {
             if (!IsLiteMode())
@@ -93,6 +110,16 @@ namespace QuantConnect.Algorithm.CSharp
             return true;
         }
 
+        private bool PassesLiteStructureFilter(string structure)
+        {
+            if (!IsLiteMode())
+                return true;
+            string value = string.IsNullOrWhiteSpace(structure) ? "CLEAR" : structure.Trim().ToUpperInvariant();
+            if (LiteAllowedStructures.Count > 0 && !LiteAllowedStructures.Contains(value))
+                return false;
+            return LiteBlockedStructures.Count == 0 || !LiteBlockedStructures.Contains(value);
+        }
+
         private int MinutesFromOpen(BarSnapshot bar)
         {
             return (int)(bar.EndTime.TimeOfDay - new TimeSpan(9, 30, 0)).TotalMinutes;
@@ -140,6 +167,20 @@ namespace QuantConnect.Algorithm.CSharp
             return hours == null || hours.Count == 0
                 ? "none"
                 : string.Join("-", hours.OrderBy(x => x).Select(x => x.ToString(CultureInfo.InvariantCulture)));
+        }
+
+        private static string TextToken(HashSet<string> values)
+        {
+            return values == null || values.Count == 0
+                ? "none"
+                : string.Join("|", values.OrderBy(x => x));
+        }
+
+        private static string TextKeyToken(HashSet<string> values)
+        {
+            return values == null || values.Count == 0
+                ? "none"
+                : string.Join("-", values.OrderBy(x => x));
         }
     }
 }

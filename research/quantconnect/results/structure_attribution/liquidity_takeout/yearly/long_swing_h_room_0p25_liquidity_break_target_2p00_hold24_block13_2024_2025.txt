@@ -1,0 +1,137 @@
+=== RUN long_swing_h_room_0p25_liquidity_break_target_2p00_hold24_block13_2024_2025 ===
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+6ba127def81d3aabbfb7d5ee584e2b7b-f2f4e1c0c2510e3375b97f3a1fe53d85, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'SecondLeg liq yearly 
+long_swing_h_room_0p25_liquidity_break_target_2p00_hold24_block13_2024_2025' 
+for project 'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/5238c3916ea2bcf63788666f89fd0680
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 5m Bars           | 22977            | Armed             | 26               |
+| Avg R             | 0.63             | Block 1           | SecondLegTooDeep |
+|                   |                  |                   | :399             |
+| Block 2           | StopTooWide:372  | Block 3           | PullbackTooLong: |
+|                   |                  |                   | 326              |
+| Block 4           | PullbackTooDeep: | Block 5           | LiteEntryRoomFil |
+|                   | 296              |                   | ter:198          |
+| Block Types       | 10               | Entry Mode        | VideoSecondEntry |
+|                   |                  |                   | Lite             |
+| Equity            | $100,000.00      | Expired           | 6                |
+| Export Key        | 30609547/secondl | Fees              | -$0.00           |
+|                   | eg_trade_export_ |                   |                  |
+|                   | VideoSecondEntry |                   |                  |
+|                   | Lite_20240401_20 |                   |                  |
+|                   | 250401_bar_5_sid |                   |                  |
+|                   | e_long_leg2_0p8_ |                   |                  |
+|                   | leg2retr_0p95_im |                   |                  |
+|                   | p_0p75_pbatr_0_l |                   |                  |
+|                   | 2atr_0_sig_0p55_ |                   |                  |
+|                   | target_2_hold_24 |                   |                  |
+|                   | _trig_3_liq_1_ro |                   |                  |
+|                   | om_1_rmin_-1_rma |                   |                  |
+|                   | x_0p25_struct_SW |                   |                  |
+|                   | ING_H_hrs_13_hL_ |                   |                  |
+|                   | none_hS_none.csv |                   |                  |
+| H10 L             | n=8 avg=0.67     | H11 L             | n=4 avg=-0.25    |
+|                   | net=5.4 2R=3     |                   | net=-1.0 2R=1    |
+|                   | st=3 to=2 t1=5   |                   | st=3 to=0 t1=3   |
+|                   | mfe=1.24         |                   | mfe=1.14         |
+|                   | mae=-0.94        |                   | mae=-1.34        |
+| H12 L             | n=5 avg=0.67     | H14 L             | n=2 avg=1.63     |
+|                   | net=3.4 2R=2     |                   | net=3.3 2R=1     |
+|                   | st=2 to=1 t1=4   |                   | st=0 to=1 t1=2   |
+|                   | mfe=1.69         |                   | mfe=1.91         |
+|                   | mae=-0.96        |                   | mae=-0.65        |
+| H15 L             | n=1 avg=1.49     | Holdings          | $0.00            |
+|                   | net=1.5 2R=0     |                   |                  |
+|                   | st=0 to=1 t1=1   |                   |                  |
+|                   | mfe=1.73         |                   |                  |
+|                   | mae=-0.68        |                   |                  |
+| Impulses          | 985              | Leg1              | 719              |
+| Leg2 Candidates   | 433              | Long Armed        | 26               |
+| Net Profit        | $0.00            | Net R             | 12.52            |
+| Params            | mode=VideoSecond | Probabilistic     | 0%               |
+|                   | EntryLite bar=5  | Sharpe Ratio      |                  |
+|                   | side=long        |                   |                  |
+|                   | imp=0.75         |                   |                  |
+|                   | leg2Retr=0.95    |                   |                  |
+|                   | sig=0.55         |                   |                  |
+|                   | target=2 hold=24 |                   |                  |
+|                   | trig=3 liq=True  |                   |                  |
+|                   | roomMax=0.25     |                   |                  |
+|                   | struct=SWING_H   |                   |                  |
+|                   | block=13         |                   |                  |
+|                   | blockS=none      |                   |                  |
+| Return            | 0.00 %           | RiskTooSmall      | 15               |
+| Room <0.25R       | n=20 avg=0.63    | RTH 5m Bars       | 19701            |
+|                   | net=12.5 2R=7    |                   |                  |
+|                   | st=8 to=5 t1=15  |                   |                  |
+|                   | mfe=1.42         |                   |                  |
+|                   | mae=-0.98        |                   |                  |
+| Runtime Trade     | 5/20             | Separations       | 464              |
+| Rows              |                  |                   |                  |
+| Short Armed       | 0                | Side L            | n=20 avg=0.63    |
+|                   |                  |                   | net=12.5 2R=7    |
+|                   |                  |                   | st=8 to=5 t1=15  |
+|                   |                  |                   | mfe=1.42         |
+|                   |                  |                   | mae=-0.98        |
+| SignalInvalid     | 195              | Stops             | 8                |
+| StopTooWide       | 372              | Struct SWING_H    | n=20 avg=0.63    |
+|                   |                  |                   | net=12.5 2R=7    |
+|                   |                  |                   | st=8 to=5 t1=15  |
+|                   |                  |                   | mfe=1.42         |
+|                   |                  |                   | mae=-0.98        |
+| StructureRoom     | 0                | T01               | 24-04-23 10:25 L |
+|                   |                  |                   | Target r=2       |
+|                   |                  |                   | mfe=2.167        |
+|                   |                  |                   | mae=-0.5807      |
+|                   |                  |                   | room=0.0083      |
+|                   |                  |                   | bars=8           |
+| T02               | 24-04-26 13:00 L | T03               | 24-05-03 12:10 L |
+|                   | Stop r=-1        |                   | Timeout r=1.3739 |
+|                   | mfe=1.2633       |                   | mfe=1.9833       |
+|                   | mae=-1.0634      |                   | mae=-0.97        |
+|                   | room=0.1377      |                   | room=0.0115      |
+|                   | bars=18          |                   | bars=26          |
+| T04               | 24-05-06 10:45 L | T05               | 24-07-23 10:25 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.1563       |                   | mfe=0.0941       |
+|                   | mae=-1.1293      |                   | mae=-1.2452      |
+|                   | room=0.2336      |                   | room=0.1344      |
+|                   | bars=5           |                   | bars=4           |
+| Timeouts          | 5                | Touch 1R          | 15               |
+| Trend Bars        | 8866             | Triggered         | 20               |
+| Unrealized        | $0.00            | Virtual Trades    | 20               |
+| Volume            | $0.00            | Win 2R            | 7                |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -0.581           |
+| Tracking Error    | 0.115            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 5238c3916ea2bcf63788666f89fd0680
+Backtest name: SecondLeg liq yearly 
+long_swing_h_room_0p25_liquidity_break_target_2p00_hold24_block13_2024_2025
+Backtest url: 
+https://www.quantconnect.com/project/30609547/5238c3916ea2bcf63788666f89fd0680

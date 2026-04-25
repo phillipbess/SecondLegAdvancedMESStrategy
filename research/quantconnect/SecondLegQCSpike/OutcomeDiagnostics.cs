@@ -11,6 +11,7 @@ namespace QuantConnect.Algorithm.CSharp
             RecordOutcomeBucket($"Side {side}", outcome, rMultiple);
             RecordOutcomeBucket($"H{_virtualTrade.SignalHour:00} {side}", outcome, rMultiple);
             RecordOutcomeBucket(RoomBucketName(_virtualTrade.RoomToStructureR), outcome, rMultiple);
+            RecordOutcomeBucket($"Struct {_virtualTrade.Structure}", outcome, rMultiple);
         }
 
         private void RecordOutcomeBucket(string key, string outcome, double rMultiple)
@@ -60,7 +61,9 @@ namespace QuantConnect.Algorithm.CSharp
                 return "0-" + key;
             if (key.StartsWith("H", StringComparison.Ordinal))
                 return "1-" + key;
-            return "2-" + key;
+            if (key.StartsWith("Room", StringComparison.Ordinal))
+                return "2-" + key;
+            return "3-" + key;
         }
 
         private sealed class OutcomeBucket

@@ -41,8 +41,9 @@ namespace QuantConnect.Algorithm.CSharp
         private bool LiteResetOnImpulseBreak = false;
         private bool LiteForbidNegativeRetracement = false;
         private bool LiteStructureVetoEnabled = false;
+        private bool LiteUseStructureBreakEntry = false;
         private const int EntryOffsetTicks = 1;
-        private const int MaxTriggerBars = 3;
+        private int MaxTriggerBars = 3;
         private const int StopBufferTicks = 2;
         private double RiskPerTrade = 150.0;
         private double MaxStopAtrMultiple = 1.50;
@@ -52,11 +53,14 @@ namespace QuantConnect.Algorithm.CSharp
         private int MaxOutcomeBars = 24;
         private double ProfitTargetR = 2.0;
         private double TouchProbeR = 1.0;
+        private int BarMinutes = 5;
         private double LiteEntryRoomMinR = -1.0;
         private double LiteEntryRoomMaxR = -1.0;
         private string EntryMode = "strictv1";
         private string SideFilter = "both";
         private int MaxRuntimeTradeRows = 100;
+        private HashSet<string> LiteAllowedStructures = new HashSet<string>();
+        private HashSet<string> LiteBlockedStructures = new HashSet<string>();
         private HashSet<int> LiteAllowedHours = new HashSet<int>();
         private HashSet<int> LiteBlockedHours = new HashSet<int>();
         private HashSet<int> LiteAllowedLongHours = new HashSet<int>();
@@ -95,8 +99,8 @@ namespace QuantConnect.Algorithm.CSharp
         private double _separationLow = double.NaN;
         private int _separationBar = -1;
 
-        private int _fiveMinuteBars;
-        private int _rthFiveMinuteBars;
+        private int _analysisBars;
+        private int _rthAnalysisBars;
         private int _trendBars;
         private int _impulseCount;
         private int _leg1Count;
@@ -134,17 +138,22 @@ namespace QuantConnect.Algorithm.CSharp
             LiteResetOnImpulseBreak = BoolParameter("liteResetOnImpulseBreak", LiteResetOnImpulseBreak);
             LiteForbidNegativeRetracement = BoolParameter("liteForbidNegativeRetracement", LiteForbidNegativeRetracement);
             LiteStructureVetoEnabled = BoolParameter("liteStructureVetoEnabled", LiteStructureVetoEnabled);
+            LiteUseStructureBreakEntry = BoolParameter("liteUseStructureBreakEntry", LiteUseStructureBreakEntry);
             MinRoomToStructureR = DoubleParameter("minRoomToStructureR", MinRoomToStructureR);
             RiskPerTrade = DoubleParameter("riskPerTrade", RiskPerTrade);
             MaxStopAtrMultiple = DoubleParameter("maxStopAtr", MaxStopAtrMultiple);
             MaxOutcomeBars = Math.Max(1, IntParameter("maxOutcomeBars", MaxOutcomeBars));
+            MaxTriggerBars = Math.Max(1, IntParameter("maxTriggerBars", MaxTriggerBars));
             ProfitTargetR = Clamp(DoubleParameter("profitTargetR", ProfitTargetR), 0.25, 5.0);
             TouchProbeR = Clamp(DoubleParameter("touchProbeR", TouchProbeR), 0.25, 5.0);
+            BarMinutes = Math.Max(1, IntParameter("barMinutes", BarMinutes));
             LiteEntryRoomMinR = DoubleParameter("liteEntryRoomMinR", LiteEntryRoomMinR);
             LiteEntryRoomMaxR = DoubleParameter("liteEntryRoomMaxR", LiteEntryRoomMaxR);
             EntryMode = TextParameter("entryMode", EntryMode).ToLowerInvariant();
             SideFilter = TextParameter("sideFilter", SideFilter).ToLowerInvariant();
             MaxRuntimeTradeRows = Math.Max(0, IntParameter("maxRuntimeTradeRows", MaxRuntimeTradeRows));
+            LiteAllowedStructures = TextSetParameter("liteAllowedStructures");
+            LiteBlockedStructures = TextSetParameter("liteBlockedStructures");
             LiteAllowedHours = HourSetParameter("liteAllowedHours");
             LiteBlockedHours = HourSetParameter("liteBlockedHours");
             LiteAllowedLongHours = HourSetParameter("liteAllowedLongHours");
@@ -165,22 +174,22 @@ namespace QuantConnect.Algorithm.CSharp
                 contractDepthOffset: 0);
 
             _continuousSymbol = _future.Symbol;
-            Consolidate<TradeBar>(_continuousSymbol, TimeSpan.FromMinutes(5), OnFiveMinuteBar);
-            _tradeExportKey = $"{ProjectId}/secondleg_trade_export_{EntryModeToken()}_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_side_{SideFilter}_leg2_{ParamToken(SecondLegMaxMomentumRatio)}_leg2retr_{ParamToken(LiteMaxLeg2Retracement)}_imp_{ParamToken(EffectiveMinImpulseAtrMultiple())}_pbatr_{ParamToken(LiteMinPullbackAtr)}_l2atr_{ParamToken(LiteMinLeg2Atr)}_sig_{ParamToken(LiteMinSignalClosePct)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}_room_{ParamToken(MinRoomToStructureR)}_rmin_{ParamToken(LiteEntryRoomMinR)}_rmax_{ParamToken(LiteEntryRoomMaxR)}_hrs_{HourKeyToken(LiteBlockedHours)}_hL_{HourKeyToken(LiteBlockedLongHours)}_hS_{HourKeyToken(LiteBlockedShortHours)}.csv";
+            Consolidate<TradeBar>(_continuousSymbol, TimeSpan.FromMinutes(BarMinutes), OnAnalysisBar);
+            _tradeExportKey = $"{ProjectId}/secondleg_trade_export_{EntryModeToken()}_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_leg2_{ParamToken(SecondLegMaxMomentumRatio)}_leg2retr_{ParamToken(LiteMaxLeg2Retracement)}_imp_{ParamToken(EffectiveMinImpulseAtrMultiple())}_pbatr_{ParamToken(LiteMinPullbackAtr)}_l2atr_{ParamToken(LiteMinLeg2Atr)}_sig_{ParamToken(LiteMinSignalClosePct)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}_trig_{MaxTriggerBars}_liq_{(LiteUseStructureBreakEntry ? "1" : "0")}_room_{ParamToken(MinRoomToStructureR)}_rmin_{ParamToken(LiteEntryRoomMinR)}_rmax_{ParamToken(LiteEntryRoomMaxR)}_struct_{TextKeyToken(LiteAllowedStructures)}_hrs_{HourKeyToken(LiteBlockedHours)}_hL_{HourKeyToken(LiteBlockedLongHours)}_hS_{HourKeyToken(LiteBlockedShortHours)}.csv";
             _tradeExport.AppendLine("tradeId,entryMode,signalTime,triggerTime,closeTime,side,entry,stop,touchProbePrice,targetPrice,targetR,riskPts,riskDollars,quantity,atrAtPlan,stopAtrMultiple,impulseAtrMultiple,leg1Retracement,leg2Retracement,leg2MomentumRatio,totalPullbackBars,leg1Bars,leg2Bars,structure,roomToStructureR,signalHour,minutesFromOpen,signalClosePct,signalBodyPct,emaFastDistanceAtr,emaSlowDistanceAtr,atrRatio,slopeAtrPct,maxFavorableR,maxAdverseR,outcome,rMultiple,touchedProbe,barsHeld");
 
-            Debug($"SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders. entryMode={EntryModeToken()} startDate={startDate:yyyy-MM-dd} endDate={endDate:yyyy-MM-dd} sideFilter={SideFilter} minImpulseAtr={EffectiveMinImpulseAtrMultiple():0.###} maxPullbackRetracement={EffectiveMaxPullbackRetracement():0.###} liteMaxLeg2Retracement={LiteMaxLeg2Retracement:0.###} liteSignalClosePct={LiteMinSignalClosePct:0.###} profitTargetR={ProfitTargetR:0.###} touchProbeR={TouchProbeR:0.###} maxOutcomeBars={MaxOutcomeBars} entryRoomMin={LiteEntryRoomMinR:0.###} entryRoomMax={LiteEntryRoomMaxR:0.###} blockedHours={HourToken(LiteBlockedHours)} blockedLong={HourToken(LiteBlockedLongHours)} blockedShort={HourToken(LiteBlockedShortHours)} maxStopAtr={MaxStopAtrMultiple:0.###}");
+            Debug($"SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders. entryMode={EntryModeToken()} startDate={startDate:yyyy-MM-dd} endDate={endDate:yyyy-MM-dd} barMinutes={BarMinutes} sideFilter={SideFilter} minImpulseAtr={EffectiveMinImpulseAtrMultiple():0.###} maxPullbackRetracement={EffectiveMaxPullbackRetracement():0.###} liteMaxLeg2Retracement={LiteMaxLeg2Retracement:0.###} liteSignalClosePct={LiteMinSignalClosePct:0.###} profitTargetR={ProfitTargetR:0.###} touchProbeR={TouchProbeR:0.###} maxOutcomeBars={MaxOutcomeBars} maxTriggerBars={MaxTriggerBars} entryRoomMin={LiteEntryRoomMinR:0.###} entryRoomMax={LiteEntryRoomMaxR:0.###} allowedStructures={TextToken(LiteAllowedStructures)} blockedHours={HourToken(LiteBlockedHours)} blockedLong={HourToken(LiteBlockedLongHours)} blockedShort={HourToken(LiteBlockedShortHours)} maxStopAtr={MaxStopAtrMultiple:0.###}");
         }
 
-        private void OnFiveMinuteBar(TradeBar input)
+        private void OnAnalysisBar(TradeBar input)
         {
-            _fiveMinuteBars++;
+            _analysisBars++;
             if (!IsRegularSession(input.EndTime))
                 return;
 
             var bar = BuildBarSnapshot(input);
             _bars.Add(bar);
-            _rthFiveMinuteBars++;
+            _rthAnalysisBars++;
             GetMonth(bar.EndTime).Bars++;
 
             UpdateSessionState(bar);
@@ -239,8 +248,8 @@ namespace QuantConnect.Algorithm.CSharp
                 CloseVirtualTrade(_bars[_bars.Count - 1], "AlgorithmEnd");
             SaveTradeExport();
 
-            SetRuntimeStatistic("5m Bars", _fiveMinuteBars.ToString());
-            SetRuntimeStatistic("RTH 5m Bars", _rthFiveMinuteBars.ToString());
+            SetRuntimeStatistic($"{BarMinutes}m Bars", _analysisBars.ToString());
+            SetRuntimeStatistic($"RTH {BarMinutes}m Bars", _rthAnalysisBars.ToString());
             SetRuntimeStatistic("Trend Bars", _trendBars.ToString());
             SetRuntimeStatistic("Impulses", _impulseCount.ToString());
             SetRuntimeStatistic("Leg1", _leg1Count.ToString());
@@ -259,7 +268,7 @@ namespace QuantConnect.Algorithm.CSharp
             SetRuntimeStatistic("Net R", _netR.ToString("0.00"));
             SetRuntimeStatistic("Avg R", _virtualTrades > 0 ? (_netR / _virtualTrades).ToString("0.00") : "0.00");
             SetRuntimeStatistic("Entry Mode", EntryModeToken());
-            SetRuntimeStatistic("Params", $"mode={EntryModeToken()} side={SideFilter} imp={EffectiveMinImpulseAtrMultiple():0.###} retr={(IsLiteMode() ? 0.0 : MinPullbackRetracement):0.###}-{EffectiveMaxPullbackRetracement():0.###} leg2Retr={LiteMaxLeg2Retracement:0.###} sig={LiteMinSignalClosePct:0.###} target={ProfitTargetR:0.###} hold={MaxOutcomeBars} roomMin={LiteEntryRoomMinR:0.###} roomMax={LiteEntryRoomMaxR:0.###} block={HourToken(LiteBlockedHours)} blockL={HourToken(LiteBlockedLongHours)} blockS={HourToken(LiteBlockedShortHours)}");
+            SetRuntimeStatistic("Params", $"mode={EntryModeToken()} bar={BarMinutes} side={SideFilter} imp={EffectiveMinImpulseAtrMultiple():0.###} leg2Retr={LiteMaxLeg2Retracement:0.###} sig={LiteMinSignalClosePct:0.###} target={ProfitTargetR:0.###} hold={MaxOutcomeBars} trig={MaxTriggerBars} liq={LiteUseStructureBreakEntry} roomMax={LiteEntryRoomMaxR:0.###} struct={TextToken(LiteAllowedStructures)} block={HourToken(LiteBlockedHours)} blockS={HourToken(LiteBlockedShortHours)}");
             SetRuntimeStatistic("Export Key", _tradeExportKey);
             SetRuntimeStatistic("Runtime Trade Rows", $"{_tradeRuntimeRows.Count}/{_virtualTrades}");
             foreach (string row in _tradeRuntimeRows)
@@ -278,7 +287,7 @@ namespace QuantConnect.Algorithm.CSharp
                 SetRuntimeStatistic($"Block {blockRank++}", $"{item.Key}:{item.Value}");
             PublishOutcomeBuckets();
 
-            Debug($"ENTRY_DETECTOR_SUMMARY bars={_rthFiveMinuteBars} trendBars={_trendBars} impulses={_impulseCount} leg1={_leg1Count} separation={_separationCount} leg2={_leg2CandidateCount} armed={_armedSignals} long={_longArmed} short={_shortArmed} triggered={_triggeredSignals} expired={_expiredSignals}");
+            Debug($"ENTRY_DETECTOR_SUMMARY barMinutes={BarMinutes} bars={_rthAnalysisBars} trendBars={_trendBars} impulses={_impulseCount} leg1={_leg1Count} separation={_separationCount} leg2={_leg2CandidateCount} armed={_armedSignals} long={_longArmed} short={_shortArmed} triggered={_triggeredSignals} expired={_expiredSignals}");
             Debug($"VIRTUAL_OUTCOME_SUMMARY trades={_virtualTrades} touchProbe={_touchOneR} targetWins={_targetWins} stops={_stops} timeouts={_timeouts} netR={_netR:0.00} avgR={(_virtualTrades > 0 ? _netR / _virtualTrades : 0.0):0.00}");
             foreach (var item in _monthly.OrderBy(x => x.Key))
                 Debug($"MONTH_SUMMARY month={item.Key} bars={item.Value.Bars} armed={item.Value.Armed} long={item.Value.LongArmed} short={item.Value.ShortArmed} triggered={item.Value.Triggered} expired={item.Value.Expired}");
@@ -641,7 +650,7 @@ namespace QuantConnect.Algorithm.CSharp
                 Block("StopTooWide");
                 return;
             }
-            bool hasStructureRoom = HasStructureRoom(entry, stop, _impulse.Bias, bar, out string structure, out double roomToStructureR);
+            bool hasStructureRoom = HasStructureRoom(entry, stop, _impulse.Bias, bar, out string structure, out double roomToStructureR, out double structurePrice);
             if (!hasStructureRoom && (!IsLiteMode() || LiteStructureVetoEnabled))
             {
                 Block("StructureRoom");
@@ -651,6 +660,34 @@ namespace QuantConnect.Algorithm.CSharp
             {
                 Block("LiteEntryRoomFilter");
                 return;
+            }
+            if (IsLiteMode() && !PassesLiteStructureFilter(structure))
+            {
+                Block("LiteStructureFilter");
+                return;
+            }
+            if (IsLiteMode() && LiteUseStructureBreakEntry && !double.IsNaN(structurePrice))
+            {
+                double breakEntry = _impulse.Bias == Bias.Long
+                    ? RoundToTick(structurePrice + EntryOffsetTicks * TickSize)
+                    : RoundToTick(structurePrice - EntryOffsetTicks * TickSize);
+                if ((_impulse.Bias == Bias.Long && breakEntry > entry) || (_impulse.Bias == Bias.Short && breakEntry < entry))
+                {
+                    entry = breakEntry;
+                    stopDistance = Math.Abs(entry - stop);
+                    riskPerContract = stopDistance * PointValue;
+                    quantity = riskPerContract > 0.0 ? Math.Floor(RiskPerTrade / riskPerContract) : 0.0;
+                    if (riskPerContract <= 0.0 || quantity <= 0)
+                    {
+                        Block("LiquidityRiskTooSmall");
+                        return;
+                    }
+                    if (bar.Atr > 0.0 && stopDistance / bar.Atr > MaxStopAtrMultiple)
+                    {
+                        Block("LiquidityStopTooWide");
+                        return;
+                    }
+                }
             }
 
             double leg1Retracement = ComputeRetracement(_impulse.Bias == Bias.Long ? _leg1.Low : _leg1.High);
@@ -939,10 +976,11 @@ namespace QuantConnect.Algorithm.CSharp
                 _activeBias = Bias.Neutral;
         }
 
-        private bool HasStructureRoom(double entry, double stop, Bias bias, BarSnapshot bar, out string label, out double roomToStructureR)
+        private bool HasStructureRoom(double entry, double stop, Bias bias, BarSnapshot bar, out string label, out double roomToStructureR, out double structurePrice)
         {
             label = "clear";
             roomToStructureR = 999.0;
+            structurePrice = double.NaN;
             double risk = Math.Max(TickSize, Math.Abs(entry - stop));
             double required = risk * MinRoomToStructureR;
             var levels = BuildStructureLevels(bar);
@@ -955,6 +993,7 @@ namespace QuantConnect.Algorithm.CSharp
                 if (resistance == null)
                     return true;
                 label = resistance.Label;
+                structurePrice = resistance.Price;
                 roomToStructureR = (resistance.Price - entry) / risk;
                 return resistance.Price - entry >= required;
             }
@@ -965,6 +1004,7 @@ namespace QuantConnect.Algorithm.CSharp
             if (support == null)
                 return true;
             label = support.Label;
+            structurePrice = support.Price;
             roomToStructureR = (entry - support.Price) / risk;
             return entry - support.Price >= required;
         }
