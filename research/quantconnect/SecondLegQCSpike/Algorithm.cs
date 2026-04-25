@@ -855,6 +855,9 @@ namespace QuantConnect.Algorithm.CSharp
                 _touchOneR++;
             }
 
+            if (TryCloseAmbiguousOutcome(bar, stopHit, targetHit))
+                return;
+
             if (stopHit)
             {
                 CloseVirtualTrade(bar, "Stop", -1.0);

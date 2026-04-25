@@ -111,6 +111,23 @@ The panel converged on three broader ideas:
 
 The most credible "new ingredient" is **order-flow imbalance confirmation**. QuantConnect documentation says futures tick data includes trade and quote ticks with bid/ask price and size, so this is feasible to test in LEAN, but it should be treated as a new research harness rather than another minute-bar tweak.
 
+### Brooks Bar-by-Bar Price Action
+
+Reviewed `Reading Price Charts Bar by Bar` and converted two of the strongest price-action families into deterministic tests:
+
+- `BrooksTFO`: trend-from-open context followed by weak with-trend pullback continuation.
+- `BrooksOR`: failed opening breakout/reversal around prior-day or opening-range levels.
+
+Best BrooksTFO result:
+
+| Variant | Net R | Monthly R | Trades/mo | Avg R |
+|---|---:|---:|---:|---:|
+| 5m long, 60m measure, 0.75 ATR move, no EMA-side requirement, 1.5R target, 60-bar hold | 57.97 | 0.97 | 4.4 | 0.22 |
+
+BrooksOR results were negative across the tested matrix. The worst broad version was OR-level failed breakouts at `-97.91R` over five years.
+
+Verdict: **Brooks helped conceptually, but deterministic minute-bar Brooks rules did not meet the goal**. The useful lesson is that context matters more than the named pattern. Price-only versions still fall far short of `+6R` to `+8R/month`.
+
 ## Next Research Steps
 
 1. Treat **Afternoon Momentum Long 5m** as the current benchmark, not the finish line.

@@ -36,7 +36,11 @@ namespace QuantConnect.Algorithm.CSharp
                 || string.Equals(EntryMode, "odpullback", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(EntryMode, "afternoonmomentum", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(EntryMode, "afternooncompression", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(EntryMode, "compressionbreakout", StringComparison.OrdinalIgnoreCase);
+                || string.Equals(EntryMode, "compressionbreakout", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(EntryMode, "brookstfo", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(EntryMode, "brookstrendpullback", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(EntryMode, "brooksopenreversal", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(EntryMode, "brooksor", StringComparison.OrdinalIgnoreCase);
         }
 
         private void ConfigureOpeningDriveResearch(DateTime startDate, DateTime endDate)
@@ -59,8 +63,16 @@ namespace QuantConnect.Algorithm.CSharp
                 || string.Equals(EntryMode, "compressionbreakout", StringComparison.OrdinalIgnoreCase)
                     ? "compression"
                     : string.Empty;
+            if (string.Equals(EntryMode, "brookstfo", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(EntryMode, "brookstrendpullback", StringComparison.OrdinalIgnoreCase))
+                MomentumResearchMode = "brooks";
+            if (string.Equals(EntryMode, "brooksopenreversal", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(EntryMode, "brooksor", StringComparison.OrdinalIgnoreCase))
+                MomentumResearchMode = "brooksor";
             ConfigureAfternoonCompressionResearch(startDate, endDate);
-            if (MomentumResearchMode != "compression")
+            ConfigureBrooksTrendPullbackResearch(startDate, endDate);
+            ConfigureBrooksOpeningReversalResearch(startDate, endDate);
+            if (MomentumResearchMode != "compression" && MomentumResearchMode != "brooks" && MomentumResearchMode != "brooksor")
                 _tradeExportKey = $"{ProjectId}/opening_drive_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_or_{OpeningRangeMinutes}_minatr_{ParamToken(OpeningDriveMinRangeAtr)}_close_{ParamToken(OpeningDriveClosePct)}_pb_{ParamToken(OpeningDrivePullbackAtr)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}.csv";
         }
 
@@ -76,6 +88,16 @@ namespace QuantConnect.Algorithm.CSharp
             if (MomentumResearchMode == "compression")
             {
                 TryAfternoonCompressionResearch(bar);
+                return;
+            }
+            if (MomentumResearchMode == "brooks")
+            {
+                TryBrooksTrendPullbackResearch(bar);
+                return;
+            }
+            if (MomentumResearchMode == "brooksor")
+            {
+                TryBrooksOpeningReversalResearch(bar);
                 return;
             }
 
@@ -123,6 +145,8 @@ namespace QuantConnect.Algorithm.CSharp
             _odSessionOpen = bar.Open;
             _odPending = new OpeningDrivePending();
             ResetAfternoonCompressionSession();
+            ResetBrooksTrendPullbackSession();
+            ResetBrooksOpeningReversalSession();
         }
 
         private void TryAfternoonMomentumResearch(BarSnapshot bar)
