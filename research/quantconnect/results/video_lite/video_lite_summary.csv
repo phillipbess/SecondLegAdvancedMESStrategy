@@ -1,0 +1,8 @@
+"variant","triggered","approx_trades_per_month","win_2r","stops","timeouts","net_r","avg_r","armed","long_armed","short_armed","structure_room_blocks","backtest_id"
+"lite_both_5y_imp_0p75_retr_0p95_no_structure","1564","26.1","377","920","267","-33.02","-0.02","1854","1098","756","0","a5a116c5aecab95a1e60614406edc323"
+"lite_both_5y_imp_0p75_retr_0p95_structure_veto","633","10.6","127","374","132","-59.29","-0.09","762","461","301","1792","544e1dd1cc1d64863bc8556082e008bd"
+"lite_long_5y_imp_0p50_retr_0p95_no_structure","927","15.4","225","531","171","16.09","0.02","1100","1100","0","0","cb73c020ca6673f245b2ec3b206c38ae"
+"lite_long_5y_imp_0p75_retr_0p95_no_structure","926","15.4","225","530","171","17.09","0.02","1099","1099","0","0","849f2570b009c550868de7d2a15c53d9"
+"lite_long_5y_imp_1p00_retr_0p95_no_structure","921","15.4","225","527","169","19.16","0.02","1091","1091","0","0","d9c60ba08e7eee0be036ccd3ddd34691"
+"lite_long_5y_imp_1p25_retr_0p95_no_structure","910","15.2","223","522","165","14.95","0.02","1073","1073","0","0","cc2036b3f24e6502525ec22ae6ff912d"
+"lite_short_5y_imp_0p75_retr_0p95_no_structure","639","10.6","154","389","96","-45.71","-0.07","758","0","758","0","52ad32be81bb2e30d3fb668062566db5"

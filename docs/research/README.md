@@ -18,6 +18,7 @@ For the 2026-04-24 backtesting push, read the notes in this order:
 3. [quantconnect-side-split-2026-04-24.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/research/quantconnect-side-split-2026-04-24.md)
 4. [quantconnect-short-refinement-2026-04-24.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/research/quantconnect-short-refinement-2026-04-24.md)
 5. [quantconnect-frequency-probe-2026-04-24.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/research/quantconnect-frequency-probe-2026-04-24.md)
+6. [quantconnect-video-lite-5y-2026-04-25.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/research/quantconnect-video-lite-5y-2026-04-25.md)
 
 Short version:
 
@@ -27,3 +28,5 @@ Short version:
   frequency and remains negative
 - `VideoSecondEntryLite` exists to test the video idea separately instead of mutating
   the strict contract
+- `VideoSecondEntryLite` fixes frequency, but the first 5-year sweep says the cleanest
+  pocket is long-only and still thin: about `+0.02R/trade`
