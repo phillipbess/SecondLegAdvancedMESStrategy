@@ -60,6 +60,16 @@ class Setup:
     first_hour_move_atr: float
     strong_bull_bars: int
     strong_bear_bars: int
+    entry_price: float
+    stop_price: float
+    risk_pts: float
+    continuation_mfe_pts: float
+    continuation_mae_pts: float
+    continuation_eod_pts: float
+    continuation_mfe_r: float
+    continuation_mae_r: float
+    hit_1r_before_stop: bool
+    continuation_grade: str
     bars: list[Bar]
 
 
@@ -204,6 +214,8 @@ def build_setups(
         setup_index = index_by_time[measure.t]
         window_start = max(0, setup_index - before_bars)
         window_end = min(len(bars), setup_index + after_bars + 1)
+        forward = [bar for bar in session if bar.t > measure.t]
+        outcome = compute_continuation_outcome(side, measure.c, first_hour, forward)
         setup_id = f"{date_key.replace('-', '')}_{measure.t.strftime('%H%M')}_{side}_{len(setups) + 1:03d}"
         setups.append(Setup(
             setup_id=setup_id,
@@ -219,10 +231,98 @@ def build_setups(
             first_hour_move_atr=move_atr,
             strong_bull_bars=sum(1 for bar in first_hour if is_strong_bull(bar)),
             strong_bear_bars=sum(1 for bar in first_hour if is_strong_bear(bar)),
+            entry_price=measure.c,
+            stop_price=outcome["stop_price"],
+            risk_pts=outcome["risk_pts"],
+            continuation_mfe_pts=outcome["mfe_pts"],
+            continuation_mae_pts=outcome["mae_pts"],
+            continuation_eod_pts=outcome["eod_pts"],
+            continuation_mfe_r=outcome["mfe_r"],
+            continuation_mae_r=outcome["mae_r"],
+            hit_1r_before_stop=outcome["hit_1r_before_stop"],
+            continuation_grade=outcome["grade"],
             bars=bars[window_start:window_end],
         ))
 
     return setups
+
+
+def compute_continuation_outcome(side: str, entry_price: float, first_hour: list[Bar], forward: list[Bar]) -> dict[str, float | bool | str]:
+    if side == "Long":
+        stop_price = min(bar.l for bar in first_hour)
+        risk_pts = max(TICK_SIZE, entry_price - stop_price)
+    else:
+        stop_price = max(bar.h for bar in first_hour)
+        risk_pts = max(TICK_SIZE, stop_price - entry_price)
+
+    if not forward:
+        return {
+            "stop_price": stop_price,
+            "risk_pts": risk_pts,
+            "mfe_pts": 0.0,
+            "mae_pts": 0.0,
+            "eod_pts": 0.0,
+            "mfe_r": 0.0,
+            "mae_r": 0.0,
+            "hit_1r_before_stop": False,
+            "grade": "no-forward-bars",
+        }
+
+    target_price = entry_price + risk_pts if side == "Long" else entry_price - risk_pts
+    mfe_pts = 0.0
+    mae_pts = 0.0
+    hit_1r_before_stop = False
+    stopped_first = False
+
+    for bar in forward:
+        if side == "Long":
+            favorable = bar.h - entry_price
+            adverse = entry_price - bar.l
+            target_hit = bar.h >= target_price
+            stop_hit = bar.l <= stop_price
+        else:
+            favorable = entry_price - bar.l
+            adverse = bar.h - entry_price
+            target_hit = bar.l <= target_price
+            stop_hit = bar.h >= stop_price
+
+        mfe_pts = max(mfe_pts, favorable)
+        mae_pts = max(mae_pts, adverse)
+        if target_hit and not stop_hit:
+            hit_1r_before_stop = True
+            break
+        if stop_hit and not target_hit:
+            stopped_first = True
+            break
+        if target_hit and stop_hit:
+            # Conservative ambiguity rule for 5-minute bars.
+            stopped_first = True
+            break
+
+    last_close = forward[-1].c
+    eod_pts = last_close - entry_price if side == "Long" else entry_price - last_close
+    mfe_r = mfe_pts / risk_pts
+    mae_r = mae_pts / risk_pts
+    if hit_1r_before_stop:
+        grade = "hit-1r"
+    elif stopped_first:
+        grade = "stopped"
+    elif eod_pts > 0:
+        grade = "positive-eod"
+    else:
+        grade = "failed-eod"
+
+    return {
+        "stop_price": stop_price,
+        "risk_pts": risk_pts,
+        "mfe_pts": mfe_pts,
+        "mae_pts": mae_pts,
+        "eod_pts": eod_pts,
+        "mfe_r": mfe_r,
+        "mae_r": mae_r,
+        "hit_1r_before_stop": hit_1r_before_stop,
+        "grade": grade,
+    }
 
 
 def scale(value: float, lo: float, hi: float, height: int, pad: int) -> float:
@@ -300,6 +400,16 @@ def write_manifest(setups: list[Setup], out_dir: Path) -> Path:
             "firstHourMoveAtr",
             "strongBullBars",
             "strongBearBars",
+            "entryPrice",
+            "stopPrice",
+            "riskPts",
+            "continuationMfePts",
+            "continuationMaePts",
+            "continuationEodPts",
+            "continuationMfeR",
+            "continuationMaeR",
+            "hit1RBeforeStop",
+            "continuationGrade",
             "brooksQuality",
             "trendContext",
             "pullbackQuality",
@@ -321,6 +431,16 @@ def write_manifest(setups: list[Setup], out_dir: Path) -> Path:
                 f"{setup.first_hour_move_atr:.3f}",
                 setup.strong_bull_bars,
                 setup.strong_bear_bars,
+                f"{setup.entry_price:.2f}",
+                f"{setup.stop_price:.2f}",
+                f"{setup.risk_pts:.2f}",
+                f"{setup.continuation_mfe_pts:.2f}",
+                f"{setup.continuation_mae_pts:.2f}",
+                f"{setup.continuation_eod_pts:.2f}",
+                f"{setup.continuation_mfe_r:.3f}",
+                f"{setup.continuation_mae_r:.3f}",
+                "true" if setup.hit_1r_before_stop else "false",
+                setup.continuation_grade,
                 "",
                 "",
                 "",
@@ -340,6 +460,7 @@ def write_html(setups: list[Setup], out_dir: Path, symbol: str, days: int) -> Pa
           <div class="meta">
             <h2>{html.escape(setup.setup_id)} <span>{html.escape(setup.side)}</span></h2>
             <p>{setup.setup_time.strftime('%Y-%m-%d %H:%M %Z')} | move {setup.first_hour_move_pts:.2f} pts / {setup.first_hour_move_atr:.2f} ATR | strong bull {setup.strong_bull_bars} | strong bear {setup.strong_bear_bars}</p>
+            <p class="outcome">Continuation: {html.escape(setup.continuation_grade)} | MFE {setup.continuation_mfe_r:.2f}R | MAE {setup.continuation_mae_r:.2f}R | EOD {setup.continuation_eod_pts:.2f} pts | stop {setup.stop_price:.2f}</p>
           </div>
           {render_svg(setup)}
           <div class="labels">
@@ -409,6 +530,10 @@ def write_html(setups: list[Setup], out_dir: Path, symbol: str, days: int) -> Pa
       color: var(--muted);
       font-size: 14px;
     }}
+    .outcome {{
+      color: #1f4f36;
+      font-weight: 700;
+    }}
     .chart {{
       width: 100%;
       min-width: 760px;
@@ -456,9 +581,15 @@ def write_summary(setups: list[Setup], out_dir: Path, symbol: str, days: int) ->
     if setups:
         avg_abs_move_atr = statistics.fmean(abs(s.first_hour_move_atr) for s in setups)
         long_count = sum(1 for s in setups if s.side == "Long")
+        hit_1r = sum(1 for s in setups if s.hit_1r_before_stop)
+        positive_eod = sum(1 for s in setups if s.continuation_eod_pts > 0)
+        avg_mfe_r = statistics.fmean(s.continuation_mfe_r for s in setups)
     else:
         avg_abs_move_atr = 0.0
         long_count = 0
+        hit_1r = 0
+        positive_eod = 0
+        avg_mfe_r = 0.0
     text = f"""# Brooks Label Review Pack
 
 Generated from `{symbol}` Yahoo 5-minute bars over the last `{days}` days.
@@ -476,6 +607,19 @@ This pack is for manual idea extraction, not final performance validation. The g
 - Long contexts: `{long_count}`
 - Short contexts: `{len(setups) - long_count}`
 - Average absolute first-hour move: `{avg_abs_move_atr:.2f} ATR`
+- Hit 1R before opposite first-hour stop: `{hit_1r}/{len(setups)}`
+- Positive EOD continuation: `{positive_eod}/{len(setups)}`
+- Average continuation MFE: `{avg_mfe_r:.2f}R`
+
+## Auto-Triage Columns
+
+- `entryPrice`: first-hour measurement close.
+- `stopPrice`: opposite first-hour extreme.
+- `riskPts`: distance from entry to stop.
+- `continuationMfeR`: best same-direction excursion after measurement.
+- `continuationMaeR`: worst adverse excursion after measurement.
+- `hit1RBeforeStop`: conservative 5-minute bar check; same-bar target/stop ambiguity is counted as stopped.
+- `continuationGrade`: quick bucket for sorting before visual labeling.
 
 ## Labeling Rubric
 

@@ -15,6 +15,19 @@ This pack is for manual idea extraction, not final performance validation. The g
 - Long contexts: `24`
 - Short contexts: `17`
 - Average absolute first-hour move: `1.56 ATR`
+- Hit 1R before opposite first-hour stop: `16/41`
+- Positive EOD continuation: `19/41`
+- Average continuation MFE: `0.67R`
+
+## Auto-Triage Columns
+
+- `entryPrice`: first-hour measurement close.
+- `stopPrice`: opposite first-hour extreme.
+- `riskPts`: distance from entry to stop.
+- `continuationMfeR`: best same-direction excursion after measurement.
+- `continuationMaeR`: worst adverse excursion after measurement.
+- `hit1RBeforeStop`: conservative 5-minute bar check; same-bar target/stop ambiguity is counted as stopped.
+- `continuationGrade`: quick bucket for sorting before visual labeling.
 
 ## Labeling Rubric
 
