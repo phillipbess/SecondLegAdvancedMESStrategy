@@ -13,6 +13,11 @@ namespace QuantConnect.Algorithm.CSharp
         private double AfternoonCompressionMinBoxBars = 6.0;
         private double AfternoonCompressionStopAtr = 0.75;
         private double AfternoonCompressionStopBufferTicks = 2.0;
+        private int AfternoonCompressionMinStrongDominance = -99;
+        private int AfternoonCompressionMaxOpeningCounterStrongBars = 99;
+        private double AfternoonCompressionMinMeasureCloseLocation = 0.0;
+        private double AfternoonCompressionStrongBodyPct = 0.45;
+        private double AfternoonCompressionStrongClosePct = 0.65;
         private bool AfternoonCompressionLongOnly = true;
 
         private bool _acBiasCaptured;
@@ -22,6 +27,10 @@ namespace QuantConnect.Algorithm.CSharp
         private double _acBoxLow = double.NaN;
         private double _acBoxAtr = double.NaN;
         private int _acBoxBars;
+        private double _acOpeningHigh = double.NaN;
+        private double _acOpeningLow = double.NaN;
+        private int _acStrongBullBars;
+        private int _acStrongBearBars;
 
         private void ConfigureAfternoonCompressionResearch(DateTime startDate, DateTime endDate)
         {
@@ -37,8 +46,13 @@ namespace QuantConnect.Algorithm.CSharp
             AfternoonCompressionMinBoxBars = Math.Max(1.0, DoubleParameter("afternoonCompressionMinBoxBars", AfternoonCompressionMinBoxBars));
             AfternoonCompressionStopAtr = Math.Max(0.0, DoubleParameter("afternoonCompressionStopAtr", AfternoonCompressionStopAtr));
             AfternoonCompressionStopBufferTicks = Math.Max(0.0, DoubleParameter("afternoonCompressionStopBufferTicks", AfternoonCompressionStopBufferTicks));
+            AfternoonCompressionMinStrongDominance = IntParameter("afternoonCompressionMinStrongDominance", AfternoonCompressionMinStrongDominance);
+            AfternoonCompressionMaxOpeningCounterStrongBars = Math.Max(0, IntParameter("afternoonCompressionMaxOpeningCounterStrongBars", AfternoonCompressionMaxOpeningCounterStrongBars));
+            AfternoonCompressionMinMeasureCloseLocation = Clamp(DoubleParameter("afternoonCompressionMinMeasureCloseLocation", AfternoonCompressionMinMeasureCloseLocation), 0.0, 0.95);
+            AfternoonCompressionStrongBodyPct = Clamp(DoubleParameter("afternoonCompressionStrongBodyPct", AfternoonCompressionStrongBodyPct), 0.1, 0.95);
+            AfternoonCompressionStrongClosePct = Clamp(DoubleParameter("afternoonCompressionStrongClosePct", AfternoonCompressionStrongClosePct), 0.5, 0.95);
             AfternoonCompressionLongOnly = BoolParameter("afternoonCompressionLongOnly", AfternoonCompressionLongOnly);
-            _tradeExportKey = $"{ProjectId}/afternoon_compression_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_measure_{AfternoonCompressionMeasureMinutes}_box_{AfternoonCompressionStartMinutes}_{AfternoonCompressionEndMinutes}_move_{ParamToken(AfternoonCompressionMinMorningMoveAtr)}_maxbox_{ParamToken(AfternoonCompressionMaxBoxAtr)}_stopatr_{ParamToken(AfternoonCompressionStopAtr)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}.csv";
+            _tradeExportKey = $"{ProjectId}/afternoon_compression_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_measure_{AfternoonCompressionMeasureMinutes}_box_{AfternoonCompressionStartMinutes}_{AfternoonCompressionEndMinutes}_move_{ParamToken(AfternoonCompressionMinMorningMoveAtr)}_dom_{AfternoonCompressionMinStrongDominance}_ctr_{AfternoonCompressionMaxOpeningCounterStrongBars}_loc_{ParamToken(AfternoonCompressionMinMeasureCloseLocation)}_maxbox_{ParamToken(AfternoonCompressionMaxBoxAtr)}_stopatr_{ParamToken(AfternoonCompressionStopAtr)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}.csv";
         }
 
         private void ResetAfternoonCompressionSession()
@@ -50,6 +64,10 @@ namespace QuantConnect.Algorithm.CSharp
             _acBoxLow = double.NaN;
             _acBoxAtr = double.NaN;
             _acBoxBars = 0;
+            _acOpeningHigh = double.NaN;
+            _acOpeningLow = double.NaN;
+            _acStrongBullBars = 0;
+            _acStrongBearBars = 0;
         }
 
         private void TryAfternoonCompressionResearch(BarSnapshot bar)
@@ -79,17 +97,67 @@ namespace QuantConnect.Algorithm.CSharp
 
         private void CaptureAfternoonCompressionBias(BarSnapshot bar, int minutes)
         {
-            if (_acBiasCaptured || minutes < AfternoonCompressionMeasureMinutes)
+            if (_acBiasCaptured)
+                return;
+
+            TrackAfternoonCompressionOpeningContext(bar);
+            if (minutes < AfternoonCompressionMeasureMinutes)
                 return;
 
             double moveAtr = (bar.Close - _odSessionOpen) / Math.Max(bar.Atr, TickSize);
-            if (moveAtr >= AfternoonCompressionMinMorningMoveAtr)
+            if (moveAtr >= AfternoonCompressionMinMorningMoveAtr && PassesAfternoonCompressionOpeningQuality(bar, Bias.Long))
                 _acBias = Bias.Long;
-            else if (!AfternoonCompressionLongOnly && moveAtr <= -AfternoonCompressionMinMorningMoveAtr)
+            else if (!AfternoonCompressionLongOnly && moveAtr <= -AfternoonCompressionMinMorningMoveAtr && PassesAfternoonCompressionOpeningQuality(bar, Bias.Short))
                 _acBias = Bias.Short;
             else
                 Block("AcWeakMorning");
             _acBiasCaptured = true;
+        }
+
+        private void TrackAfternoonCompressionOpeningContext(BarSnapshot bar)
+        {
+            _acOpeningHigh = double.IsNaN(_acOpeningHigh) ? bar.High : Math.Max(_acOpeningHigh, bar.High);
+            _acOpeningLow = double.IsNaN(_acOpeningLow) ? bar.Low : Math.Min(_acOpeningLow, bar.Low);
+            if (IsAfternoonCompressionStrongBar(bar, Bias.Long))
+                _acStrongBullBars++;
+            if (IsAfternoonCompressionStrongBar(bar, Bias.Short))
+                _acStrongBearBars++;
+        }
+
+        private bool PassesAfternoonCompressionOpeningQuality(BarSnapshot bar, Bias bias)
+        {
+            int strongWith = bias == Bias.Long ? _acStrongBullBars : _acStrongBearBars;
+            int strongAgainst = bias == Bias.Long ? _acStrongBearBars : _acStrongBullBars;
+            if (strongWith - strongAgainst < AfternoonCompressionMinStrongDominance)
+            {
+                Block("AcOpenWeakDominance");
+                return false;
+            }
+            if (strongAgainst > AfternoonCompressionMaxOpeningCounterStrongBars)
+            {
+                Block("AcOpenCounterStrong");
+                return false;
+            }
+
+            double range = Math.Max(TickSize, _acOpeningHigh - _acOpeningLow);
+            double closeLocation = bias == Bias.Long
+                ? (bar.Close - _acOpeningLow) / range
+                : (_acOpeningHigh - bar.Close) / range;
+            if (closeLocation < AfternoonCompressionMinMeasureCloseLocation)
+            {
+                Block("AcOpenBadClose");
+                return false;
+            }
+            return true;
+        }
+
+        private bool IsAfternoonCompressionStrongBar(BarSnapshot bar, Bias bias)
+        {
+            double closePct = CloseLocationPct(bar);
+            double bodyPct = BodyPct(bar);
+            if (bias == Bias.Long)
+                return bar.Close > bar.Open && bodyPct >= AfternoonCompressionStrongBodyPct && closePct >= AfternoonCompressionStrongClosePct;
+            return bar.Close < bar.Open && bodyPct >= AfternoonCompressionStrongBodyPct && closePct <= 1.0 - AfternoonCompressionStrongClosePct;
         }
 
         private void TrackAfternoonCompressionBox(BarSnapshot bar, int minutes)
