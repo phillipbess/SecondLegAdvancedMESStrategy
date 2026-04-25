@@ -1,0 +1,7 @@
+"variant","targetR","triggered","tradesPerMonth","wins","stops","timeouts","touch1R","netR","avgR","backtestId"
+"target_0p50_hold24_block13_short11_5y","0.5","1353","22.6","892","436","25","146","6.68","0","a0bd9daf6a37fdf1b8397f7106790dc6"
+"target_0p75_hold24_block13_short11_5y","0.75","1315","21.9","735","531","49","293","15.4","0.01","2d55ac85cf13c546890c44ec7dd92d21"
+"target_1p00_hold24_block13_short11_5y","1","1287","21.4","610","592","85","613","18.15","0.01","7362b569e081cc44cf7c555d341f28db"
+"target_1p25_hold24_block13_short11_5y","1.25","1267","21.1","502","646","119","599","-3.94","-0","e4b6074f2017c0d49302eb992e4bddd6"
+"target_1p50_hold24_block13_short11_5y","1.5","1253","20.9","413","672","168","590","-8.63","-0.01","7598f424a786ed1d752fe86278028765"
+"target_2p00_hold24_block13_short11_5y","2","1218","20.3","296","682","240","575","34.37","0.03","76f63e2d83f585ebd0194570e6711fe5"

@@ -49,7 +49,11 @@ namespace QuantConnect.Algorithm.CSharp
         private const int SwingLookbackBars = 20;
         private double MinRoomToStructureR = 1.00;
         private const int OpeningRangeMinutes = 30;
-        private const int MaxOutcomeBars = 24;
+        private int MaxOutcomeBars = 24;
+        private double ProfitTargetR = 2.0;
+        private double TouchProbeR = 1.0;
+        private double LiteEntryRoomMinR = -1.0;
+        private double LiteEntryRoomMaxR = -1.0;
         private string EntryMode = "strictv1";
         private string SideFilter = "both";
         private int MaxRuntimeTradeRows = 100;
@@ -105,7 +109,7 @@ namespace QuantConnect.Algorithm.CSharp
         private int _expiredSignals;
         private int _virtualTrades;
         private int _touchOneR;
-        private int _winsTwoR;
+        private int _targetWins;
         private int _stops;
         private int _timeouts;
         private double _netR;
@@ -133,6 +137,11 @@ namespace QuantConnect.Algorithm.CSharp
             MinRoomToStructureR = DoubleParameter("minRoomToStructureR", MinRoomToStructureR);
             RiskPerTrade = DoubleParameter("riskPerTrade", RiskPerTrade);
             MaxStopAtrMultiple = DoubleParameter("maxStopAtr", MaxStopAtrMultiple);
+            MaxOutcomeBars = Math.Max(1, IntParameter("maxOutcomeBars", MaxOutcomeBars));
+            ProfitTargetR = Clamp(DoubleParameter("profitTargetR", ProfitTargetR), 0.25, 5.0);
+            TouchProbeR = Clamp(DoubleParameter("touchProbeR", TouchProbeR), 0.25, 5.0);
+            LiteEntryRoomMinR = DoubleParameter("liteEntryRoomMinR", LiteEntryRoomMinR);
+            LiteEntryRoomMaxR = DoubleParameter("liteEntryRoomMaxR", LiteEntryRoomMaxR);
             EntryMode = TextParameter("entryMode", EntryMode).ToLowerInvariant();
             SideFilter = TextParameter("sideFilter", SideFilter).ToLowerInvariant();
             MaxRuntimeTradeRows = Math.Max(0, IntParameter("maxRuntimeTradeRows", MaxRuntimeTradeRows));
@@ -157,10 +166,10 @@ namespace QuantConnect.Algorithm.CSharp
 
             _continuousSymbol = _future.Symbol;
             Consolidate<TradeBar>(_continuousSymbol, TimeSpan.FromMinutes(5), OnFiveMinuteBar);
-            _tradeExportKey = $"{ProjectId}/secondleg_trade_export_{EntryModeToken()}_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_side_{SideFilter}_leg2_{ParamToken(SecondLegMaxMomentumRatio)}_leg2retr_{ParamToken(LiteMaxLeg2Retracement)}_imp_{ParamToken(EffectiveMinImpulseAtrMultiple())}_pbatr_{ParamToken(LiteMinPullbackAtr)}_l2atr_{ParamToken(LiteMinLeg2Atr)}_sig_{ParamToken(LiteMinSignalClosePct)}_room_{ParamToken(MinRoomToStructureR)}_hrs_{HourKeyToken(LiteBlockedHours)}_hL_{HourKeyToken(LiteBlockedLongHours)}_hS_{HourKeyToken(LiteBlockedShortHours)}.csv";
-            _tradeExport.AppendLine("tradeId,entryMode,signalTime,triggerTime,closeTime,side,entry,stop,oneR,twoR,riskPts,riskDollars,quantity,atrAtPlan,stopAtrMultiple,impulseAtrMultiple,leg1Retracement,leg2Retracement,leg2MomentumRatio,totalPullbackBars,leg1Bars,leg2Bars,structure,roomToStructureR,signalHour,minutesFromOpen,signalClosePct,signalBodyPct,emaFastDistanceAtr,emaSlowDistanceAtr,atrRatio,slopeAtrPct,maxFavorableR,maxAdverseR,outcome,rMultiple,touched1R,barsHeld");
+            _tradeExportKey = $"{ProjectId}/secondleg_trade_export_{EntryModeToken()}_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_side_{SideFilter}_leg2_{ParamToken(SecondLegMaxMomentumRatio)}_leg2retr_{ParamToken(LiteMaxLeg2Retracement)}_imp_{ParamToken(EffectiveMinImpulseAtrMultiple())}_pbatr_{ParamToken(LiteMinPullbackAtr)}_l2atr_{ParamToken(LiteMinLeg2Atr)}_sig_{ParamToken(LiteMinSignalClosePct)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}_room_{ParamToken(MinRoomToStructureR)}_rmin_{ParamToken(LiteEntryRoomMinR)}_rmax_{ParamToken(LiteEntryRoomMaxR)}_hrs_{HourKeyToken(LiteBlockedHours)}_hL_{HourKeyToken(LiteBlockedLongHours)}_hS_{HourKeyToken(LiteBlockedShortHours)}.csv";
+            _tradeExport.AppendLine("tradeId,entryMode,signalTime,triggerTime,closeTime,side,entry,stop,touchProbePrice,targetPrice,targetR,riskPts,riskDollars,quantity,atrAtPlan,stopAtrMultiple,impulseAtrMultiple,leg1Retracement,leg2Retracement,leg2MomentumRatio,totalPullbackBars,leg1Bars,leg2Bars,structure,roomToStructureR,signalHour,minutesFromOpen,signalClosePct,signalBodyPct,emaFastDistanceAtr,emaSlowDistanceAtr,atrRatio,slopeAtrPct,maxFavorableR,maxAdverseR,outcome,rMultiple,touchedProbe,barsHeld");
 
-            Debug($"SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders. entryMode={EntryModeToken()} startDate={startDate:yyyy-MM-dd} endDate={endDate:yyyy-MM-dd} sideFilter={SideFilter} minImpulseAtr={EffectiveMinImpulseAtrMultiple():0.###} minPullbackRetracement={MinPullbackRetracement:0.###} maxPullbackRetracement={EffectiveMaxPullbackRetracement():0.###} liteMaxLeg2Retracement={LiteMaxLeg2Retracement:0.###} liteMinPullbackAtr={LiteMinPullbackAtr:0.###} liteMinLeg2Atr={LiteMinLeg2Atr:0.###} liteSignalClosePct={LiteMinSignalClosePct:0.###} liteSignalProgress={LiteSignalProgressRequired} liteResetOnImpulseBreak={LiteResetOnImpulseBreak} liteForbidNegativeRetracement={LiteForbidNegativeRetracement} blockedHours={HourToken(LiteBlockedHours)} blockedLong={HourToken(LiteBlockedLongHours)} blockedShort={HourToken(LiteBlockedShortHours)} allowedHours={HourToken(LiteAllowedHours)} secondLegMaxMomentumRatio={SecondLegMaxMomentumRatio:0.###} minRoomToStructureR={MinRoomToStructureR:0.###} maxStopAtr={MaxStopAtrMultiple:0.###} riskPerTrade={RiskPerTrade:0.##} liteStructureVeto={LiteStructureVetoEnabled}");
+            Debug($"SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders. entryMode={EntryModeToken()} startDate={startDate:yyyy-MM-dd} endDate={endDate:yyyy-MM-dd} sideFilter={SideFilter} minImpulseAtr={EffectiveMinImpulseAtrMultiple():0.###} maxPullbackRetracement={EffectiveMaxPullbackRetracement():0.###} liteMaxLeg2Retracement={LiteMaxLeg2Retracement:0.###} liteSignalClosePct={LiteMinSignalClosePct:0.###} profitTargetR={ProfitTargetR:0.###} touchProbeR={TouchProbeR:0.###} maxOutcomeBars={MaxOutcomeBars} entryRoomMin={LiteEntryRoomMinR:0.###} entryRoomMax={LiteEntryRoomMaxR:0.###} blockedHours={HourToken(LiteBlockedHours)} blockedLong={HourToken(LiteBlockedLongHours)} blockedShort={HourToken(LiteBlockedShortHours)} maxStopAtr={MaxStopAtrMultiple:0.###}");
         }
 
         private void OnFiveMinuteBar(TradeBar input)
@@ -243,14 +252,14 @@ namespace QuantConnect.Algorithm.CSharp
             SetRuntimeStatistic("Triggered", _triggeredSignals.ToString());
             SetRuntimeStatistic("Expired", _expiredSignals.ToString());
             SetRuntimeStatistic("Virtual Trades", _virtualTrades.ToString());
-            SetRuntimeStatistic("Touch 1R", _touchOneR.ToString());
-            SetRuntimeStatistic("Win 2R", _winsTwoR.ToString());
+            SetRuntimeStatistic($"Touch {TouchProbeR:0.##}R", _touchOneR.ToString());
+            SetRuntimeStatistic($"Win {ProfitTargetR:0.##}R", _targetWins.ToString());
             SetRuntimeStatistic("Stops", _stops.ToString());
             SetRuntimeStatistic("Timeouts", _timeouts.ToString());
             SetRuntimeStatistic("Net R", _netR.ToString("0.00"));
             SetRuntimeStatistic("Avg R", _virtualTrades > 0 ? (_netR / _virtualTrades).ToString("0.00") : "0.00");
             SetRuntimeStatistic("Entry Mode", EntryModeToken());
-            SetRuntimeStatistic("Params", $"mode={EntryModeToken()} side={SideFilter} imp={EffectiveMinImpulseAtrMultiple():0.###} retr={(IsLiteMode() ? 0.0 : MinPullbackRetracement):0.###}-{EffectiveMaxPullbackRetracement():0.###} leg2Retr={LiteMaxLeg2Retracement:0.###} sig={LiteMinSignalClosePct:0.###} forbidNeg={LiteForbidNegativeRetracement} block={HourToken(LiteBlockedHours)} blockL={HourToken(LiteBlockedLongHours)} blockS={HourToken(LiteBlockedShortHours)} room={MinRoomToStructureR:0.###}");
+            SetRuntimeStatistic("Params", $"mode={EntryModeToken()} side={SideFilter} imp={EffectiveMinImpulseAtrMultiple():0.###} retr={(IsLiteMode() ? 0.0 : MinPullbackRetracement):0.###}-{EffectiveMaxPullbackRetracement():0.###} leg2Retr={LiteMaxLeg2Retracement:0.###} sig={LiteMinSignalClosePct:0.###} target={ProfitTargetR:0.###} hold={MaxOutcomeBars} roomMin={LiteEntryRoomMinR:0.###} roomMax={LiteEntryRoomMaxR:0.###} block={HourToken(LiteBlockedHours)} blockL={HourToken(LiteBlockedLongHours)} blockS={HourToken(LiteBlockedShortHours)}");
             SetRuntimeStatistic("Export Key", _tradeExportKey);
             SetRuntimeStatistic("Runtime Trade Rows", $"{_tradeRuntimeRows.Count}/{_virtualTrades}");
             foreach (string row in _tradeRuntimeRows)
@@ -270,7 +279,7 @@ namespace QuantConnect.Algorithm.CSharp
             PublishOutcomeBuckets();
 
             Debug($"ENTRY_DETECTOR_SUMMARY bars={_rthFiveMinuteBars} trendBars={_trendBars} impulses={_impulseCount} leg1={_leg1Count} separation={_separationCount} leg2={_leg2CandidateCount} armed={_armedSignals} long={_longArmed} short={_shortArmed} triggered={_triggeredSignals} expired={_expiredSignals}");
-            Debug($"VIRTUAL_OUTCOME_SUMMARY trades={_virtualTrades} touch1R={_touchOneR} win2R={_winsTwoR} stops={_stops} timeouts={_timeouts} netR={_netR:0.00} avgR={(_virtualTrades > 0 ? _netR / _virtualTrades : 0.0):0.00}");
+            Debug($"VIRTUAL_OUTCOME_SUMMARY trades={_virtualTrades} touchProbe={_touchOneR} targetWins={_targetWins} stops={_stops} timeouts={_timeouts} netR={_netR:0.00} avgR={(_virtualTrades > 0 ? _netR / _virtualTrades : 0.0):0.00}");
             foreach (var item in _monthly.OrderBy(x => x.Key))
                 Debug($"MONTH_SUMMARY month={item.Key} bars={item.Value.Bars} armed={item.Value.Armed} long={item.Value.LongArmed} short={item.Value.ShortArmed} triggered={item.Value.Triggered} expired={item.Value.Expired}");
             foreach (var item in _blocks.OrderByDescending(x => x.Value).Take(12))
@@ -638,6 +647,11 @@ namespace QuantConnect.Algorithm.CSharp
                 Block("StructureRoom");
                 return;
             }
+            if (IsLiteMode() && !PassesLiteEntryRoomFilter(roomToStructureR))
+            {
+                Block("LiteEntryRoomFilter");
+                return;
+            }
 
             double leg1Retracement = ComputeRetracement(_impulse.Bias == Bias.Long ? _leg1.Low : _leg1.High);
             double leg2Retracement = ComputeRetracement(_impulse.Bias == Bias.Long ? _leg2.Low : _leg2.High);
@@ -730,8 +744,9 @@ namespace QuantConnect.Algorithm.CSharp
                 Bias = _planned.Bias,
                 Entry = _planned.Entry,
                 Stop = _planned.Stop,
-                OneR = _planned.Bias == Bias.Long ? _planned.Entry + risk : _planned.Entry - risk,
-                TwoR = _planned.Bias == Bias.Long ? _planned.Entry + 2.0 * risk : _planned.Entry - 2.0 * risk,
+                TouchProbePrice = _planned.Bias == Bias.Long ? _planned.Entry + TouchProbeR * risk : _planned.Entry - TouchProbeR * risk,
+                TargetPrice = _planned.Bias == Bias.Long ? _planned.Entry + ProfitTargetR * risk : _planned.Entry - ProfitTargetR * risk,
+                TargetR = ProfitTargetR,
                 TriggerBar = bar.Index,
                 ExpiryBar = bar.Index + MaxOutcomeBars,
                 TriggerTime = bar.EndTime,
@@ -763,7 +778,7 @@ namespace QuantConnect.Algorithm.CSharp
             };
 
             _virtualTrades++;
-            Debug($"VIRTUAL_TRADE_OPEN time={bar.EndTime:yyyy-MM-dd HH:mm} side={_virtualTrade.Bias} entry={_virtualTrade.Entry:0.00} stop={_virtualTrade.Stop:0.00} oneR={_virtualTrade.OneR:0.00} twoR={_virtualTrade.TwoR:0.00} structure={_virtualTrade.Structure}");
+            Debug($"VIRTUAL_TRADE_OPEN time={bar.EndTime:yyyy-MM-dd HH:mm} side={_virtualTrade.Bias} entry={_virtualTrade.Entry:0.00} stop={_virtualTrade.Stop:0.00} touchProbe={_virtualTrade.TouchProbePrice:0.00} target={_virtualTrade.TargetPrice:0.00} targetR={_virtualTrade.TargetR:0.##} structure={_virtualTrade.Structure}");
             ObserveVirtualTrade(bar);
         }
 
@@ -773,13 +788,13 @@ namespace QuantConnect.Algorithm.CSharp
                 return;
 
             bool stopHit = _virtualTrade.Bias == Bias.Long ? bar.Low <= _virtualTrade.Stop : bar.High >= _virtualTrade.Stop;
-            bool oneRHit = _virtualTrade.Bias == Bias.Long ? bar.High >= _virtualTrade.OneR : bar.Low <= _virtualTrade.OneR;
-            bool twoRHit = _virtualTrade.Bias == Bias.Long ? bar.High >= _virtualTrade.TwoR : bar.Low <= _virtualTrade.TwoR;
+            bool touchProbeHit = _virtualTrade.Bias == Bias.Long ? bar.High >= _virtualTrade.TouchProbePrice : bar.Low <= _virtualTrade.TouchProbePrice;
+            bool targetHit = _virtualTrade.Bias == Bias.Long ? bar.High >= _virtualTrade.TargetPrice : bar.Low <= _virtualTrade.TargetPrice;
             UpdateExcursion(bar);
 
-            if (oneRHit && !_virtualTrade.TouchedOneR)
+            if (touchProbeHit && !_virtualTrade.TouchedProbe)
             {
-                _virtualTrade.TouchedOneR = true;
+                _virtualTrade.TouchedProbe = true;
                 _touchOneR++;
             }
 
@@ -789,9 +804,9 @@ namespace QuantConnect.Algorithm.CSharp
                 return;
             }
 
-            if (twoRHit)
+            if (targetHit)
             {
-                CloseVirtualTrade(bar, "TwoR", 2.0);
+                CloseVirtualTrade(bar, "Target", _virtualTrade.TargetR);
                 return;
             }
 
@@ -825,8 +840,8 @@ namespace QuantConnect.Algorithm.CSharp
                 return;
 
             double realizedR = rMultiple ?? 0.0;
-            if (reason == "TwoR")
-                _winsTwoR++;
+            if (reason == "Target")
+                _targetWins++;
             else if (reason == "Stop")
                 _stops++;
             else
@@ -835,7 +850,7 @@ namespace QuantConnect.Algorithm.CSharp
             _netR += realizedR;
             RecordOutcomeBuckets(reason, realizedR);
             AppendTradeExport(bar, reason, realizedR);
-            Debug($"VIRTUAL_TRADE_CLOSE time={bar.EndTime:yyyy-MM-dd HH:mm} reason={reason} side={_virtualTrade.Bias} r={realizedR:0.00} touched1R={_virtualTrade.TouchedOneR}");
+            Debug($"VIRTUAL_TRADE_CLOSE time={bar.EndTime:yyyy-MM-dd HH:mm} reason={reason} side={_virtualTrade.Bias} r={realizedR:0.00} touchedProbe={_virtualTrade.TouchedProbe}");
             _virtualTrade = new VirtualTrade();
         }
 
@@ -852,8 +867,9 @@ namespace QuantConnect.Algorithm.CSharp
                 _virtualTrade.Bias.ToString(),
                 N(_virtualTrade.Entry),
                 N(_virtualTrade.Stop),
-                N(_virtualTrade.OneR),
-                N(_virtualTrade.TwoR),
+                N(_virtualTrade.TouchProbePrice),
+                N(_virtualTrade.TargetPrice),
+                N(_virtualTrade.TargetR),
                 N(Math.Abs(_virtualTrade.Entry - _virtualTrade.Stop)),
                 N(_virtualTrade.RiskDollars),
                 N(_virtualTrade.Quantity),
@@ -880,7 +896,7 @@ namespace QuantConnect.Algorithm.CSharp
                 N(_virtualTrade.MaxAdverseR),
                 outcome,
                 N(rMultiple),
-                _virtualTrade.TouchedOneR ? "true" : "false",
+                _virtualTrade.TouchedProbe ? "true" : "false",
                 barsHeld.ToString(CultureInfo.InvariantCulture)
             }));
 
@@ -888,7 +904,7 @@ namespace QuantConnect.Algorithm.CSharp
             if (_tradeRuntimeRows.Count < MaxRuntimeTradeRows)
             {
                 _tradeRuntimeRows.Add(
-                    $"T{_virtualTrade.TradeId:00}:{CsvTime(_virtualTrade.TriggerTime).Substring(2)} {side} {outcome} r={N(rMultiple)} l2={N(_virtualTrade.Leg2MomentumRatio)} room={N(_virtualTrade.RoomToStructureR)} retr={N(_virtualTrade.Leg2Retracement)} bars={barsHeld}");
+                    $"T{_virtualTrade.TradeId:00}:{CsvTime(_virtualTrade.TriggerTime).Substring(2)} {side} {outcome} r={N(rMultiple)} mfe={N(_virtualTrade.MaxFavorableR)} mae={N(_virtualTrade.MaxAdverseR)} room={N(_virtualTrade.RoomToStructureR)} bars={barsHeld}");
             }
         }
 
@@ -1333,8 +1349,9 @@ namespace QuantConnect.Algorithm.CSharp
             public Bias Bias = Bias.Neutral;
             public double Entry;
             public double Stop;
-            public double OneR;
-            public double TwoR;
+            public double TouchProbePrice;
+            public double TargetPrice;
+            public double TargetR;
             public int TriggerBar = -1;
             public int ExpiryBar = -1;
             public DateTime SignalTime;
@@ -1362,7 +1379,7 @@ namespace QuantConnect.Algorithm.CSharp
             public double SlopeAtrPct;
             public double MaxFavorableR;
             public double MaxAdverseR;
-            public bool TouchedOneR;
+            public bool TouchedProbe;
             public bool IsActive => TriggerBar >= 0 && Bias != Bias.Neutral;
         }
 

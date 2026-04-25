@@ -25,9 +25,9 @@ namespace QuantConnect.Algorithm.CSharp
             bucket.NetR += rMultiple;
             bucket.SumMfe += _virtualTrade.MaxFavorableR;
             bucket.SumMae += _virtualTrade.MaxAdverseR;
-            if (_virtualTrade.TouchedOneR)
+            if (_virtualTrade.TouchedProbe)
                 bucket.TouchOneR++;
-            if (outcome == "TwoR")
+            if (outcome == "Target")
                 bucket.TwoR++;
             else if (outcome == "Stop")
                 bucket.Stops++;

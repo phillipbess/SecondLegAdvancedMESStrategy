@@ -82,6 +82,17 @@ namespace QuantConnect.Algorithm.CSharp
             return leg2Move >= LiteMinLeg2Atr * Math.Max(bar.Atr, TickSize);
         }
 
+        private bool PassesLiteEntryRoomFilter(double roomToStructureR)
+        {
+            if (!IsLiteMode())
+                return true;
+            if (LiteEntryRoomMinR >= 0.0 && roomToStructureR < LiteEntryRoomMinR)
+                return false;
+            if (LiteEntryRoomMaxR >= 0.0 && roomToStructureR > LiteEntryRoomMaxR)
+                return false;
+            return true;
+        }
+
         private int MinutesFromOpen(BarSnapshot bar)
         {
             return (int)(bar.EndTime.TimeOfDay - new TimeSpan(9, 30, 0)).TotalMinutes;
