@@ -14,6 +14,9 @@ namespace QuantConnect.Algorithm.CSharp
         private double BrooksMinPullbackAtr = 0.25;
         private double BrooksMaxRetrace = 0.65;
         private double BrooksStopBufferTicks = 2.0;
+        private int BrooksMinStrongDominance = -99;
+        private int BrooksMaxOpeningCounterStrongBars = 99;
+        private double BrooksMinMeasureCloseLocation = 0.0;
         private bool BrooksRequireEmaSide = true;
 
         private bool _btfoMeasured;
@@ -43,8 +46,11 @@ namespace QuantConnect.Algorithm.CSharp
             BrooksMinPullbackAtr = Math.Max(0.0, DoubleParameter("brooksMinPullbackAtr", BrooksMinPullbackAtr));
             BrooksMaxRetrace = Clamp(DoubleParameter("brooksMaxRetrace", BrooksMaxRetrace), 0.1, 1.5);
             BrooksStopBufferTicks = Math.Max(0.0, DoubleParameter("brooksStopBufferTicks", BrooksStopBufferTicks));
+            BrooksMinStrongDominance = IntParameter("brooksMinStrongDominance", BrooksMinStrongDominance);
+            BrooksMaxOpeningCounterStrongBars = Math.Max(0, IntParameter("brooksMaxOpeningCounterStrongBars", BrooksMaxOpeningCounterStrongBars));
+            BrooksMinMeasureCloseLocation = Clamp(DoubleParameter("brooksMinMeasureCloseLocation", BrooksMinMeasureCloseLocation), 0.0, 0.95);
             BrooksRequireEmaSide = BoolParameter("brooksRequireEmaSide", BrooksRequireEmaSide);
-            _tradeExportKey = $"{ProjectId}/brooks_tfo_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_measure_{BrooksMeasureMinutes}_maxsig_{BrooksMaxSignalMinutes}_move_{ParamToken(BrooksMinMoveAtr)}_strong_{BrooksMinStrongBars}_pb_{ParamToken(BrooksMinPullbackAtr)}_retr_{ParamToken(BrooksMaxRetrace)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}.csv";
+            _tradeExportKey = $"{ProjectId}/brooks_tfo_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_measure_{BrooksMeasureMinutes}_maxsig_{BrooksMaxSignalMinutes}_move_{ParamToken(BrooksMinMoveAtr)}_strong_{BrooksMinStrongBars}_dom_{BrooksMinStrongDominance}_ctr_{BrooksMaxOpeningCounterStrongBars}_loc_{ParamToken(BrooksMinMeasureCloseLocation)}_pb_{ParamToken(BrooksMinPullbackAtr)}_retr_{ParamToken(BrooksMaxRetrace)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}.csv";
         }
 
         private void ResetBrooksTrendPullbackSession()
@@ -113,9 +119,9 @@ namespace QuantConnect.Algorithm.CSharp
             double moveAtr = (bar.Close - _odSessionOpen) / Math.Max(bar.Atr, TickSize);
             bool emaLongOk = !BrooksRequireEmaSide || bar.Close >= bar.EmaFast;
             bool emaShortOk = !BrooksRequireEmaSide || bar.Close <= bar.EmaFast;
-            if (moveAtr >= BrooksMinMoveAtr && _btfoStrongBullBars >= BrooksMinStrongBars && emaLongOk)
+            if (moveAtr >= BrooksMinMoveAtr && _btfoStrongBullBars >= BrooksMinStrongBars && emaLongOk && PassesBrooksOpeningQuality(bar, Bias.Long))
                 _btfoBias = Bias.Long;
-            else if (moveAtr <= -BrooksMinMoveAtr && _btfoStrongBearBars >= BrooksMinStrongBars && emaShortOk)
+            else if (moveAtr <= -BrooksMinMoveAtr && _btfoStrongBearBars >= BrooksMinStrongBars && emaShortOk && PassesBrooksOpeningQuality(bar, Bias.Short))
                 _btfoBias = Bias.Short;
             else
                 Block("BrooksNoTfo");
@@ -123,6 +129,33 @@ namespace QuantConnect.Algorithm.CSharp
             _odHigh = _btfoHigh;
             _odLow = _btfoLow;
             _btfoMeasured = true;
+        }
+
+        private bool PassesBrooksOpeningQuality(BarSnapshot bar, Bias bias)
+        {
+            int strongWith = bias == Bias.Long ? _btfoStrongBullBars : _btfoStrongBearBars;
+            int strongAgainst = bias == Bias.Long ? _btfoStrongBearBars : _btfoStrongBullBars;
+            if (strongWith - strongAgainst < BrooksMinStrongDominance)
+            {
+                Block("BrooksOpenWeakDominance");
+                return false;
+            }
+            if (strongAgainst > BrooksMaxOpeningCounterStrongBars)
+            {
+                Block("BrooksOpenCounterStrong");
+                return false;
+            }
+
+            double range = Math.Max(TickSize, _btfoHigh - _btfoLow);
+            double closeLocation = bias == Bias.Long
+                ? (bar.Close - _btfoLow) / range
+                : (_btfoHigh - bar.Close) / range;
+            if (closeLocation < BrooksMinMeasureCloseLocation)
+            {
+                Block("BrooksOpenBadClose");
+                return false;
+            }
+            return true;
         }
 
         private void TrackBrooksPullbackAndSignal(BarSnapshot bar)

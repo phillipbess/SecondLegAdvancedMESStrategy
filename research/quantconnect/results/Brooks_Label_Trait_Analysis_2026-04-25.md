@@ -1,0 +1,43 @@
+# Brooks Label Trait Analysis - 2026-04-25
+
+Input: `research/quantconnect/labeling/brooks_label_review/brooks_label_sheet.csv`
+
+This compares first-hour contexts that hit `1R` before the opposite first-hour stop against the rest.
+
+## Baseline
+
+- Contexts: `41`
+- Hit 1R: `39.0%`
+- Avg MFE: `0.67R`
+- Avg MAE: `0.69R`
+- Avg EOD continuation: `-4.98` ES points
+
+## Winner vs Miss Traits
+
+| Group | N | Avg Abs Move ATR | Avg Close Location | Avg Strong Dominance | Avg MFE R | Avg MAE R | Avg EOD Pts |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Hit 1R | 16 | 1.66 | 0.75 | 2.19 | 1.15 | 0.36 | 21.73 |
+| Miss | 25 | 1.50 | 0.76 | 1.44 | 0.36 | 0.90 | -22.07 |
+
+## Best Simple Filters
+
+| Filter | N | Hit 1R | Lift | Avg MFE R | Avg MAE R | Avg EOD Pts |
+|---|---:|---:|---:|---:|---:|---:|
+| abs first-hour move >= 2.00 ATR | 9 | 55.6% | 16.5% | 0.79 | 0.28 | 21.33 |
+| strong dominance >= 3 | 15 | 53.3% | 14.3% | 0.80 | 0.49 | 14.57 |
+| strong dominance >= 1 | 28 | 50.0% | 11.0% | 0.77 | 0.57 | 11.31 |
+| strong with-bars >= 5 | 12 | 50.0% | 11.0% | 0.77 | 0.44 | 16.90 |
+| strong dominance >= 2 | 20 | 50.0% | 11.0% | 0.76 | 0.50 | 8.24 |
+| abs first-hour move >= 1.50 ATR | 18 | 50.0% | 11.0% | 0.69 | 0.53 | 11.74 |
+| strong against-bars <= 2 | 25 | 48.0% | 9.0% | 0.76 | 0.57 | 6.25 |
+| strong with-bars >= 4 | 26 | 46.2% | 7.1% | 0.74 | 0.55 | 3.57 |
+| risk <= 50 pts | 35 | 45.7% | 6.7% | 0.71 | 0.71 | -1.55 |
+| abs first-hour move >= 0.75 ATR | 29 | 44.8% | 5.8% | 0.71 | 0.58 | 0.29 |
+| risk <= 40 pts | 29 | 44.8% | 5.8% | 0.71 | 0.76 | -1.59 |
+| mixed auction | 37 | 43.2% | 4.2% | 0.70 | 0.69 | -2.33 |
+
+## Read
+
+The best simple split is `abs first-hour move >= 2.00 ATR`, with `9` contexts and `55.6%` hit-1R. Treat this as a hypothesis only; the sample is small and public Yahoo data is a proxy.
+
+The current evidence still argues against a blind 10:30 continuation entry. The better hypothesis is narrower: first-hour context may matter only when the close is near the favorable extreme and the opposing strong bars are limited. The next coded test should wait for a post-measurement pullback/trigger, not enter immediately at 10:30.
