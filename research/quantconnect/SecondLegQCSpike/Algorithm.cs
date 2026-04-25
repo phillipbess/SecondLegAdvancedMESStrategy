@@ -49,7 +49,7 @@ namespace QuantConnect.Algorithm.CSharp
         private double MaxStopAtrMultiple = 1.50;
         private const int SwingLookbackBars = 20;
         private double MinRoomToStructureR = 1.00;
-        private const int OpeningRangeMinutes = 30;
+        private int OpeningRangeMinutes = 30;
         private int MaxOutcomeBars = 24;
         private double ProfitTargetR = 2.0;
         private double TouchProbeR = 1.0;
@@ -147,6 +147,7 @@ namespace QuantConnect.Algorithm.CSharp
             ProfitTargetR = Clamp(DoubleParameter("profitTargetR", ProfitTargetR), 0.25, 5.0);
             TouchProbeR = Clamp(DoubleParameter("touchProbeR", TouchProbeR), 0.25, 5.0);
             BarMinutes = Math.Max(1, IntParameter("barMinutes", BarMinutes));
+            OpeningRangeMinutes = Math.Max(BarMinutes, IntParameter("openingRangeMinutes", OpeningRangeMinutes));
             LiteEntryRoomMinR = DoubleParameter("liteEntryRoomMinR", LiteEntryRoomMinR);
             LiteEntryRoomMaxR = DoubleParameter("liteEntryRoomMaxR", LiteEntryRoomMaxR);
             EntryMode = TextParameter("entryMode", EntryMode).ToLowerInvariant();
@@ -177,8 +178,11 @@ namespace QuantConnect.Algorithm.CSharp
             Consolidate<TradeBar>(_continuousSymbol, TimeSpan.FromMinutes(BarMinutes), OnAnalysisBar);
             _tradeExportKey = $"{ProjectId}/secondleg_trade_export_{EntryModeToken()}_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_leg2_{ParamToken(SecondLegMaxMomentumRatio)}_leg2retr_{ParamToken(LiteMaxLeg2Retracement)}_imp_{ParamToken(EffectiveMinImpulseAtrMultiple())}_pbatr_{ParamToken(LiteMinPullbackAtr)}_l2atr_{ParamToken(LiteMinLeg2Atr)}_sig_{ParamToken(LiteMinSignalClosePct)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}_trig_{MaxTriggerBars}_liq_{(LiteUseStructureBreakEntry ? "1" : "0")}_room_{ParamToken(MinRoomToStructureR)}_rmin_{ParamToken(LiteEntryRoomMinR)}_rmax_{ParamToken(LiteEntryRoomMaxR)}_struct_{TextKeyToken(LiteAllowedStructures)}_hrs_{HourKeyToken(LiteBlockedHours)}_hL_{HourKeyToken(LiteBlockedLongHours)}_hS_{HourKeyToken(LiteBlockedShortHours)}.csv";
             _tradeExport.AppendLine("tradeId,entryMode,signalTime,triggerTime,closeTime,side,entry,stop,touchProbePrice,targetPrice,targetR,riskPts,riskDollars,quantity,atrAtPlan,stopAtrMultiple,impulseAtrMultiple,leg1Retracement,leg2Retracement,leg2MomentumRatio,totalPullbackBars,leg1Bars,leg2Bars,structure,roomToStructureR,signalHour,minutesFromOpen,signalClosePct,signalBodyPct,emaFastDistanceAtr,emaSlowDistanceAtr,atrRatio,slopeAtrPct,maxFavorableR,maxAdverseR,outcome,rMultiple,touchedProbe,barsHeld");
+            ConfigureOpeningAuctionResearch(startDate, endDate);
+            ConfigureLiquiditySweepResearch(startDate, endDate);
+            ConfigureOpeningDriveResearch(startDate, endDate);
 
-            Debug($"SecondLegQCSpike initialized: MES continuous futures entry-detector plus virtual outcome pass, no orders. entryMode={EntryModeToken()} startDate={startDate:yyyy-MM-dd} endDate={endDate:yyyy-MM-dd} barMinutes={BarMinutes} sideFilter={SideFilter} minImpulseAtr={EffectiveMinImpulseAtrMultiple():0.###} maxPullbackRetracement={EffectiveMaxPullbackRetracement():0.###} liteMaxLeg2Retracement={LiteMaxLeg2Retracement:0.###} liteSignalClosePct={LiteMinSignalClosePct:0.###} profitTargetR={ProfitTargetR:0.###} touchProbeR={TouchProbeR:0.###} maxOutcomeBars={MaxOutcomeBars} maxTriggerBars={MaxTriggerBars} entryRoomMin={LiteEntryRoomMinR:0.###} entryRoomMax={LiteEntryRoomMaxR:0.###} allowedStructures={TextToken(LiteAllowedStructures)} blockedHours={HourToken(LiteBlockedHours)} blockedLong={HourToken(LiteBlockedLongHours)} blockedShort={HourToken(LiteBlockedShortHours)} maxStopAtr={MaxStopAtrMultiple:0.###}");
+            Debug($"SecondLegQCSpike init mode={EntryModeToken()} start={startDate:yyyy-MM-dd} end={endDate:yyyy-MM-dd} bar={BarMinutes} side={SideFilter} target={ProfitTargetR:0.###} hold={MaxOutcomeBars} or={OpeningRangeMinutes}");
         }
 
         private void OnAnalysisBar(TradeBar input)
@@ -193,6 +197,22 @@ namespace QuantConnect.Algorithm.CSharp
             GetMonth(bar.EndTime).Bars++;
 
             UpdateSessionState(bar);
+
+            if (IsOpeningAuctionMode())
+            {
+                TryOpeningAuctionResearch(bar);
+                return;
+            }
+            if (IsLiquiditySweepMode())
+            {
+                TryLiquiditySweepResearch(bar);
+                return;
+            }
+            if (IsOpeningDriveMode())
+            {
+                TryOpeningDriveResearch(bar);
+                return;
+            }
 
             if (!IndicatorsReady(bar))
                 return;
@@ -1201,6 +1221,12 @@ namespace QuantConnect.Algorithm.CSharp
 
         private string EntryModeToken()
         {
+            if (IsOpeningAuctionMode())
+                return "OpenAuction";
+            if (IsLiquiditySweepMode())
+                return "LiquiditySweep";
+            if (IsOpeningDriveMode())
+                return "OpeningDrive";
             return IsLiteMode() ? "VideoSecondEntryLite" : "StrictV1";
         }
 

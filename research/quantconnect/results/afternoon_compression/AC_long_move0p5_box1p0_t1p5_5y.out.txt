@@ -1,0 +1,80 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+61f85799ec6d5d60a9b394180e9f4d35-acb4a4f81159e0657a4a69b80f6ed316, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'AC long 5y move0.5 box1.0 t1.5' for project 
+'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/096119ea0b3f864ce146c1cd654a6012
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 5m Bars           | 114201           | Armed             | 0                |
+| Avg R             | 0.00             | Block 1           | AcBoxTooWide:646 |
+|                   |                  |                   | 8                |
+| Block 2           | AcWeakMorning:73 | Block Types       | 2                |
+|                   | 5                |                   |                  |
+| Entry Mode        | OpeningDrive     | Equity            | $100,000.00      |
+| Expired           | 0                | Export Key        | 30609547/afterno |
+|                   |                  |                   | on_compression_e |
+|                   |                  |                   | xport_20210424_2 |
+|                   |                  |                   | 0260423_bar_5_si |
+|                   |                  |                   | de_long_measure_ |
+|                   |                  |                   | 60_box_180_300_m |
+|                   |                  |                   | ove_0p5_maxbox_1 |
+|                   |                  |                   | _target_1p5_hold |
+|                   |                  |                   | _24.csv          |
+| Fees              | -$0.00           | Holdings          | $0.00            |
+| Impulses          | 0                | Leg1              | 0                |
+| Leg2 Candidates   | 0                | Long Armed        | 0                |
+| Net Profit        | $0.00            | Net R             | 0.00             |
+| Params            | mode=OpeningDriv | Probabilistic     | 0%               |
+|                   | e bar=5          | Sharpe Ratio      |                  |
+|                   | side=long        |                   |                  |
+|                   | imp=1.25         |                   |                  |
+|                   | leg2Retr=0.95    |                   |                  |
+|                   | sig=0.5          |                   |                  |
+|                   | target=1.5       |                   |                  |
+|                   | hold=24 trig=3   |                   |                  |
+|                   | liq=False        |                   |                  |
+|                   | roomMax=-1       |                   |                  |
+|                   | struct=none      |                   |                  |
+|                   | block=none       |                   |                  |
+|                   | blockS=none      |                   |                  |
+| Return            | 0.00 %           | RiskTooSmall      | 0                |
+| RTH 5m Bars       | 97951            | Runtime Trade     | 0/0              |
+|                   |                  | Rows              |                  |
+| Separations       | 0                | Short Armed       | 0                |
+| SignalInvalid     | 0                | Stops             | 0                |
+| StopTooWide       | 0                | StructureRoom     | 0                |
+| Timeouts          | 0                | Touch 1R          | 0                |
+| Trend Bars        | 0                | Triggered         | 0                |
+| Unrealized        | $0.00            | Virtual Trades    | 0                |
+| Volume            | $0.00            | Win 1.5R          | 0                |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -0.685           |
+| Tracking Error    | 0.142            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 096119ea0b3f864ce146c1cd654a6012
+Backtest name: AC long 5y move0.5 box1.0 t1.5
+Backtest url: 
+https://www.quantconnect.com/project/30609547/096119ea0b3f864ce146c1cd654a6012

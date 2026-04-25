@@ -1,0 +1,124 @@
+===== RUN OA_acc_15m_both_t1p0_h12_5y =====
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+59533405807c8939b12bdee3eb88dd54-2932449bfe67e62bfd78566663594fe2, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'OA_acc_15m_both_t1p0_h12_5y' for project 
+'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/4e55d4df2d281ba4da0e4cc9aa7fc65b
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 5m Bars           | 114291           | Armed             | 1403             |
+| Avg R             | -0.08            | Block 1           | OaStopTooWide:25 |
+|                   |                  |                   | 3                |
+| Block 2           | OaRiskTooSmall:5 | Block Types       | 2                |
+|                   | 4                |                   |                  |
+| Entry Mode        | OpenAuction      | Equity            | $100,000.00      |
+| Expired           | 0                | Export Key        | 30609547/opening |
+|                   |                  |                   | _auction_export_ |
+|                   |                  |                   | 20210401_2026040 |
+|                   |                  |                   | 1_bar_5_side_bot |
+|                   |                  |                   | h_model_accepted |
+|                   |                  |                   | _confirm_2_fail_ |
+|                   |                  |                   | 3_target_1_hold_ |
+|                   |                  |                   | 12_or_15_maxsig_ |
+|                   |                  |                   | 90_range_0-999.c |
+|                   |                  |                   | sv               |
+| Fees              | -$0.00           | H09 L             | n=146 avg=-0.10  |
+|                   |                  |                   | net=-14.3 2R=65  |
+|                   |                  |                   | st=79 to=2 t1=84 |
+|                   |                  |                   | mfe=1.26         |
+|                   |                  |                   | mae=-1.23        |
+| H09 S             | n=114 avg=-0.17  | H10 L             | n=426 avg=-0.11  |
+|                   | net=-19.1 2R=46  |                   | net=-47.6 2R=180 |
+|                   | st=66 to=2 t1=66 |                   | st=225 to=21     |
+|                   | mfe=1.41         |                   | t1=234 mfe=1.26  |
+|                   | mae=-1.51        |                   | mae=-1.31        |
+| H10 S             | n=394 avg=-0.03  | H11 L             | n=9 avg=0.33     |
+|                   | net=-10.4 2R=188 |                   | net=3.0 2R=6     |
+|                   | st=195 to=11     |                   | st=3 to=0 t1=7   |
+|                   | t1=227 mfe=1.52  |                   | mfe=1.64         |
+|                   | mae=-1.34        |                   | mae=-0.93        |
+| H11 S             | n=7 avg=-0.43    | Holdings          | $0.00            |
+|                   | net=-3.0 2R=2    |                   |                  |
+|                   | st=5 to=0 t1=3   |                   |                  |
+|                   | mfe=0.97         |                   |                  |
+|                   | mae=-1.45        |                   |                  |
+| Impulses          | 0                | Leg1              | 0                |
+| Leg2 Candidates   | 0                | Long Armed        | 721              |
+| Net Profit        | $0.00            | Net R             | -91.43           |
+| Params            | mode=OpenAuction | Probabilistic     | 0%               |
+|                   | bar=5 side=both  | Sharpe Ratio      |                  |
+|                   | imp=1.25         |                   |                  |
+|                   | leg2Retr=0.95    |                   |                  |
+|                   | sig=0.5 target=1 |                   |                  |
+|                   | hold=12 trig=3   |                   |                  |
+|                   | liq=False        |                   |                  |
+|                   | roomMax=-1       |                   |                  |
+|                   | struct=none      |                   |                  |
+|                   | block=none       |                   |                  |
+|                   | blockS=none      |                   |                  |
+| Return            | 0.00 %           | RiskTooSmall      | 0                |
+| Room <0.50R       | n=1 avg=-0.24    | Room <1.00R       | n=37 avg=0.30    |
+|                   | net=-0.2 2R=0    |                   | net=11.1 2R=20   |
+|                   | st=0 to=1 t1=0   |                   | st=8 to=9 t1=20  |
+|                   | mfe=0.37         |                   | mfe=0.91         |
+|                   | mae=-0.24        |                   | mae=-0.64        |
+| Room >=1R         | n=1058 avg=-0.10 | RTH 5m Bars       | 98028            |
+|                   | net=-102.3       |                   |                  |
+|                   | 2R=467 st=565    |                   |                  |
+|                   | to=26 t1=601     |                   |                  |
+|                   | mfe=1.38         |                   |                  |
+|                   | mae=-1.35        |                   |                  |
+| Runtime Trade     | 0/1096           | Separations       | 0                |
+| Rows              |                  |                   |                  |
+| Short Armed       | 682              | Side L            | n=581 avg=-0.10  |
+|                   |                  |                   | net=-58.9 2R=251 |
+|                   |                  |                   | st=307 to=23     |
+|                   |                  |                   | t1=325 mfe=1.26  |
+|                   |                  |                   | mae=-1.28        |
+| Side S            | n=515 avg=-0.06  | SignalInvalid     | 0                |
+|                   | net=-32.5 2R=236 |                   |                  |
+|                   | st=266 to=13     |                   |                  |
+|                   | t1=296 mfe=1.49  |                   |                  |
+|                   | mae=-1.38        |                   |                  |
+| Stops             | 573              | StopTooWide       | 0                |
+| Struct            | n=581 avg=-0.10  | Struct            | n=515 avg=-0.06  |
+| OA_ACCEPT_ORH     | net=-58.9 2R=251 | OA_ACCEPT_ORL     | net=-32.5 2R=236 |
+|                   | st=307 to=23     |                   | st=266 to=13     |
+|                   | t1=325 mfe=1.26  |                   | t1=296 mfe=1.49  |
+|                   | mae=-1.28        |                   | mae=-1.38        |
+| StructureRoom     | 0                | Timeouts          | 36               |
+| Touch 1R          | 621              | Trend Bars        | 0                |
+| Triggered         | 1096             | Unrealized        | $0.00            |
+| Virtual Trades    | 1096             | Volume            | $0.00            |
+| Win 1R            | 487              |                   |                  |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -0.645           |
+| Tracking Error    | 0.141            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 4e55d4df2d281ba4da0e4cc9aa7fc65b
+Backtest name: OA_acc_15m_both_t1p0_h12_5y
+Backtest url: 
+https://www.quantconnect.com/project/30609547/4e55d4df2d281ba4da0e4cc9aa7fc65b

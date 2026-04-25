@@ -1,0 +1,137 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+949c75c2ddac0c67b38a6af53bfa386a-bc7fca5361d235f45706c6d2d0a9c0a5, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'AC long 5y move0.5 box3.0 stop0.75 t1.5' for project 
+'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/9cb96918f84dbee1bd94ef7a4359da16
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic        | Value             | Statistic        | Value             |
+|------------------+-------------------+------------------+-------------------|
+| 5m Bars          | 114201            | Armed            | 12                |
+| Avg R            | 0.46              | Block 1          | AcBoxTooWide:6168 |
+| Block 2          | AcWeakMorning:735 | Block 3          | AcNoBreakout:201  |
+| Block Types      | 3                 | Entry Mode       | OpeningDrive      |
+| Equity           | $100,000.00       | Expired          | 0                 |
+| Export Key       | 30609547/afternoo | Fees             | -$0.00            |
+|                  | n_compression_exp |                  |                   |
+|                  | ort_20210424_2026 |                  |                   |
+|                  | 0423_bar_5_side_l |                  |                   |
+|                  | ong_measure_60_bo |                  |                   |
+|                  | x_180_300_move_0p |                  |                   |
+|                  | 5_maxbox_3_stopat |                  |                   |
+|                  | r_0p75_target_1p5 |                  |                   |
+|                  | _hold_24.csv      |                  |                   |
+| H14 L            | n=9 avg=0.39      | H15 L            | n=3 avg=0.67      |
+|                  | net=3.5 2R=5 st=4 |                  | net=2.0 2R=2 st=1 |
+|                  | to=0 t1=6         |                  | to=0 t1=2         |
+|                  | mfe=1.25          |                  | mfe=1.26          |
+|                  | mae=-1.21         |                  | mae=-0.66         |
+| Holdings         | $0.00             | Impulses         | 0                 |
+| Leg1             | 0                 | Leg2 Candidates  | 0                 |
+| Long Armed       | 12                | Net Profit       | $0.00             |
+| Net R            | 5.50              | Params           | mode=OpeningDrive |
+|                  |                   |                  | bar=5 side=long   |
+|                  |                   |                  | imp=1.25          |
+|                  |                   |                  | leg2Retr=0.95     |
+|                  |                   |                  | sig=0.5           |
+|                  |                   |                  | target=1.5        |
+|                  |                   |                  | hold=24 trig=3    |
+|                  |                   |                  | liq=False         |
+|                  |                   |                  | roomMax=-1        |
+|                  |                   |                  | struct=none       |
+|                  |                   |                  | block=none        |
+|                  |                   |                  | blockS=none       |
+| Probabilistic    | 0%                | Return           | 0.00 %            |
+| Sharpe Ratio     |                   |                  |                   |
+| RiskTooSmall     | 0                 | Room >=1R        | n=12 avg=0.46     |
+|                  |                   |                  | net=5.5 2R=7 st=5 |
+|                  |                   |                  | to=0 t1=8         |
+|                  |                   |                  | mfe=1.25          |
+|                  |                   |                  | mae=-1.07         |
+| RTH 5m Bars      | 97951             | Runtime Trade    | 12/12             |
+|                  |                   | Rows             |                   |
+| Separations      | 0                 | Short Armed      | 0                 |
+| Side L           | n=12 avg=0.46     | SignalInvalid    | 0                 |
+|                  | net=5.5 2R=7 st=5 |                  |                   |
+|                  | to=0 t1=8         |                  |                   |
+|                  | mfe=1.25          |                  |                   |
+|                  | mae=-1.07         |                  |                   |
+| Stops            | 5                 | StopTooWide      | 0                 |
+| Struct           | n=12 avg=0.46     | StructureRoom    | 0                 |
+| AC_BREAK_LONG    | net=5.5 2R=7 st=5 |                  |                   |
+|                  | to=0 t1=8         |                  |                   |
+|                  | mfe=1.25          |                  |                   |
+|                  | mae=-1.07         |                  |                   |
+| T01              | 21-10-18 15:00 L  | T02              | 22-05-27 14:55 L  |
+|                  | Stop r=-1         |                  | Target r=1.5      |
+|                  | mfe=0.7794        |                  | mfe=1.7338        |
+|                  | mae=-1.7035       |                  | mae=-0.5688       |
+|                  | room=4.0108       |                  | room=4.7203       |
+|                  | bars=2            |                  | bars=2            |
+| T03              | 22-06-21 15:00 L  | T04              | 22-06-24 14:55 L  |
+|                  | Stop r=-1         |                  | Target r=1.5      |
+|                  | mfe=1.1849        |                  | mfe=1.7085        |
+|                  | mae=-1.2302       |                  | mae=-0.68         |
+|                  | room=3.2776       |                  | room=3.9809       |
+|                  | bars=9            |                  | bars=10           |
+| T05              | 22-08-15 15:30 L  | T06              | 23-04-03 14:40 L  |
+|                  | Stop r=-1         |                  | Target r=1.5      |
+|                  | mfe=0.1609        |                  | mfe=1.9893        |
+|                  | mae=-1.2192       |                  | mae=-0.1605       |
+|                  | room=4.4851       |                  | room=3.7878       |
+|                  | bars=1            |                  | bars=3            |
+| T07              | 23-06-26 14:45 L  | T08              | 25-05-02 14:45 L  |
+|                  | Stop r=-1         |                  | Stop r=-1         |
+|                  | mfe=0.2344        |                  | mfe=0.3588        |
+|                  | mae=-1.0524       |                  | mae=-4.363        |
+|                  | room=3.6889       |                  | room=5.2382       |
+|                  | bars=3            |                  | bars=2            |
+| T09              | 25-07-02 14:40 L  | T10              | 25-09-11 15:25 L  |
+|                  | Target r=1.5      |                  | Target r=1.5      |
+|                  | mfe=1.5915        |                  | mfe=1.8636        |
+|                  | mae=-0.4581       |                  | mae=-0.5703       |
+|                  | room=5.6365       |                  | room=4.2274       |
+|                  | bars=2            |                  | bars=3            |
+| T11              | 25-12-03 14:50 L  | T12              | 26-02-27 15:20 L  |
+|                  | Target r=1.5      |                  | Target r=1.5      |
+|                  | mfe=1.6261        |                  | mfe=1.7659        |
+|                  | mae=-0.6304       |                  | mae=-0.1993       |
+|                  | room=5.7542       |                  | room=4.2327       |
+|                  | bars=6            |                  | bars=2            |
+| Timeouts         | 0                 | Touch 1R         | 8                 |
+| Trend Bars       | 0                 | Triggered        | 12                |
+| Unrealized       | $0.00             | Virtual Trades   | 12                |
+| Volume           | $0.00             | Win 1.5R         | 7                 |
+|------------------+-------------------+------------------+-------------------|
+| Total Orders     | 0                 | Average Win      | 0%                |
+| Average Loss     | 0%                | Compounding      | 0%                |
+|                  |                   | Annual Return    |                   |
+| Drawdown         | 0%                | Expectancy       | 0                 |
+| Start Equity     | 100000            | End Equity       | 100000            |
+| Net Profit       | 0%                | Sharpe Ratio     | 0                 |
+| Sortino Ratio    | 0                 | Probabilistic    | 0%                |
+|                  |                   | Sharpe Ratio     |                   |
+| Loss Rate        | 0%                | Win Rate         | 0%                |
+| Profit-Loss      | 0                 | Alpha            | 0                 |
+| Ratio            |                   |                  |                   |
+| Beta             | 0                 | Annual Standard  | 0                 |
+|                  |                   | Deviation        |                   |
+| Annual Variance  | 0                 | Information      | -0.685            |
+|                  |                   | Ratio            |                   |
+| Tracking Error   | 0.142             | Treynor Ratio    | 0                 |
+| Total Fees       | $0.00             | Estimated        | $0                |
+|                  |                   | Strategy         |                   |
+|                  |                   | Capacity         |                   |
+| Lowest Capacity  |                   | Portfolio        | 0%                |
+| Asset            |                   | Turnover         |                   |
+| Drawdown         | 0                 |                  |                   |
+| Recovery         |                   |                  |                   |
++-----------------------------------------------------------------------------+
+Backtest id: 9cb96918f84dbee1bd94ef7a4359da16
+Backtest name: AC long 5y move0.5 box3.0 stop0.75 t1.5
+Backtest url: 
+https://www.quantconnect.com/project/30609547/9cb96918f84dbee1bd94ef7a4359da16

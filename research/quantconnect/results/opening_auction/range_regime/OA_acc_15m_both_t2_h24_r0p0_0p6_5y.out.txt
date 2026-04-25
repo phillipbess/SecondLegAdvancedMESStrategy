@@ -1,0 +1,107 @@
+===== RUN OA_acc_15m_both_t2_h24_r0p0_0p6_5y =====
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+267336b5ee34510c1f3f9a44d970236f-2932449bfe67e62bfd78566663594fe2, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'OA_acc_15m_both_t2_h24_r0p0_0p6_5y' for project 
+'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/1215c32b30f1d0878cc9043eb868bc5b
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic        | Value             | Statistic        | Value             |
+|------------------+-------------------+------------------+-------------------|
+| 5m Bars          | 114291            | Armed            | 8                 |
+| Avg R            | 0.73              | Block 1          | OaRangeFilter:193 |
+|                  |                   |                  | 14                |
+| Block 2          | OaRiskTooSmall:4  | Block 3          | OaStopTooWide:2   |
+| Block Types      | 3                 | Entry Mode       | OpenAuction       |
+| Equity           | $100,000.00       | Expired          | 0                 |
+| Export Key       | 30609547/opening_ | Fees             | -$0.00            |
+|                  | auction_export_20 |                  |                   |
+|                  | 210401_20260401_b |                  |                   |
+|                  | ar_5_side_both_mo |                  |                   |
+|                  | del_accepted_conf |                  |                   |
+|                  | irm_2_fail_3_targ |                  |                   |
+|                  | et_2_hold_24_or_1 |                  |                   |
+|                  | 5_maxsig_90_range |                  |                   |
+|                  | _0-0p6.csv        |                  |                   |
+| H09 L            | n=1 avg=-0.54     | H10 S            | n=1 avg=2.00      |
+|                  | net=-0.5 2R=0     |                  | net=2.0 2R=1 st=0 |
+|                  | st=0 to=1 t1=0    |                  | to=0 t1=1         |
+|                  | mfe=0.37          |                  | mfe=2.92          |
+|                  | mae=-0.85         |                  | mae=-0.88         |
+| Holdings         | $0.00             | Impulses         | 0                 |
+| Leg1             | 0                 | Leg2 Candidates  | 0                 |
+| Long Armed       | 1                 | Net Profit       | $0.00             |
+| Net R            | 1.46              | Params           | mode=OpenAuction  |
+|                  |                   |                  | bar=5 side=both   |
+|                  |                   |                  | imp=1.25          |
+|                  |                   |                  | leg2Retr=0.95     |
+|                  |                   |                  | sig=0.5 target=2  |
+|                  |                   |                  | hold=24 trig=3    |
+|                  |                   |                  | liq=False         |
+|                  |                   |                  | roomMax=-1        |
+|                  |                   |                  | struct=none       |
+|                  |                   |                  | block=none        |
+|                  |                   |                  | blockS=none       |
+| Probabilistic    | 0%                | Return           | 0.00 %            |
+| Sharpe Ratio     |                   |                  |                   |
+| RiskTooSmall     | 0                 | Room <0.50R      | n=2 avg=0.73      |
+|                  |                   |                  | net=1.5 2R=1 st=0 |
+|                  |                   |                  | to=1 t1=1         |
+|                  |                   |                  | mfe=1.64          |
+|                  |                   |                  | mae=-0.86         |
+| RTH 5m Bars      | 98028             | Runtime Trade    | 0/2               |
+|                  |                   | Rows             |                   |
+| Separations      | 0                 | Short Armed      | 7                 |
+| Side L           | n=1 avg=-0.54     | Side S           | n=1 avg=2.00      |
+|                  | net=-0.5 2R=0     |                  | net=2.0 2R=1 st=0 |
+|                  | st=0 to=1 t1=0    |                  | to=0 t1=1         |
+|                  | mfe=0.37          |                  | mfe=2.92          |
+|                  | mae=-0.85         |                  | mae=-0.88         |
+| SignalInvalid    | 0                 | Stops            | 0                 |
+| StopTooWide      | 0                 | Struct           | n=1 avg=-0.54     |
+|                  |                   | OA_ACCEPT_ORH    | net=-0.5 2R=0     |
+|                  |                   |                  | st=0 to=1 t1=0    |
+|                  |                   |                  | mfe=0.37          |
+|                  |                   |                  | mae=-0.85         |
+| Struct           | n=1 avg=2.00      | StructureRoom    | 0                 |
+| OA_ACCEPT_ORL    | net=2.0 2R=1 st=0 |                  |                   |
+|                  | to=0 t1=1         |                  |                   |
+|                  | mfe=2.92          |                  |                   |
+|                  | mae=-0.88         |                  |                   |
+| Timeouts         | 1                 | Touch 1R         | 1                 |
+| Trend Bars       | 0                 | Triggered        | 2                 |
+| Unrealized       | $0.00             | Virtual Trades   | 2                 |
+| Volume           | $0.00             | Win 2R           | 1                 |
+|------------------+-------------------+------------------+-------------------|
+| Total Orders     | 0                 | Average Win      | 0%                |
+| Average Loss     | 0%                | Compounding      | 0%                |
+|                  |                   | Annual Return    |                   |
+| Drawdown         | 0%                | Expectancy       | 0                 |
+| Start Equity     | 100000            | End Equity       | 100000            |
+| Net Profit       | 0%                | Sharpe Ratio     | 0                 |
+| Sortino Ratio    | 0                 | Probabilistic    | 0%                |
+|                  |                   | Sharpe Ratio     |                   |
+| Loss Rate        | 0%                | Win Rate         | 0%                |
+| Profit-Loss      | 0                 | Alpha            | 0                 |
+| Ratio            |                   |                  |                   |
+| Beta             | 0                 | Annual Standard  | 0                 |
+|                  |                   | Deviation        |                   |
+| Annual Variance  | 0                 | Information      | -0.645            |
+|                  |                   | Ratio            |                   |
+| Tracking Error   | 0.141             | Treynor Ratio    | 0                 |
+| Total Fees       | $0.00             | Estimated        | $0                |
+|                  |                   | Strategy         |                   |
+|                  |                   | Capacity         |                   |
+| Lowest Capacity  |                   | Portfolio        | 0%                |
+| Asset            |                   | Turnover         |                   |
+| Drawdown         | 0                 |                  |                   |
+| Recovery         |                   |                  |                   |
++-----------------------------------------------------------------------------+
+Backtest id: 1215c32b30f1d0878cc9043eb868bc5b
+Backtest name: OA_acc_15m_both_t2_h24_r0p0_0p6_5y
+Backtest url: 
+https://www.quantconnect.com/project/30609547/1215c32b30f1d0878cc9043eb868bc5b

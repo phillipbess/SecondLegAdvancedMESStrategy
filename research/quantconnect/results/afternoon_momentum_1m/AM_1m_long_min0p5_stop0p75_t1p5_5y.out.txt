@@ -1,0 +1,406 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID: 
+e8a96f489b94a167a30c2e154e85beff-bc7fca5361d235f45706c6d2d0a9c0a5, Lean 
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'AM 1m long min0.5 stop0.75 t1.5 5y' for project 
+'SecondLegQCSpike 1'
+Backtest url: 
+https://www.quantconnect.com/project/30609547/0258c90dac90df97c608ee4797453c89
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 1m Bars           | 571005           | Armed             | 425              |
+| Avg R             | 0.15             | Block 1           | AmWeakMorning:88 |
+| Block 2           | OdRiskTooSmall:2 | Block Types       | 2                |
+|                   | 3                |                   |                  |
+| Entry Mode        | OpeningDrive     | Equity            | $100,000.00      |
+| Expired           | 0                | Export Key        | 30609547/opening |
+|                   |                  |                   | _drive_export_20 |
+|                   |                  |                   | 210424_20260423_ |
+|                   |                  |                   | bar_1_side_long_ |
+|                   |                  |                   | or_30_minatr_0p8 |
+|                   |                  |                   | _close_0p7_pb_0p |
+|                   |                  |                   | 25_target_1p5_ho |
+|                   |                  |                   | ld_120.csv       |
+| Fees              | -$0.00           | H14 L             | n=389 avg=0.16   |
+|                   |                  |                   | net=62.2 2R=180  |
+|                   |                  |                   | st=208 to=1      |
+|                   |                  |                   | t1=229 mfe=1.28  |
+|                   |                  |                   | mae=-1.04        |
+| H15 L             | n=13 avg=-0.23   | Holdings          | $0.00            |
+|                   | net=-3.0 2R=4    |                   |                  |
+|                   | st=9 to=0 t1=6   |                   |                  |
+|                   | mfe=1.05         |                   |                  |
+|                   | mae=-1.08        |                   |                  |
+| Impulses          | 0                | Leg1              | 0                |
+| Leg2 Candidates   | 0                | Long Armed        | 425              |
+| Net Profit        | $0.00            | Net R             | 59.22            |
+| Params            | mode=OpeningDriv | Probabilistic     | 0%               |
+|                   | e bar=1          | Sharpe Ratio      |                  |
+|                   | side=long        |                   |                  |
+|                   | imp=1.25         |                   |                  |
+|                   | leg2Retr=0.95    |                   |                  |
+|                   | sig=0.5          |                   |                  |
+|                   | target=1.5       |                   |                  |
+|                   | hold=120 trig=3  |                   |                  |
+|                   | liq=False        |                   |                  |
+|                   | roomMax=-1       |                   |                  |
+|                   | struct=none      |                   |                  |
+|                   | block=none       |                   |                  |
+|                   | blockS=none      |                   |                  |
+| Return            | 0.00 %           | RiskTooSmall      | 0                |
+| Room >=1R         | n=402 avg=0.15   | RTH 1m Bars       | 489755           |
+|                   | net=59.2 2R=184  |                   |                  |
+|                   | st=217 to=1      |                   |                  |
+|                   | t1=235 mfe=1.27  |                   |                  |
+|                   | mae=-1.04        |                   |                  |
+| Runtime Trade     | 100/402          | Separations       | 0                |
+| Rows              |                  |                   |                  |
+| Short Armed       | 0                | Side L            | n=402 avg=0.15   |
+|                   |                  |                   | net=59.2 2R=184  |
+|                   |                  |                   | st=217 to=1      |
+|                   |                  |                   | t1=235 mfe=1.27  |
+|                   |                  |                   | mae=-1.04        |
+| SignalInvalid     | 0                | Stops             | 217              |
+| StopTooWide       | 0                | Struct            | n=402 avg=0.15   |
+|                   |                  | AM_CONT_LONG      | net=59.2 2R=184  |
+|                   |                  |                   | st=217 to=1      |
+|                   |                  |                   | t1=235 mfe=1.27  |
+|                   |                  |                   | mae=-1.04        |
+| StructureRoom     | 0                | T01               | 21-04-26 14:34 L |
+|                   |                  |                   | Stop r=-1        |
+|                   |                  |                   | mfe=0.5388       |
+|                   |                  |                   | mae=-1.171       |
+|                   |                  |                   | room=17.6682     |
+|                   |                  |                   | bars=2           |
+| T02               | 21-04-28 14:39 L | T03               | 21-05-07 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=1.9442       |                   | mfe=0.2144       |
+|                   | mae=-0.478       |                   | mae=-1.2104      |
+|                   | room=6.1269      |                   | room=26.2173     |
+|                   | bars=4           |                   | bars=4           |
+| T04               | 21-05-13 14:31 L | T05               | 21-05-14 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.4445       |                   | mfe=2.1846       |
+|                   | mae=-1.3171      |                   | mae=-0.0952      |
+|                   | room=12.5387     |                   | room=16.1863     |
+|                   | bars=2           |                   | bars=2           |
+| T06               | 21-05-20 14:31 L | T07               | 21-05-24 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.8738       |                   | mfe=2.3439 mae=0 |
+|                   | mae=-1.4059      |                   | room=26.2173     |
+|                   | room=14.5905     |                   | bars=1           |
+|                   | bars=3           |                   |                  |
+| T08               | 21-06-04 14:31 L | T09               | 21-06-21 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=1.1375       |                   | mfe=0.0438       |
+|                   | mae=-1.1423      |                   | mae=-1.0992      |
+|                   | room=38.756      |                   | room=31.6247     |
+|                   | bars=1           |                   | bars=1           |
+| T10               | 21-06-22 14:31 L | T100              | 22-08-25 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=2.1444       |                   | mfe=0.5906       |
+|                   | mae=-0.9038      |                   | mae=-1.1344      |
+|                   | room=15.2408     |                   | room=18.5921     |
+|                   | bars=3           |                   | bars=1           |
+| T11               | 21-06-24 14:31 L | T12               | 21-06-25 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.7995       |                   | mfe=0.5176       |
+|                   | mae=-1.4866      |                   | mae=-1.197       |
+|                   | room=13.1452     |                   | room=12.5737     |
+|                   | bars=1           |                   | bars=1           |
+| T13               | 21-06-30 14:35 L | T14               | 21-07-01 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=1.1911       |                   | mfe=2.1763       |
+|                   | mae=-2.2381      |                   | mae=-0.6814      |
+|                   | room=35.4349     |                   | room=16.0028     |
+|                   | bars=1           |                   | bars=2           |
+| T15               | 21-07-02 14:31 L | T16               | 21-07-08 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1 mfe=0  |
+|                   | mfe=2.5226       |                   | mae=-1.5215      |
+|                   | mae=-0.9065      |                   | room=12.9002     |
+|                   | room=27.4334     |                   | bars=1           |
+|                   | bars=1           |                   |                  |
+| T17               | 21-07-09 14:31 L | T18               | 21-07-12 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.4641       |                   | mfe=1.755        |
+|                   | mae=-1.06        |                   | mae=-0.5312      |
+|                   | room=20.5751     |                   | room=15.2408     |
+|                   | bars=3           |                   | bars=5           |
+| T19               | 21-07-20 14:31 L | T20               | 21-07-21 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=1.3413       |                   | mfe=1.8814       |
+|                   | mae=-1.2305      |                   | mae=-0.119       |
+|                   | room=40.8644     |                   | room=18.0032     |
+|                   | bars=7           |                   | bars=3           |
+| T21               | 21-07-26 14:31 L | T22               | 21-07-29 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=1.5018       |                   | mfe=0.5747       |
+|                   | mae=-0.7843      |                   | mae=-1.4256      |
+|                   | room=11.4306     |                   | room=14.574      |
+|                   | bars=20          |                   | bars=6           |
+| T23               | 21-08-05 14:38 L | T24               | 21-08-19 14:55 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.0022       |                   | mfe=2.343        |
+|                   | mae=-1.1409      |                   | mae=-0.248       |
+|                   | room=10.8591     |                   | room=8.4586      |
+|                   | bars=2           |                   | bars=7           |
+| T25               | 21-08-20 14:31 L | T26               | 21-08-23 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.919        |                   | mfe=1.7663       |
+|                   | mae=-1.1385      |                   | mae=-0.5198      |
+|                   | room=21.9468     |                   | room=14.574      |
+|                   | bars=2           |                   | bars=5           |
+| T27               | 21-08-24 14:31 L | T28               | 21-08-25 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=2.4974       |                   | mfe=0.7523       |
+|                   | mae=-0.9318      |                   | mae=-2.1054      |
+|                   | room=35.4349     |                   | room=13.1452     |
+|                   | bars=2           |                   | bars=3           |
+| T29               | 21-08-27 14:31 L | T30               | 21-08-30 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=1.828        |                   | mfe=0.6068       |
+|                   | mae=-0.4581      |                   | mae=-1.6793      |
+|                   | room=22.8612     |                   | room=11.8116     |
+|                   | bars=2           |                   | bars=5           |
+| T31               | 21-09-03 14:31 L | T32               | 21-09-22 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=1.1978       |                   | mfe=1.0453       |
+|                   | mae=-1.0884      |                   | mae=-2.3925      |
+|                   | room=28.5765     |                   | room=7.5007      |
+|                   | bars=3           |                   | bars=2           |
+| T33               | 21-09-23 14:31 L | T34               | 21-09-24 14:58 L |
+|                   | Target r=1.5     |                   | Target r=1.5     |
+|                   | mfe=2.3606 mae=0 |                   | mfe=2.6237       |
+|                   | room=50.0395     |                   | mae=-0.0502      |
+|                   | bars=1           |                   | room=37.4341     |
+|                   |                  |                   | bars=2           |
+| T35               | 21-09-27 14:31 L | T36               | 21-09-29 14:32 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=1.3518       |                   | mfe=0.0183       |
+|                   | mae=-1.5131      |                   | mae=-1.5096      |
+|                   | room=31.5134     |                   | room=18.9081     |
+|                   | bars=2           |                   | bars=1           |
+| T37               | 21-10-05 14:31 L | T38               | 21-10-06 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=2.7625       |                   | mfe=0.132        |
+|                   | mae=-0.2169      |                   | mae=-1.8734      |
+|                   | room=21.5437     |                   | room=15.6135     |
+|                   | bars=1           |                   | bars=1           |
+| T39               | 21-10-14 14:31 L | T40               | 21-10-18 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1 mfe=0  |
+|                   | mfe=0.4113       |                   | mae=-2.0322      |
+|                   | mae=-3.5995      |                   | room=34.3783     |
+|                   | room=29.7945     |                   | bars=1           |
+|                   | bars=1           |                   |                  |
+| T41               | 21-10-19 14:31 L | T42               | 21-10-20 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=1.1118       |                   | mfe=1.7973       |
+|                   | mae=-2.3261      |                   | mae=-0.4946      |
+|                   | room=15.2792     |                   | room=23.4918     |
+|                   | bars=2           |                   | bars=2           |
+| T43               | 21-10-21 14:31 L | T44               | 21-10-28 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=1.3027       |                   | mfe=0.4773       |
+|                   | mae=-1.3712      |                   | mae=-1.0507      |
+|                   | room=14.1333     |                   | room=23.3008     |
+|                   | bars=8           |                   | bars=3           |
+| T45               | 21-10-29 14:31 L | T46               | 21-11-02 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1 mfe=0  |
+|                   | mfe=2.2366       |                   | mae=-1.0195      |
+|                   | mae=-0.972       |                   | room=7.8579      |
+|                   | room=19.9394     |                   | bars=1           |
+|                   | bars=6           |                   |                  |
+| T47               | 21-11-16 14:31 L | T48               | 21-11-24 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.5093       |                   | mfe=2.2844       |
+|                   | mae=-1.4007      |                   | mae=-0.1985      |
+|                   | room=29.4125     |                   | room=11.6504     |
+|                   | bars=6           |                   | bars=1           |
+| T49               | 21-12-02 14:31 L | T50               | 21-12-06 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.4373       |                   | mfe=1.7597       |
+|                   | mae=-1.2295      |                   | mae=-0.0411      |
+|                   | room=23.5439     |                   | room=20.627      |
+|                   | bars=1           |                   | bars=1           |
+| T51               | 21-12-07 14:31 L | T52               | 21-12-22 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.0288       |                   | mfe=1.5718 mae=0 |
+|                   | mae=-1.8047      |                   | room=10.1442     |
+|                   | room=26.5859     |                   | bars=1           |
+|                   | bars=1           |                   |                  |
+| T53               | 21-12-23 14:31 L | T54               | 21-12-27 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.5488       |                   | mfe=0.5117       |
+|                   | mae=-1.748       |                   | mae=-1.7851      |
+|                   | room=23.8293     |                   | room=39.6198     |
+|                   | bars=3           |                   | bars=1           |
+| T55               | 22-01-31 14:31 L | T56               | 22-02-07 15:13 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.2161       |                   | mfe=1.4798       |
+|                   | mae=-1.9167      |                   | mae=-1.1616      |
+|                   | room=24.1164     |                   | room=10.2208     |
+|                   | bars=3           |                   | bars=8           |
+| T57               | 22-02-09 14:31 L | T58               | 22-02-15 15:07 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.1872       |                   | mfe=0.1965       |
+|                   | mae=-1.4205      |                   | mae=-1.28        |
+|                   | room=13.0918     |                   | room=15.7495     |
+|                   | bars=2           |                   | bars=1           |
+| T59               | 22-02-24 14:31 L | T60               | 22-02-25 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=3.1147       |                   | mfe=2.215        |
+|                   | mae=-0.2588      |                   | mae=-1.439       |
+|                   | room=15.1445     |                   | room=12.528      |
+|                   | bars=1           |                   | bars=2           |
+| T61               | 22-03-02 14:31 L | T62               | 22-03-09 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.4119       |                   | mfe=1.5594       |
+|                   | mae=-2.0125      |                   | mae=-0.0066      |
+|                   | room=14.9292     |                   | room=12.1104     |
+|                   | bars=1           |                   | bars=2           |
+| T63               | 22-03-10 14:34 L | T64               | 22-03-15 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.4056       |                   | mfe=0.0174       |
+|                   | mae=-1.578       |                   | mae=-1.6095      |
+|                   | room=12.4236     |                   | room=11.1969     |
+|                   | bars=2           |                   | bars=1           |
+| T65               | 22-03-17 14:31 L | T66               | 22-03-18 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=2.2554       |                   | mfe=0.5506       |
+|                   | mae=-0.185       |                   | mae=-1.5601      |
+|                   | room=17.6566     |                   | room=15.9261     |
+|                   | bars=2           |                   | bars=1           |
+| T67               | 22-03-22 14:31 L | T68               | 22-03-25 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.4815       |                   | mfe=2.3158       |
+|                   | mae=-1.0535      |                   | mae=-0.1512      |
+|                   | room=8.1869      |                   | room=8.8813      |
+|                   | bars=1           |                   | bars=2           |
+| T69               | 22-03-28 14:52 L | T70               | 22-04-04 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=1.7158       |                   | mfe=0.3923       |
+|                   | mae=-0.2578      |                   | mae=-1.4497      |
+|                   | room=13.322      |                   | room=22.5651     |
+|                   | bars=2           |                   | bars=1           |
+| T71               | 22-04-13 14:31 L | T72               | 22-04-19 14:31 L |
+|                   | Target r=1.5     |                   | Target r=1.5     |
+|                   | mfe=1.727        |                   | mfe=2.2762       |
+|                   | mae=-0.8634      |                   | mae=-0.7939      |
+|                   | room=14.1032     |                   | room=29.1658     |
+|                   | bars=7           |                   | bars=1           |
+| T73               | 22-05-03 14:36 L | T74               | 22-05-13 14:33 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=1.7139       |                   | mfe=0.0611       |
+|                   | mae=-0.2746      |                   | mae=-2.3694      |
+|                   | room=10.0475     |                   | room=8.9544      |
+|                   | bars=1           |                   | bars=1           |
+| T75               | 22-05-16 14:31 L | T76               | 22-05-19 14:39 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=1.5682       |                   | mfe=0.7953       |
+|                   | mae=-0.3506      |                   | mae=-1.6284      |
+|                   | room=14.2951     |                   | room=11.3916     |
+|                   | bars=3           |                   | bars=3           |
+| T77               | 22-05-23 14:31 L | T78               | 22-05-25 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.3189       |                   | mfe=0.8927       |
+|                   | mae=-1.6958      |                   | mae=-1.122       |
+|                   | room=19.4279     |                   | room=6.7158      |
+|                   | bars=1           |                   | bars=10          |
+| T79               | 22-05-26 14:31 L | T80               | 22-05-27 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.8091       |                   | mfe=1.9358       |
+|                   | mae=-1.2376      |                   | mae=-0.1749      |
+|                   | room=22.2581     |                   | room=29.9333     |
+|                   | bars=4           |                   | bars=6           |
+| T81               | 22-06-07 14:31 L | T82               | 22-06-15 14:42 L |
+|                   | Target r=1.5     |                   | Target r=1.5     |
+|                   | mfe=1.5341       |                   | mfe=1.5227       |
+|                   | mae=-0.9603      |                   | mae=-0.0985      |
+|                   | room=22.8337     |                   | room=2.3026      |
+|                   | bars=3           |                   | bars=1           |
+| T83               | 22-06-21 14:31 L | T84               | 22-06-22 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.9162       |                   | mfe=1.1848       |
+|                   | mae=-1.0005      |                   | mae=-1.0002      |
+|                   | room=16.4838     |                   | room=20.0105     |
+|                   | bars=4           |                   | bars=12          |
+| T85               | 22-06-24 14:31 L | T86               | 22-07-07 14:31 L |
+|                   | Target r=1.5     |                   | Stop r=-1 mfe=0  |
+|                   | mfe=1.7586       |                   | mae=-2.0722      |
+|                   | mae=-0.3772      |                   | room=29.3258     |
+|                   | room=18.5648     |                   | bars=1           |
+|                   | bars=3           |                   |                  |
+| T87               | 22-07-08 14:31 L | T88               | 22-07-13 14:31 L |
+|                   | Target r=1.5     |                   | Target r=1.5     |
+|                   | mfe=1.7516       |                   | mfe=2.043        |
+|                   | mae=-0.6922      |                   | mae=-0.3392      |
+|                   | room=15.5254     |                   | room=11.7467     |
+|                   | bars=5           |                   | bars=2           |
+| T89               | 22-07-15 14:31 L | T90               | 22-07-19 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.6509       |                   | mfe=1.645 mae=0  |
+|                   | mae=-1.1563      |                   | room=10.186      |
+|                   | room=18.7291     |                   | bars=1           |
+|                   | bars=2           |                   |                  |
+| T91               | 22-07-20 14:31 L | T92               | 22-07-27 14:31 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.4187       |                   | mfe=1.1928       |
+|                   | mae=-1.2425      |                   | mae=-3.1982      |
+|                   | room=8.3058      |                   | room=7.1093      |
+|                   | bars=1           |                   | bars=2           |
+| T93               | 22-07-29 14:31 L | T94               | 22-08-03 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=1.1564       |                   | mfe=1.6987       |
+|                   | mae=-1.3354      |                   | mae=-0.793       |
+|                   | room=21.0839     |                   | room=13.2253     |
+|                   | bars=4           |                   | bars=4           |
+| T95               | 22-08-05 15:12 L | T96               | 22-08-12 14:31 L |
+|                   | Target r=1.5     |                   | Target r=1.5     |
+|                   | mfe=1.6424       |                   | mfe=2.018        |
+|                   | mae=-0.8014      |                   | mae=-0.2821      |
+|                   | room=15.5254     |                   | room=22.2339     |
+|                   | bars=8           |                   | bars=1           |
+| T97               | 22-08-15 14:31 L | T98               | 22-08-17 14:31 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.4511       |                   | mfe=1.5237       |
+|                   | mae=-1.0275      |                   | mae=-0.9533      |
+|                   | room=17.2504     |                   | room=5.4848      |
+|                   | bars=2           |                   | bars=5           |
+| T99               | 22-08-24 14:31 L | Timeouts          | 1                |
+|                   | Stop r=-1        |                   |                  |
+|                   | mfe=0.5464       |                   |                  |
+|                   | mae=-2.137       |                   |                  |
+|                   | room=19.5505     |                   |                  |
+|                   | bars=1           |                   |                  |
+| Touch 1R          | 235              | Trend Bars        | 0                |
+| Triggered         | 402              | Unrealized        | $0.00            |
+| Virtual Trades    | 402              | Volume            | $0.00            |
+| Win 1.5R          | 184              |                   |                  |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -0.685           |
+| Tracking Error    | 0.142            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 0258c90dac90df97c608ee4797453c89
+Backtest name: AM 1m long min0.5 stop0.75 t1.5 5y
+Backtest url: 
+https://www.quantconnect.com/project/30609547/0258c90dac90df97c608ee4797453c89
