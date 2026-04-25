@@ -13,6 +13,12 @@ idea on top of a donor-shaped runtime shell.
 trend -> impulse -> two-legged pullback -> second-entry trigger -> room to structure ->
 runtime-managed trade
 
+The repo now has two entry modes:
+
+- `StrictV1`: the canonical, fully auditable entry contract
+- `VideoSecondEntryLite`: a research mode for testing a faster, closer-to-the-video
+  version of the idea without changing the runtime shell
+
 ## What This Repo Is Trying To Do
 
 - preserve the hardened runtime lessons from `ManciniMESStrategy`
@@ -37,6 +43,10 @@ The current strict `v1` includes:
 - hard risk rails
 - end-of-day flatten rule
 - long and short symmetry
+
+The lite research mode keeps the same runtime, risk rails, stop-entry planning, and
+order-management path, but relaxes selected entry-quality gates so Playback can test
+whether the original video dynamic appears often enough to matter.
 
 The current strict `v1` excludes:
 
@@ -77,6 +87,7 @@ Canonical doc:
 
 - [Entry_Brain_V1_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Entry_Brain_V1_Contract.md)
 - [Video_Idea_To_Strategy_Mapping.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Video_Idea_To_Strategy_Mapping.md)
+- [VideoSecondEntryLite_Research_Mode.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/VideoSecondEntryLite_Research_Mode.md)
 
 ### 2. Runtime Shell
 

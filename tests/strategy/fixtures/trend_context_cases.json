@@ -68,6 +68,29 @@
       "use_opening_bias_filter": false,
       "expected_active_bias": "Long",
       "expected_trend_context_valid": true
+    },
+    {
+      "case_id": "lite_mode_accepts_positive_slope_below_strict_threshold",
+      "entry_mode": "VideoSecondEntryLite",
+      "close": 5200.0,
+      "ema_fast": 5196.0,
+      "ema_slow": 5190.0,
+      "ema_fast_slope_atr_pct": 0.01,
+      "slope_min_atr_pct_per_bar": 0.03,
+      "expected_active_bias": "Long",
+      "expected_trend_context_valid": true
+    },
+    {
+      "case_id": "short_only_direction_filter_blocks_lite_long_context",
+      "entry_mode": "VideoSecondEntryLite",
+      "trade_direction": "ShortOnly",
+      "close": 5200.0,
+      "ema_fast": 5196.0,
+      "ema_slow": 5190.0,
+      "ema_fast_slope_atr_pct": 0.01,
+      "slope_min_atr_pct_per_bar": 0.03,
+      "expected_active_bias": "Neutral",
+      "expected_trend_context_valid": false
     }
   ]
 }

@@ -320,6 +320,62 @@
         "TrackingSeparation",
         "Reset"
       ]
+    },
+    {
+      "sequence_id": "strict_separation_extension_updates_leg2_momentum_reference",
+      "bias": "Long",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "second_leg_max_momentum_ratio": 0.3,
+      "bars": [
+        { "o": 106.0, "h": 106.1, "l": 105.8, "c": 105.9 },
+        { "o": 105.8, "h": 105.9, "l": 104.4, "c": 104.6 },
+        { "o": 104.6, "h": 104.8, "l": 104.5, "c": 104.75 },
+        { "o": 104.75, "h": 105.5, "l": 104.8, "c": 105.2 },
+        { "o": 105.2, "h": 105.25, "l": 104.4, "c": 104.6 }
+      ],
+      "expected_final_state": "TrackingPullbackLeg2",
+      "expected_block_reason": "SecondLegTooStrong",
+      "expected_signal_valid": false,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2"
+      ]
+    },
+    {
+      "sequence_id": "lite_mode_accepts_shallow_fast_second_entry",
+      "entry_mode": "VideoSecondEntryLite",
+      "bias": "Long",
+      "impulse_high": 106.0,
+      "impulse_low": 100.0,
+      "impulse_bars": 3,
+      "max_pullback_bars": 12,
+      "min_pullback_retracement": 0.236,
+      "max_pullback_retracement": 0.618,
+      "lite_max_pullback_retracement": 0.95,
+      "second_leg_max_momentum_ratio": 0.1,
+      "bars": [
+        { "o": 106.0, "h": 106.1, "l": 105.9, "c": 106.0 },
+        { "o": 105.9, "h": 106.0, "l": 105.5, "c": 105.7 },
+        { "o": 105.7, "h": 106.1, "l": 105.6, "c": 106.0 },
+        { "o": 106.0, "h": 106.05, "l": 105.4, "c": 105.5 },
+        { "o": 105.5, "h": 106.0, "l": 105.45, "c": 105.9 }
+      ],
+      "expected_final_state": "WaitingForTrigger",
+      "expected_block_reason": "",
+      "expected_signal_valid": true,
+      "expected_state_path": [
+        "TrackingPullbackLeg1",
+        "TrackingSeparation",
+        "TrackingPullbackLeg2",
+        "WaitingForSignalBar",
+        "WaitingForTrigger"
+      ]
     }
   ]
 }

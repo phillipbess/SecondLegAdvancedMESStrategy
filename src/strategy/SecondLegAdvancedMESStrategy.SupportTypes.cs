@@ -23,6 +23,19 @@ namespace NinjaTrader.NinjaScript.Strategies
         ManagingTrade = 9,
     }
 
+    public enum SecondLegEntryMode
+    {
+        StrictV1 = 0,
+        VideoSecondEntryLite = 1,
+    }
+
+    public enum SecondLegTradeDirection
+    {
+        Both = 0,
+        ShortOnly = 1,
+        LongOnly = 2,
+    }
+
     public enum StructureLevelKind
     {
         Unknown = 0,

@@ -12,12 +12,14 @@ ordered path below.
 2. [CURRENT_STATE.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/CURRENT_STATE.md)
    Honest handoff note for what is done, what is not yet proven, and what the next operator should do.
 3. [Entry_Brain_V1_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Entry_Brain_V1_Contract.md)
-   Canonical source of truth for the setup logic.
+   Canonical source of truth for the strict setup logic.
 4. [Video_Idea_To_Strategy_Mapping.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Video_Idea_To_Strategy_Mapping.md)
    Plain-English bridge from the original discretionary setup idea to the coded entry brain.
-5. [Host_Shell_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Host_Shell_Contract.md)
+5. [VideoSecondEntryLite_Research_Mode.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/VideoSecondEntryLite_Research_Mode.md)
+   Research-mode contract for the faster video-aligned entry branch.
+6. [Host_Shell_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Host_Shell_Contract.md)
    Canonical source of truth for the donor-shaped runtime shell and authority boundaries.
-6. [Parity_Signoff_Checklist.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Parity_Signoff_Checklist.md)
+7. [Parity_Signoff_Checklist.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Parity_Signoff_Checklist.md)
    The only document that defines what counts as real completion.
 
 ## What Each Section Is For
@@ -51,6 +53,7 @@ These are useful context, but they are not the current contract. The current con
 are:
 
 - `Entry_Brain_V1_Contract.md`
+- `VideoSecondEntryLite_Research_Mode.md`
 - `Host_Shell_Contract.md`
 - `Parity_Signoff_Checklist.md`
 
@@ -60,6 +63,7 @@ If two docs disagree, trust them in this order:
 
 1. `Parity_Signoff_Checklist.md`
 2. `Entry_Brain_V1_Contract.md`
-3. `Host_Shell_Contract.md`
-4. dated evidence in `artifacts/YYYY-MM-DD/`
-5. planning docs
+3. `VideoSecondEntryLite_Research_Mode.md` when running lite mode
+4. `Host_Shell_Contract.md`
+5. dated evidence in `artifacts/YYYY-MM-DD/`
+6. planning docs

@@ -1,0 +1,6 @@
+variant,triggered,approx_trades_per_month,win_2r,stops,timeouts,net_r,avg_r,backtest_id
+strict_baseline,37,0.6,10,23,4,-2.32,-0.06,b68aa58944a6d95c0ff93b6a36ef5339
+both_loose_1,265,4.4,60,153,52,-15.49,-0.06,af2c9bcea393f71ff5f4b9c89a5a7e7d
+short_loose_1,147,2.5,33,90,24,-17.78,-0.12,303d1eb001f3d73bfb12d30accc6f135
+both_loose_2,353,5.9,75,206,72,-25.88,-0.07,d3d9226c0157cba6cbc8e5e8c1de6807
+both_loose_stop_unbounded,459,7.7,85,253,121,-25.12,-0.05,1714e915d8f41dec6dd29e51ddb4736d

@@ -17,14 +17,24 @@ namespace NinjaTrader.NinjaScript.Strategies
             _emaFastSlopeAtrPct = ComputeFastSlopeAtrPct();
             _atrRegimeRatio = ComputeAtrRegimeRatio();
 
-            _volatilityRegimeValid = _atrValue > 0.0
-                && _atrRegimeRatio >= MinAtrRegimeRatio
-                && _atrRegimeRatio <= MaxAtrRegimeRatio;
+            bool liteMode = IsVideoSecondEntryLiteMode();
+            _volatilityRegimeValid = liteMode
+                ? _atrValue > 0.0
+                : _atrValue > 0.0
+                    && _atrRegimeRatio >= MinAtrRegimeRatio
+                    && _atrRegimeRatio <= MaxAtrRegimeRatio;
 
-            bool longTrendValid = ClosedBarClose() > _emaSlowValue
-                && _emaFastSlopeAtrPct >= SlopeMinAtrPctPerBar;
-            bool shortTrendValid = ClosedBarClose() < _emaSlowValue
-                && _emaFastSlopeAtrPct <= -SlopeMinAtrPctPerBar;
+            bool longTrendValid = liteMode
+                ? ClosedBarClose() > _emaSlowValue && _emaFastSlopeAtrPct > 0.0
+                : ClosedBarClose() > _emaSlowValue && _emaFastSlopeAtrPct >= SlopeMinAtrPctPerBar;
+            bool shortTrendValid = liteMode
+                ? ClosedBarClose() < _emaSlowValue && _emaFastSlopeAtrPct < 0.0
+                : ClosedBarClose() < _emaSlowValue && _emaFastSlopeAtrPct <= -SlopeMinAtrPctPerBar;
+
+            if (!IsDirectionAllowed(SecondLegBias.Long))
+                longTrendValid = false;
+            if (!IsDirectionAllowed(SecondLegBias.Short))
+                shortTrendValid = false;
 
             _trendContextValid = longTrendValid || shortTrendValid;
 
@@ -117,7 +127,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                     _pullbackLeg1.Range = _pullbackLeg1.High - _pullbackLeg1.Low;
 
                     double retracement = ComputeRetracement(_pullbackLeg1.Low);
-                    if (retracement > MaxPullbackRetracement)
+                    if (retracement > EffectiveMaxPullbackRetracement())
                     {
                         ResetSetupState("PullbackTooDeep");
                         return;
@@ -150,13 +160,39 @@ namespace NinjaTrader.NinjaScript.Strategies
                     _pullbackLeg1.Range = _pullbackLeg1.High - _pullbackLeg1.Low;
 
                     double retracement = ComputeRetracement(_pullbackLeg1.High);
-                    if (retracement > MaxPullbackRetracement)
+                    if (retracement > EffectiveMaxPullbackRetracement())
                     {
                         ResetSetupState("PullbackTooDeep");
                         return;
                     }
                 }
             }
+        }
+
+        private bool IsVideoSecondEntryLiteMode()
+        {
+            return EntryMode == SecondLegEntryMode.VideoSecondEntryLite;
+        }
+
+        private string EntryModeToken()
+        {
+            return IsVideoSecondEntryLiteMode() ? "VideoSecondEntryLite" : "StrictV1";
+        }
+
+        private double EffectiveMaxPullbackRetracement()
+        {
+            return IsVideoSecondEntryLiteMode()
+                ? LiteMaxPullbackRetracement
+                : MaxPullbackRetracement;
+        }
+
+        private bool IsDirectionAllowed(SecondLegBias bias)
+        {
+            if (bias == SecondLegBias.Long)
+                return TradeDirection != SecondLegTradeDirection.ShortOnly;
+            if (bias == SecondLegBias.Short)
+                return TradeDirection != SecondLegTradeDirection.LongOnly;
+            return true;
         }
 
         private void TryTrackPullbackLeg2()
@@ -309,7 +345,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 ? Math.Max(_pullbackLeg2.High, ClosedBarHigh())
                 : Math.Min(_pullbackLeg2.Low, ClosedBarLow());
             double retracement = ComputeRetracement(activePullbackExtreme);
-            if (retracement > MaxPullbackRetracement)
+            if (retracement > EffectiveMaxPullbackRetracement())
                 return "PullbackTooDeep";
 
             if (!SignalStillValid())
@@ -344,20 +380,23 @@ namespace NinjaTrader.NinjaScript.Strategies
             }
 
             double impulseMove = high - low;
-            if (impulseMove < (MinImpulseAtrMultiple * _atrValue))
+            double requiredImpulse = IsVideoSecondEntryLiteMode()
+                ? LiteMinImpulseAtrMultiple
+                : MinImpulseAtrMultiple;
+            if (impulseMove < (requiredImpulse * _atrValue))
                 return false;
 
-            if (strongBars < V1MinStrongBars)
+            if (!IsVideoSecondEntryLiteMode() && strongBars < V1MinStrongBars)
                 return false;
 
             if (_activeBias == SecondLegBias.Long)
             {
-                if (!(ClosedBarClose() > ClosedBarOpen() && ClosedBarClose() > _emaFastValue))
+                if (!(ClosedBarClose() > ClosedBarOpen() && (IsVideoSecondEntryLiteMode() || ClosedBarClose() > _emaFastValue)))
                     return false;
             }
             else
             {
-                if (!(ClosedBarClose() < ClosedBarOpen() && ClosedBarClose() < _emaFastValue))
+                if (!(ClosedBarClose() < ClosedBarOpen() && (IsVideoSecondEntryLiteMode() || ClosedBarClose() < _emaFastValue)))
                     return false;
             }
 
@@ -372,7 +411,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             };
             _lastImpulseStrongBars = strongBars;
             _lastImpulseMomentum = impulseMove / V1ImpulseBars;
-            WriteEntryObservation("IMPULSE_QUALIFIED", $"high={high:F2} low={low:F2} move={impulseMove:F2} strongBars={strongBars}");
+            WriteEntryObservation("IMPULSE_QUALIFIED", $"entryMode={EntryModeToken()} high={high:F2} low={low:F2} move={impulseMove:F2} impulseAtr={(impulseMove / _atrValue):F3} requiredAtr={requiredImpulse:F3} strongBars={strongBars}");
             return true;
         }
 
@@ -400,13 +439,14 @@ namespace NinjaTrader.NinjaScript.Strategies
 
                 double startingRetracement = ComputeRetracement(_impulse.Bias == SecondLegBias.Long ? _pullbackLeg1.Low : _pullbackLeg1.High);
                 _lastImpulseRetracement = startingRetracement;
-                if (startingRetracement > MaxPullbackRetracement)
+                double maxPullbackRetracement = EffectiveMaxPullbackRetracement();
+                if (startingRetracement > maxPullbackRetracement)
                 {
                     ResetSetupState("PullbackTooDeep");
                     return false;
                 }
 
-                return startingRetracement >= MinPullbackRetracement;
+                return IsVideoSecondEntryLiteMode() || startingRetracement >= MinPullbackRetracement;
             }
 
             _pullbackLeg1.EndBar = ClosedBarIndex();
@@ -424,13 +464,14 @@ namespace NinjaTrader.NinjaScript.Strategies
                 return false;
             }
 
-            if (retracement > MaxPullbackRetracement)
+            double maxRetracement = EffectiveMaxPullbackRetracement();
+            if (retracement > maxRetracement)
             {
                 ResetSetupState("PullbackTooDeep");
                 return false;
             }
 
-            return retracement >= MinPullbackRetracement;
+            return IsVideoSecondEntryLiteMode() || retracement >= MinPullbackRetracement;
         }
 
         private bool HasPullbackLeg2()
@@ -438,13 +479,23 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (_pullbackBounceBar < 0 || ClosedBarIndex() <= _pullbackBounceBar)
                 return false;
 
+            int totalBars = ClosedBarIndex() - _pullbackLeg1.StartBar + 1;
+            if (totalBars > MaxPullbackBars)
+            {
+                ResetSetupState("PullbackTooLong");
+                return false;
+            }
+
             if (_pullbackLeg2.StartBar <= 0)
             {
                 bool startingBar = _impulse.Bias == SecondLegBias.Long
                     ? (ClosedBarLow() < ClosedBarLow(1) || ClosedBarClose() < ClosedBarClose(1))
                     : (ClosedBarHigh() > ClosedBarHigh(1) || ClosedBarClose() > ClosedBarClose(1));
                 if (!startingBar)
+                {
+                    TrackSeparationExtension();
                     return false;
+                }
 
                 _pullbackLeg2 = new PullbackSnapshot
                 {
@@ -463,22 +514,33 @@ namespace NinjaTrader.NinjaScript.Strategies
                 _pullbackLeg2.Range = _pullbackLeg2.High - _pullbackLeg2.Low;
             }
 
-            int totalBars = ClosedBarIndex() - _pullbackLeg1.StartBar + 1;
             double retracement = ComputeRetracement(_impulse.Bias == SecondLegBias.Long ? _pullbackLeg2.Low : _pullbackLeg2.High);
             _lastImpulseRetracement = retracement;
-            if (totalBars > MaxPullbackBars)
-            {
-                ResetSetupState("PullbackTooLong");
-                return false;
-            }
 
-            if (retracement > MaxPullbackRetracement)
+            double maxRetracement = EffectiveMaxPullbackRetracement();
+            if (retracement > maxRetracement)
             {
                 ResetSetupState("PullbackTooDeep");
                 return false;
             }
 
-            return retracement >= MinPullbackRetracement;
+            return IsVideoSecondEntryLiteMode() || retracement >= MinPullbackRetracement;
+        }
+
+        private void TrackSeparationExtension()
+        {
+            if (_pullbackBounceBar < 0 || _pullbackLeg2.StartBar > 0)
+                return;
+
+            if (double.IsNaN(_separationHigh))
+                _separationHigh = ClosedBarHigh();
+            else
+                _separationHigh = Math.Max(_separationHigh, ClosedBarHigh());
+
+            if (double.IsNaN(_separationLow))
+                _separationLow = ClosedBarLow();
+            else
+                _separationLow = Math.Min(_separationLow, ClosedBarLow());
         }
 
         private bool HasPullbackLeg2Candidate()
@@ -510,15 +572,16 @@ namespace NinjaTrader.NinjaScript.Strategies
 
             double retracement = ComputeRetracement(_impulse.Bias == SecondLegBias.Long ? _pullbackLeg2.Low : _pullbackLeg2.High);
             _lastImpulseRetracement = retracement;
-            if (retracement < MinPullbackRetracement)
+            if (!IsVideoSecondEntryLiteMode() && retracement < MinPullbackRetracement)
             {
                 RecordEntryBlock("SecondLegTooShallow", $"retracement={retracement:F3} min={MinPullbackRetracement:F3}");
                 return false;
             }
 
-            if (retracement > MaxPullbackRetracement)
+            double maxRetracement = EffectiveMaxPullbackRetracement();
+            if (retracement > maxRetracement)
             {
-                RecordEntryBlock("SecondLegTooDeep", $"retracement={retracement:F3} max={MaxPullbackRetracement:F3}");
+                RecordEntryBlock("SecondLegTooDeep", $"retracement={retracement:F3} max={maxRetracement:F3}");
                 return false;
             }
 
@@ -530,10 +593,17 @@ namespace NinjaTrader.NinjaScript.Strategies
             double leg2Momentum = leg2CountertrendMove / leg2Bars;
             _lastLeg2Momentum = leg2Momentum;
 
-            if (impulseMomentum <= 0.0 || leg2Momentum > impulseMomentum * SecondLegMaxMomentumRatio)
+            if (!IsVideoSecondEntryLiteMode() && (impulseMomentum <= 0.0 || leg2Momentum > impulseMomentum * SecondLegMaxMomentumRatio))
             {
                 RecordEntryBlock("SecondLegTooStrong", $"leg2Momentum={leg2Momentum:F3} limit={(impulseMomentum * SecondLegMaxMomentumRatio):F3}");
                 return false;
+            }
+
+            if (IsVideoSecondEntryLiteMode())
+            {
+                WriteEntryObservation(
+                    "ENTRY_DIAGNOSTIC",
+                    $"entryMode={EntryModeToken()} leg2Momentum={leg2Momentum:F3} strictLimit={(impulseMomentum * SecondLegMaxMomentumRatio):F3} retracement={retracement:F3}");
             }
 
             return true;
@@ -629,7 +699,9 @@ namespace NinjaTrader.NinjaScript.Strategies
             }
 
             _structureRoomValid = EvaluateStructureRoom(plannedEntryPrice, plannedStopPrice, plannedEntryBias);
-            if (!_structureRoomValid)
+            bool structureBlocksEntry = !_structureRoomValid
+                && (!IsVideoSecondEntryLiteMode() || LiteStructureVetoEnabled);
+            if (structureBlocksEntry)
             {
                 double roomR = (!double.IsNaN(_lastStructureRoom) && stopDistance > 0.0)
                     ? _lastStructureRoom / stopDistance
@@ -638,6 +710,16 @@ namespace NinjaTrader.NinjaScript.Strategies
                     "StructureRoom",
                     $"entry={plannedEntryPrice:F2} stop={plannedStopPrice:F2} risk={stopDistance:F2} required={_lastStructureRequiredRoom:F2} room={_lastStructureRoom:F2} roomR={roomR:F2} level={_lastStructureLabel} structurePrice={_lastStructurePrice:F2}");
                 return false;
+            }
+            else if (!_structureRoomValid && IsVideoSecondEntryLiteMode())
+            {
+                double roomR = (!double.IsNaN(_lastStructureRoom) && stopDistance > 0.0)
+                    ? _lastStructureRoom / stopDistance
+                    : double.NaN;
+                WriteEntryObservation(
+                    "ENTRY_DIAGNOSTIC",
+                    $"entryMode={EntryModeToken()} diagnosticRoomR={roomR:F2} level={_lastStructureLabel} structurePrice={_lastStructurePrice:F2}");
+                _structureRoomValid = true;
             }
 
             string pendingEntrySignal = plannedEntryBias == SecondLegBias.Short
@@ -663,7 +745,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             };
             WriteEntryObservation(
                 "ENTRY_ARMED",
-                $"signal={pendingEntrySignal} bias={plannedEntryBias} entry={plannedEntryPrice:F2} stop={plannedStopPrice:F2} qty={pendingEntryQuantity} expiry={expiryBar} stopDistance={stopDistance:F2} atr={_atrValue:F2} structure={_lastStructureLabel} room={_lastStructureRoom:F2} required={_lastStructureRequiredRoom:F2}");
+                $"entryMode={EntryModeToken()} signal={pendingEntrySignal} bias={plannedEntryBias} entry={plannedEntryPrice:F2} stop={plannedStopPrice:F2} qty={pendingEntryQuantity} expiry={expiryBar} stopDistance={stopDistance:F2} atr={_atrValue:F2} structure={_lastStructureLabel} room={_lastStructureRoom:F2} required={_lastStructureRequiredRoom:F2}");
             return true;
         }
 

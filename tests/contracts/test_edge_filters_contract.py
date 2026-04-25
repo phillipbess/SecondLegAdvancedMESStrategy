@@ -28,6 +28,11 @@ class EdgeFiltersContractTests(unittest.TestCase):
         properties = read_strategy_file("SecondLegAdvancedMESStrategy.Properties.cs")
 
         required_markers = [
+            "public SecondLegEntryMode EntryMode { get; set; } = SecondLegEntryMode.StrictV1;",
+            "public SecondLegTradeDirection TradeDirection { get; set; } = SecondLegTradeDirection.Both;",
+            "public double LiteMinImpulseAtrMultiple { get; set; } = 0.75;",
+            "public double LiteMaxPullbackRetracement { get; set; } = 0.95;",
+            "public bool LiteStructureVetoEnabled { get; set; } = false;",
             "public double MinImpulseAtrMultiple { get; set; } = 1.25;",
             "public double MaxStopAtrMultiple { get; set; } = 1.50;",
             "public int MaxTriggerBars { get; set; } = 3;",
@@ -107,8 +112,11 @@ class EdgeFiltersContractTests(unittest.TestCase):
         self.assertIn("if (IsFirstTickOfBar)", closed_bar_adapter)
         self.assertIn("return _closedBarWasFirstBarOfSession;", closed_bar_adapter)
 
-        self.assertIn("bool longTrendValid = ClosedBarClose() > _emaSlowValue", entry_analysis)
-        self.assertIn("bool shortTrendValid = ClosedBarClose() < _emaSlowValue", entry_analysis)
+        self.assertIn("bool liteMode = IsVideoSecondEntryLiteMode();", entry_analysis)
+        self.assertIn("bool longTrendValid = liteMode", entry_analysis)
+        self.assertIn("bool shortTrendValid = liteMode", entry_analysis)
+        self.assertIn("if (!IsDirectionAllowed(SecondLegBias.Long))", entry_analysis)
+        self.assertIn("if (!IsDirectionAllowed(SecondLegBias.Short))", entry_analysis)
         self.assertIn("double slopeDenominator = Math.Max(_atrValue, TickSize);", entry_analysis)
         self.assertIn("return (delta / SlopeLookbackBars) / slopeDenominator;", entry_analysis)
         self.assertIn("ClosedBarCount() < V1ImpulseBars", entry_analysis)
@@ -117,7 +125,9 @@ class EdgeFiltersContractTests(unittest.TestCase):
         self.assertIn("strongBars < V1MinStrongBars", entry_analysis)
         self.assertIn("_emaFast = EMA(V1FastEmaPeriod);", state_lifecycle)
         self.assertIn("bool hasStrategyLookback = ClosedBarIndex() >=", state_lifecycle)
-        self.assertIn("if (impulseMove < (MinImpulseAtrMultiple * _atrValue))", entry_analysis)
+        self.assertIn("private double EffectiveMaxPullbackRetracement()", entry_analysis)
+        self.assertIn("double requiredImpulse = IsVideoSecondEntryLiteMode()", entry_analysis)
+        self.assertIn("if (impulseMove < (requiredImpulse * _atrValue))", entry_analysis)
         self.assertIn("ClosedBarFastEma()", entry_analysis)
         self.assertIn("ClosedBarAtrValue()", entry_analysis)
         self.assertIn("ClosedBarCount()", entry_analysis)
@@ -128,8 +138,9 @@ class EdgeFiltersContractTests(unittest.TestCase):
         self.assertIn("&& ClosedBarClose() < ClosedBarClose(1)", entry_analysis)
         self.assertIn("&& ClosedBarLow() < ClosedBarLow(1)", entry_analysis)
         self.assertIn("if (!HasPullbackLeg2Candidate())", entry_analysis)
-        self.assertIn("return startingRetracement >= MinPullbackRetracement;", entry_analysis)
-        self.assertIn("return retracement >= MinPullbackRetracement;", entry_analysis)
+        self.assertIn("return IsVideoSecondEntryLiteMode() || startingRetracement >= MinPullbackRetracement;", entry_analysis)
+        self.assertIn("return IsVideoSecondEntryLiteMode() || retracement >= MinPullbackRetracement;", entry_analysis)
+        self.assertIn("TrackSeparationExtension();", entry_analysis)
         self.assertIn('_setupState = SecondLegSetupState.TrackingPullbackLeg2;', entry_analysis)
         self.assertIn("bool leg2Refreshed = false;", entry_analysis)
         self.assertIn("if (leg2Refreshed)", entry_analysis)
@@ -142,6 +153,7 @@ class EdgeFiltersContractTests(unittest.TestCase):
         self.assertIn('"SignalInvalid"', entry_analysis)
         self.assertIn('RecordEntryBlock("RiskTooSmall",', entry_analysis)
         self.assertIn('RecordEntryBlock("SecondLegTooStrong",', entry_analysis)
+        self.assertIn("&& (!IsVideoSecondEntryLiteMode() || LiteStructureVetoEnabled);", entry_analysis)
         self.assertIn("private bool IsLongOpposingStructure(StructureLevelKind kind)", entry_analysis)
         self.assertIn("private bool IsShortOpposingStructure(StructureLevelKind kind)", entry_analysis)
         self.assertIn("if (!IsShortOpposingStructure(level.Kind))", entry_analysis)

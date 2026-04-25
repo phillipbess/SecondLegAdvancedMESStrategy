@@ -17,8 +17,9 @@ If you are new to the repo, use this path:
 1. [docs/START_HERE.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/START_HERE.md)
 2. [docs/CURRENT_STATE.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/CURRENT_STATE.md)
 3. [docs/Entry_Brain_V1_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Entry_Brain_V1_Contract.md)
-4. [docs/Host_Shell_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Host_Shell_Contract.md)
-5. [docs/Parity_Signoff_Checklist.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Parity_Signoff_Checklist.md)
+4. [docs/VideoSecondEntryLite_Research_Mode.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/VideoSecondEntryLite_Research_Mode.md)
+5. [docs/Host_Shell_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Host_Shell_Contract.md)
+6. [docs/Parity_Signoff_Checklist.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Parity_Signoff_Checklist.md)
 
 The documentation index lives at:
 
@@ -41,7 +42,13 @@ The design goal is to prove a clean continuation hypothesis before adding more f
 
 ## Current Status
 
-The repo is now in a stripped, parity-first `v1` state:
+The repo now has two entry modes:
+
+- `StrictV1`: the stripped, parity-first contract and main audit target
+- `VideoSecondEntryLite`: a research mode for testing a faster, closer-to-the-video
+  version of the idea
+
+`StrictV1` is still the canonical mode:
 
 - reuse Mancini runtime/order-management behavior as faithfully as practical
 - replace only the entry brain
@@ -65,6 +72,10 @@ The next practical milestone is broader NT8 proof, not more filter expansion.
 The canonical setup definition now lives in:
 
 - [docs/Entry_Brain_V1_Contract.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Entry_Brain_V1_Contract.md)
+
+The lite research-mode definition lives in:
+
+- [docs/VideoSecondEntryLite_Research_Mode.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/VideoSecondEntryLite_Research_Mode.md)
 
 That document is the source of truth for:
 

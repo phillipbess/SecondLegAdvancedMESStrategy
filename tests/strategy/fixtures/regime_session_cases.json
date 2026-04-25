@@ -156,6 +156,20 @@
       "expected_hard_risk_valid": false,
       "expected_hard_risk_reason": "LossCooldown",
       "expected_participate": false
+    },
+    {
+      "case_id": "lite_mode_accepts_atr_without_strict_regime_ratio",
+      "entry_mode": "VideoSecondEntryLite",
+      "use_session_filter": true,
+      "trade_rth_only": true,
+      "hhmm": 1015,
+      "atr_value": 8.0,
+      "atr_regime_ratio": 2.8,
+      "min_atr_regime_ratio": 0.75,
+      "max_atr_regime_ratio": 2.25,
+      "expected_session_valid": true,
+      "expected_regime_valid": true,
+      "expected_participate": true
     }
   ]
 }

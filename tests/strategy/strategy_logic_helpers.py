@@ -8,9 +8,21 @@ def evaluate_trend_context(case: dict) -> dict:
     ema_slow = case["ema_slow"]
     slope = case["ema_fast_slope_atr_pct"]
     slope_min = case.get("slope_min_atr_pct_per_bar", 0.03)
+    entry_mode = case.get("entry_mode", "StrictV1")
+    lite_mode = entry_mode == "VideoSecondEntryLite"
+    trade_direction = case.get("trade_direction", "Both")
 
-    long_valid = close > ema_slow and slope >= slope_min
-    short_valid = close < ema_slow and slope <= -slope_min
+    if lite_mode:
+        long_valid = close > ema_slow and slope > 0.0
+        short_valid = close < ema_slow and slope < 0.0
+    else:
+        long_valid = close > ema_slow and slope >= slope_min
+        short_valid = close < ema_slow and slope <= -slope_min
+
+    if trade_direction == "ShortOnly":
+        long_valid = False
+    elif trade_direction == "LongOnly":
+        short_valid = False
 
     trend_context_valid = long_valid or short_valid
     if long_valid and not short_valid:
@@ -30,6 +42,8 @@ def evaluate_trend_context(case: dict) -> dict:
 
 def evaluate_session_and_regime(case: dict) -> dict:
     session_valid = True
+    entry_mode = case.get("entry_mode", "StrictV1")
+    lite_mode = entry_mode == "VideoSecondEntryLite"
 
     flatten_window_active = case.get("flatten_window_active")
     if flatten_window_active is None:
@@ -40,11 +54,14 @@ def evaluate_session_and_regime(case: dict) -> dict:
 
     atr_value = case.get("atr_value", 0.0)
     atr_regime_ratio = case.get("atr_regime_ratio", 0.0)
-    regime_valid = (
-        atr_value > 0.0
-        and atr_regime_ratio >= case["min_atr_regime_ratio"]
-        and atr_regime_ratio <= case["max_atr_regime_ratio"]
-    )
+    if lite_mode:
+        regime_valid = atr_value > 0.0
+    else:
+        regime_valid = (
+            atr_value > 0.0
+            and atr_regime_ratio >= case["min_atr_regime_ratio"]
+            and atr_regime_ratio <= case["max_atr_regime_ratio"]
+        )
 
     max_trades_per_session = case.get("max_trades_per_session")
     trades_this_session = case.get("trades_this_session", 0)
@@ -81,6 +98,8 @@ def evaluate_session_and_regime(case: dict) -> dict:
 
 
 def evaluate_entry_qualification(case: dict) -> dict:
+    entry_mode = case.get("entry_mode", "StrictV1")
+    lite_mode = entry_mode == "VideoSecondEntryLite"
     tick_size = case.get("tick_size", 0.25)
     entry_offset_ticks = case.get("entry_offset_ticks", 1)
     stop_buffer_ticks = case.get("stop_buffer_ticks", 2)
@@ -112,7 +131,8 @@ def evaluate_entry_qualification(case: dict) -> dict:
 
     structure_levels = case.get("structure_levels", [])
     structure_level_records = case.get("structure_level_records", [])
-    if case.get("structure_filter_enabled", True) and (structure_levels or structure_level_records):
+    structure_veto_enabled = case.get("lite_structure_veto_enabled", False) if lite_mode else True
+    if case.get("structure_filter_enabled", True) and structure_veto_enabled and (structure_levels or structure_level_records):
         required_room = stop_distance * min_room_r
         if structure_level_records:
             if bias == "Short":
@@ -169,7 +189,13 @@ def evaluate_impulse_qualification(case: dict) -> dict:
     bars = case["bars"]
     atr_value = case["atr_value"]
     ema_fast = case["ema_fast"]
-    min_impulse_atr_multiple = case.get("min_impulse_atr_multiple", 1.25)
+    entry_mode = case.get("entry_mode", "StrictV1")
+    lite_mode = entry_mode == "VideoSecondEntryLite"
+    min_impulse_atr_multiple = (
+        case.get("lite_min_impulse_atr_multiple", 0.75)
+        if lite_mode
+        else case.get("min_impulse_atr_multiple", 1.25)
+    )
     strong_body_pct = case.get("strong_body_pct", 0.50)
     min_strong_bars = case.get("min_strong_bars", 2)
     tick_size = case.get("tick_size", 0.25)
@@ -194,7 +220,7 @@ def evaluate_impulse_qualification(case: dict) -> dict:
         if directional_bar and body_pct >= strong_body_pct:
             strong_bars += 1
 
-    if strong_bars < min_strong_bars:
+    if not lite_mode and strong_bars < min_strong_bars:
         return {
             "qualified": False,
             "block_reason": "NotEnoughStrongBars",
@@ -213,7 +239,7 @@ def evaluate_impulse_qualification(case: dict) -> dict:
         }
 
     final_ema_side_ok = final_bar["c"] > ema_fast if bias == "Long" else final_bar["c"] < ema_fast
-    if not final_ema_side_ok:
+    if not lite_mode and not final_ema_side_ok:
         return {
             "qualified": False,
             "block_reason": "FinalBarWrongSideOfEma50",
@@ -415,12 +441,19 @@ def evaluate_armed_entry_lifecycle(case: dict) -> dict:
 def evaluate_pullback_state_machine(case: dict) -> dict:
     bars = case["bars"]
     bias = case["bias"]
+    entry_mode = case.get("entry_mode", "StrictV1")
+    lite_mode = entry_mode == "VideoSecondEntryLite"
     impulse_high = case["impulse_high"]
     impulse_low = case["impulse_low"]
     impulse_bars = case.get("impulse_bars", 3)
     max_pullback_bars = case.get("max_pullback_bars", 12)
     min_pullback_retracement = case.get("min_pullback_retracement", 0.236)
-    max_pullback_retracement = case.get("max_pullback_retracement", 0.618)
+    strict_max_pullback_retracement = case.get("max_pullback_retracement", 0.618)
+    max_pullback_retracement = (
+        case.get("lite_max_pullback_retracement", 0.95)
+        if lite_mode
+        else strict_max_pullback_retracement
+    )
     second_leg_max_momentum_ratio = case.get("second_leg_max_momentum_ratio", 0.80)
 
     impulse_move = max(impulse_high - impulse_low, case.get("tick_size", 0.25))
@@ -487,7 +520,7 @@ def evaluate_pullback_state_machine(case: dict) -> dict:
                 current_retracement = retracement(extreme)
                 if current_retracement > max_pullback_retracement:
                     return fail("PullbackTooDeep")
-                if current_retracement >= min_pullback_retracement:
+                if lite_mode or current_retracement >= min_pullback_retracement:
                     advance_state("TrackingSeparation")
                 continue
 
@@ -502,7 +535,7 @@ def evaluate_pullback_state_machine(case: dict) -> dict:
                 return fail("PullbackTooLong")
             if current_retracement > max_pullback_retracement:
                 return fail("PullbackTooDeep")
-            if current_retracement >= min_pullback_retracement:
+            if lite_mode or current_retracement >= min_pullback_retracement:
                 advance_state("TrackingSeparation")
             continue
 
@@ -573,6 +606,8 @@ def evaluate_pullback_state_machine(case: dict) -> dict:
                 else:
                     starting_bar = bar["h"] > previous["h"] or bar["c"] > previous["c"]
                 if not starting_bar:
+                    separation_high = max(separation_high, bar["h"])
+                    separation_low = min(separation_low, bar["l"])
                     continue
                 pullback_leg2 = {
                     "start": index,
@@ -592,7 +627,7 @@ def evaluate_pullback_state_machine(case: dict) -> dict:
                 return fail("PullbackTooLong")
             if current_retracement > max_pullback_retracement:
                 return fail("PullbackTooDeep")
-            if current_retracement < min_pullback_retracement:
+            if not lite_mode and current_retracement < min_pullback_retracement:
                 continue
 
             leg2_countertrend_move = (
@@ -602,7 +637,7 @@ def evaluate_pullback_state_machine(case: dict) -> dict:
             )
             leg2_bars = pullback_leg2["end"] - pullback_leg2["start"] + 1
             leg2_momentum = leg2_countertrend_move / max(leg2_bars, 1)
-            if leg2_momentum > impulse_momentum * second_leg_max_momentum_ratio:
+            if not lite_mode and leg2_momentum > impulse_momentum * second_leg_max_momentum_ratio:
                 block_reason = "SecondLegTooStrong"
                 continue
 
@@ -652,7 +687,7 @@ def evaluate_pullback_state_machine(case: dict) -> dict:
                 )
                 leg2_bars = pullback_leg2["end"] - pullback_leg2["start"] + 1
                 leg2_momentum = leg2_countertrend_move / max(leg2_bars, 1)
-                if leg2_momentum > impulse_momentum * second_leg_max_momentum_ratio:
+                if not lite_mode and leg2_momentum > impulse_momentum * second_leg_max_momentum_ratio:
                     block_reason = "SecondLegTooStrong"
                     advance_state("TrackingPullbackLeg2")
                     continue

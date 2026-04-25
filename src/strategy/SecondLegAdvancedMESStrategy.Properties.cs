@@ -6,6 +6,28 @@ namespace NinjaTrader.NinjaScript.Strategies
     public partial class SecondLegAdvancedMESStrategy
     {
         [NinjaScriptProperty]
+        [Display(Name = "Entry Mode", GroupName = "Entry Brain", Order = 0)]
+        public SecondLegEntryMode EntryMode { get; set; } = SecondLegEntryMode.StrictV1;
+
+        [NinjaScriptProperty]
+        [Display(Name = "Trade Direction", GroupName = "Entry Brain", Order = 1)]
+        public SecondLegTradeDirection TradeDirection { get; set; } = SecondLegTradeDirection.Both;
+
+        [NinjaScriptProperty]
+        [Range(0.25, 5.0)]
+        [Display(Name = "Lite Min Impulse ATR Multiple", GroupName = "Entry Brain", Order = 2)]
+        public double LiteMinImpulseAtrMultiple { get; set; } = 0.75;
+
+        [NinjaScriptProperty]
+        [Range(0.1, 1.5)]
+        [Display(Name = "Lite Max Pullback Retracement", GroupName = "Entry Brain", Order = 3)]
+        public double LiteMaxPullbackRetracement { get; set; } = 0.95;
+
+        [NinjaScriptProperty]
+        [Display(Name = "Lite Structure Veto Enabled", GroupName = "Entry Brain", Order = 4)]
+        public bool LiteStructureVetoEnabled { get; set; } = false;
+
+        [NinjaScriptProperty]
         [Range(50, 400)]
         [Display(Name = "Trend EMA Slow", GroupName = "Trend Context", Order = 0)]
         public int TrendEmaPeriod { get; set; } = 200;

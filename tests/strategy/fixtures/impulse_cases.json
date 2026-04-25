@@ -91,6 +91,25 @@
       "expected_block_reason": "FinalBarWrongSideOfEma50",
       "expected_impulse_move": 4.7,
       "expected_strong_bars": 3
+    },
+    {
+      "case_id": "lite_mode_accepts_weaker_impulse_without_strong_bar_or_ema50_gate",
+      "entry_mode": "VideoSecondEntryLite",
+      "bias": "Long",
+      "atr_value": 2.0,
+      "ema_fast": 104.7,
+      "lite_min_impulse_atr_multiple": 0.75,
+      "strong_body_pct": 0.5,
+      "min_strong_bars": 2,
+      "bars": [
+        { "o": 100.0, "h": 100.9, "l": 99.9, "c": 100.4 },
+        { "o": 100.4, "h": 101.5, "l": 100.2, "c": 100.8 },
+        { "o": 100.8, "h": 101.9, "l": 100.6, "c": 101.4 }
+      ],
+      "expected_qualified": true,
+      "expected_block_reason": "",
+      "expected_impulse_move": 2.0,
+      "expected_strong_bars": 0
     }
   ]
 }

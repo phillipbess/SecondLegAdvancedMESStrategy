@@ -8,7 +8,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
     public partial class SecondLegAdvancedMESStrategy : Strategy
     {
-        public const string StrategyVersion = "0.2.2-playback-v1";
+        public const string StrategyVersion = "0.3.0-video-lite-research";
         public const int V1FastEmaPeriod = 50;
         public const int V1ImpulseBars = 3;
         public const double V1StrongBodyPct = 0.50;

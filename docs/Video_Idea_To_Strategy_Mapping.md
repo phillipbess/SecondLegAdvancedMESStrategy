@@ -123,6 +123,10 @@ trend-direction signal and then a trigger.
 The coded strategy is deliberately stricter than a discretionary chart-reading version in
 several places.
 
+This is true for `StrictV1`, the canonical mode. The repo also now has
+`VideoSecondEntryLite`, which is a research mode designed to test whether the original
+video idea needs fewer quality gates to appear often enough.
+
 ### Trend Context
 
 Discretionary traders may read trend more loosely.
@@ -186,6 +190,68 @@ Reason:
 A discretionary setup can still be a bad executable trade if the stop is too wide or the
 room is too poor.
 
+## Strict V1 vs VideoSecondEntryLite
+
+The strategy now has two ways to express the same core market idea.
+
+### StrictV1
+
+`StrictV1` is the audit mode.
+
+It asks:
+
+- Can the second-entry idea survive a precise, quality-filtered implementation?
+- Can we explain every accepted and rejected setup from deterministic rules?
+- Can we keep the entry brain narrow enough to compare against QuantConnect and Playback?
+
+Strict mode keeps:
+
+- ATR regime band
+- ATR-normalized EMA50 slope threshold
+- strict impulse ATR requirement
+- strong impulse bar count
+- final impulse bar on the correct side of EMA50
+- minimum and maximum pullback retracement
+- leg-2 momentum cap
+- structure-room veto
+
+### VideoSecondEntryLite
+
+`VideoSecondEntryLite` is the research mode.
+
+It asks:
+
+- Are we over-filtering the video idea?
+- Does a simpler second-entry detector produce enough observations to test?
+- Which strict gates are actually helping, and which are only starving the strategy?
+
+Lite mode keeps:
+
+- EMA200 continuation side
+- EMA50 slope sign
+- impulse, pullback, separation, leg 2, signal bar, and stop-entry sequence
+- risk sizing
+- max stop-width protection
+- hard risk rails
+- flatten behavior
+- existing order-management shell
+
+Lite mode relaxes:
+
+- ATR regime band
+- slope magnitude threshold
+- strict impulse ATR multiple
+- strong impulse bar requirement
+- final impulse EMA50-side requirement
+- minimum pullback retracement
+- leg-2 momentum hard block
+- structure-room hard block by default
+
+In lite mode, leg-2 momentum and structure room are logged as diagnostics so Playback can
+show whether those filters are actually useful.
+
+The key discipline is that lite mode did not replace strict mode. It exists beside it.
+
 ## Where We Intentionally Did Not Add More Complexity
 
 We deliberately kept many common filters out of `v1`:
@@ -229,6 +295,9 @@ Playback work in this repo has already shown something important:
 - the idea can progress all the way through arm, submit, fill, protect, trail, and close
 - some no-trade days are not runtime failures
 - many no-trade cases are entry-conversion choices, not shell failures
+- QuantConnect frequency probes suggest strict 5-minute filters are too sparse for the
+  desired trade frequency
+- loose 5-minute probes produced more trades but not a proven edge
 
 That means the current tuning work is mostly about:
 
