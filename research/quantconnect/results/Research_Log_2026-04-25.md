@@ -163,11 +163,28 @@ Best room-filtered results:
 
 Verdict: **this is the best new discovery in the latest push**. The room filter turns a flat high-frequency idea into a modest positive candidate. Still not enough alone, but it is now worth yearly validation and possible portfolio combination with afternoon momentum / structure-break candidates.
 
+Follow-up yearly validation on 2026-04-26:
+
+| Variant | Positive Years | Total Net R | Monthly R | Trades/mo | Avg R |
+|---|---:|---:|---:|---:|---:|
+| Opening auction room filter, broad | 5/5 | 65.54 | 1.09 | 6.1 | 0.18 |
+| Opening auction room filter, short-only | 5/5 | 49.26 | 0.82 | 2.9 | 0.28 |
+
+Rough stack with `Afternoon Momentum Long 5m`:
+
+| Stack | Net R | Monthly R | Trades/mo | Read |
+|---|---:|---:|---:|---|
+| AM Long + OAR broad | 150.47 | 2.51 | 12.3 | Best total price-only stack so far |
+| AM Long + OAR short-only | 134.19 | 2.24 | 9.0 | Cleaner trade quality, less frequency |
+
+Verdict: **the candidate is stable enough to keep, but the stack is still not enough**. We now have a real benchmark around `2.5R/month`, not the `6R-8R/month` target.
+
 ## Next Research Steps
 
 1. Treat **Afternoon Momentum Long 5m** as the current benchmark, not the finish line.
-2. Promote **Opening Auction Room Filter** to the active candidate list and run yearly slices.
-3. Do not spend more cycles on raw ORB, raw sweep/reclaim, or raw compression unless a new structural variable is added.
-4. Build one tick/quote prototype for **OFI-confirmed failed auction** around PDH/PDL/ONH/ONL/ORH/ORL.
-5. Continue only if OFI materially beats the price-only sweep baseline and survives yearly slices.
-6. If OFI cannot improve failed auctions, stop chasing ES price-action variants and broaden beyond minute-bar ES setups.
+2. Treat **Opening Auction Room Filter** as validated enough to keep on the board.
+3. Use the `AM Long + OAR broad` stack as the new price-only benchmark: about `2.5R/month`.
+4. Do not spend more cycles on raw ORB, raw sweep/reclaim, or raw compression unless a new structural variable is added.
+5. Build one tick/quote prototype for **OFI-confirmed failed auction** around PDH/PDL/ONH/ONL/ORH/ORL.
+6. Continue only if OFI materially beats the price-only sweep baseline and survives yearly slices.
+7. If OFI cannot improve failed auctions, stop chasing ES price-action variants and broaden beyond minute-bar ES setups.
