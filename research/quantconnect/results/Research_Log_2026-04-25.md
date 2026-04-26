@@ -179,11 +179,26 @@ Rough stack with `Afternoon Momentum Long 5m`:
 
 Verdict: **the candidate is stable enough to keep, but the stack is still not enough**. We now have a real benchmark around `2.5R/month`, not the `6R-8R/month` target.
 
+Exact stack validation on 2026-04-26:
+
+Built `CandidateStack` research mode so the opening-auction room filter and afternoon momentum long candidate run together in one QuantConnect algorithm, rather than being added by spreadsheet estimate.
+
+| Period | Net R | Monthly R | Trades/mo | Avg R |
+|---|---:|---:|---:|---:|
+| 2021-2022 | 27.43 | 2.29 | 11.5 | 0.20 |
+| 2022-2023 | 18.16 | 1.51 | 12.3 | 0.12 |
+| 2023-2024 | 33.79 | 2.82 | 14.2 | 0.20 |
+| 2024-2025 | 44.32 | 3.69 | 13.8 | 0.27 |
+| 2025-2026 | 42.04 | 3.50 | 12.8 | 0.27 |
+| Total | 165.75 | 2.76 | 12.9 | 0.21 |
+
+Verdict: **this is the new price-only benchmark**. It is stable and clearly better than the original second-leg idea, but still below the `6R-8R/month` target. Next work should add a genuinely new engine or a structurally different confirmation variable, not just tweak this stack.
+
 ## Next Research Steps
 
 1. Treat **Afternoon Momentum Long 5m** as the current benchmark, not the finish line.
 2. Treat **Opening Auction Room Filter** as validated enough to keep on the board.
-3. Use the `AM Long + OAR broad` stack as the new price-only benchmark: about `2.5R/month`.
+3. Use the exact `CandidateStack` result as the new price-only benchmark: about `2.8R/month`.
 4. Do not spend more cycles on raw ORB, raw sweep/reclaim, or raw compression unless a new structural variable is added.
 5. Build one tick/quote prototype for **OFI-confirmed failed auction** around PDH/PDL/ONH/ONL/ORH/ORL.
 6. Continue only if OFI materially beats the price-only sweep baseline and survives yearly slices.
