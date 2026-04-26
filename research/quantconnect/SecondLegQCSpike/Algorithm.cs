@@ -54,6 +54,7 @@ namespace QuantConnect.Algorithm.CSharp
         private double ProfitTargetR = 2.0;
         private double TouchProbeR = 1.0;
         private int BarMinutes = 5;
+        private bool SkipEntryBarOutcome = false;
         private double LiteEntryRoomMinR = -1.0;
         private double LiteEntryRoomMaxR = -1.0;
         private string EntryMode = "strictv1";
@@ -147,6 +148,7 @@ namespace QuantConnect.Algorithm.CSharp
             ProfitTargetR = Clamp(DoubleParameter("profitTargetR", ProfitTargetR), 0.25, 5.0);
             TouchProbeR = Clamp(DoubleParameter("touchProbeR", TouchProbeR), 0.25, 5.0);
             BarMinutes = Math.Max(1, IntParameter("barMinutes", BarMinutes));
+            SkipEntryBarOutcome = BoolParameter("skipEntryBarOutcome", SkipEntryBarOutcome);
             OpeningRangeMinutes = Math.Max(BarMinutes, IntParameter("openingRangeMinutes", OpeningRangeMinutes));
             LiteEntryRoomMinR = DoubleParameter("liteEntryRoomMinR", LiteEntryRoomMinR);
             LiteEntryRoomMaxR = DoubleParameter("liteEntryRoomMaxR", LiteEntryRoomMaxR);
@@ -860,6 +862,8 @@ namespace QuantConnect.Algorithm.CSharp
         private void ObserveVirtualTrade(BarSnapshot bar)
         {
             if (!_virtualTrade.IsActive || bar.Index < _virtualTrade.TriggerBar)
+                return;
+            if (SkipEntryBarOutcome && bar.Index == _virtualTrade.TriggerBar)
                 return;
 
             bool stopHit = _virtualTrade.Bias == Bias.Long ? bar.Low <= _virtualTrade.Stop : bar.High >= _virtualTrade.Stop;

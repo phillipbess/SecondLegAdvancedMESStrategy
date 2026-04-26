@@ -268,3 +268,16 @@ Yearly validation for the best ICT pocket:
 | 2025-2026 | 12.88 | 1.07 | 2.6 |
 
 Verdict: **do not promote ICT as the new main strategy**. Keep the AM PDH short Silver Bullet as a possible micro-edge only. It is stable enough to remember, but far too small for the `6R-8R/month` goal.
+
+Follow-up audit: the ICT/FVG family is extremely sensitive to intrabar sequencing on one-minute OHLC data.
+
+| Test | Policy | Net R | Monthly R | Read |
+|---|---|---:|---:|---|
+| AM Silver Bullet PDH short, 2R | Default stop-first | 24.88 | 0.41 | Conservative baseline |
+| AM Silver Bullet PDH short, 2R | Skip entry bar | 0.88 | 0.01 | Positive pocket mostly disappears |
+| AM Silver Bullet PDH short, 2R | Target-first | 63.88 | 1.06 | Optimistic upper bound |
+| ICT 2022 broad RTH, 1.5R | Default stop-first | -168.76 | -2.81 | Failed under conservative sequencing |
+| ICT 2022 broad RTH, 1.5R | Skip entry bar | -246.26 | -4.10 | Worse |
+| ICT 2022 broad RTH, 1.5R | Target-first | 181.24 | 3.02 | Shows massive sequencing dependence |
+
+Updated verdict: **one-minute OHLC is not trustworthy enough to kill or crown ICT/FVG limit-entry ideas**. The next valid test needs tick or second-level sequencing so entry happens first and only subsequent prices can stop/target the trade.

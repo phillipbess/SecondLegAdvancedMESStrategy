@@ -129,11 +129,39 @@ Keep `silverbullet_am_short_pd_2r` as a possible micro-edge or stack component, 
 
 The research lesson is useful: named ICT concepts are not automatically profitable. The only tested pulse is a narrow small-account setup: AM prior-day-high raid, bearish displacement, bearish FVG retrace, short continuation.
 
+## Intrabar Sequencing Sensitivity
+
+Follow-up audit found that ICT/FVG limit-entry tests are extremely sensitive to one-minute OHLC sequencing:
+
+- Default policy is conservative: if stop and target are both touched in the same bar, count stop first.
+- `skipEntryBarOutcome=true` avoids judging stop/target on the same bar that touches the FVG entry.
+- `sameBarPolicy=targetfirst` is an optimistic upper bound, not a realistic fill model.
+
+Sensitivity results:
+
+| Test | Policy | Net R | R/Month | Read |
+|---|---|---:|---:|---|
+| AM Silver Bullet PDH short, 2R | Default stop-first | 24.88 | 0.41 | Conservative baseline |
+| AM Silver Bullet PDH short, 2R | Skip entry bar | 0.88 | 0.01 | Positive pocket largely disappears |
+| AM Silver Bullet PDH short, 2R | Target-first | 63.88 | 1.06 | Optimistic upper bound |
+| ICT 2022 broad RTH, 1.5R | Default stop-first | -168.76 | -2.81 | Failed under conservative sequencing |
+| ICT 2022 broad RTH, 1.5R | Skip entry bar | -246.26 | -4.10 | Worse |
+| ICT 2022 broad RTH, 1.5R | Target-first | 181.24 | 3.02 | Shows massive sequencing dependence |
+
+This changes the interpretation: the broad ICT result is not safe to call from one-minute OHLC alone. The huge spread between stop-first and target-first means the model needs tick-level or second-level sequencing before any final verdict.
+
 ## Next Best Step
 
-Do not do a broad ICT parameter sweep.
+Do not do a broad ICT parameter sweep on one-minute OHLC data.
 
-If we continue this branch, the only high-value follow-up is to test whether this PDH short micro-edge is additive to the current best stack:
+If we continue this branch, the high-value follow-up is to rebuild the ICT/FVG test with finer sequencing:
+
+- Use tick or second-level data if available.
+- Model entry first, then stop/target after entry only.
+- Re-test the broad ICT 2022 and AM PDH short variants.
+- Only then decide whether the idea is dead.
+
+After sequencing is fixed, test whether any surviving ICT edge is additive to the current best stack:
 
 - Run it inside `CandidateStack`.
 - Ensure no same-day overlap with opening-auction trades.
