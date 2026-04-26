@@ -128,10 +128,46 @@ BrooksOR results were negative across the tested matrix. The worst broad version
 
 Verdict: **Brooks helped conceptually, but deterministic minute-bar Brooks rules did not meet the goal**. The useful lesson is that context matters more than the named pattern. Price-only versions still fall far short of `+6R` to `+8R/month`.
 
+### Structure-Break Salvage
+
+Retested the best positive second-leg cluster as a standalone candidate: long-only `VideoSecondEntryLite`, nearby `SWING_H` / `PDH,SWING_H`, and structure-break entry.
+
+Best results:
+
+| Variant | Net R | Monthly R | Trades/mo | Avg R |
+|---|---:|---:|---:|---:|
+| `PDH,SWING_H`, room <= 0.50R, 2.5R target, 36-bar hold | 52.87 | 0.88 | 2.4 | 0.37 |
+| `SWING_H`, room <= 0.25R, 2.5R target, 36-bar hold | 50.26 | 0.84 | 1.6 | 0.52 |
+| `PDH,SWING_H`, room <= 0.25R, 2.0R target, 24-bar hold | 45.14 | 0.75 | 2.0 | 0.38 |
+
+Verdict: **keep as a micro-edge candidate, not a main engine**. Quality improved, but frequency is far too low for the `6R-8R/month` goal.
+
+### Opening Auction Room Filter
+
+Revisited opening auction acceptance because it has the frequency profile we need. The unfiltered 15m accepted version was weak: `23.31R`, `0.39R/month`, `0.02R/trade`, `18.3 trades/month`.
+
+Added research-only filters:
+
+- `openingAuctionMinRoomR`
+- `openingAuctionMaxRoomR`
+- `openingAuctionMinSignalMinutes`
+
+Best room-filtered results:
+
+| Variant | Net R | Monthly R | Trades/mo | Avg R |
+|---|---:|---:|---:|---:|
+| 15m accepted, range 0.75-2.5 ATR, room <= 1R, 1.5R target | 65.52 | 1.09 | 6.1 | 0.18 |
+| 15m accepted, range 0.75-2.0 ATR, room <= 1R, 1.5R target | 63.62 | 1.06 | 5.5 | 0.19 |
+| Same as above, signal 30-90 minutes after open | 62.87 | 1.05 | 5.4 | 0.19 |
+| Short-only, range 0.75-2.0 ATR, room <= 1R, 1.5R target | 49.26 | 0.82 | 2.9 | 0.28 |
+
+Verdict: **this is the best new discovery in the latest push**. The room filter turns a flat high-frequency idea into a modest positive candidate. Still not enough alone, but it is now worth yearly validation and possible portfolio combination with afternoon momentum / structure-break candidates.
+
 ## Next Research Steps
 
 1. Treat **Afternoon Momentum Long 5m** as the current benchmark, not the finish line.
-2. Do not spend more cycles on raw ORB, raw sweep/reclaim, or raw compression unless a new structural variable is added.
-3. Build one tick/quote prototype for **OFI-confirmed failed auction** around PDH/PDL/ONH/ONL/ORH/ORL.
-4. Continue only if OFI materially beats the price-only sweep baseline and survives yearly slices.
-5. If OFI cannot improve failed auctions, stop chasing ES price-action variants and broaden beyond minute-bar ES setups.
+2. Promote **Opening Auction Room Filter** to the active candidate list and run yearly slices.
+3. Do not spend more cycles on raw ORB, raw sweep/reclaim, or raw compression unless a new structural variable is added.
+4. Build one tick/quote prototype for **OFI-confirmed failed auction** around PDH/PDL/ONH/ONL/ORH/ORL.
+5. Continue only if OFI materially beats the price-only sweep baseline and survives yearly slices.
+6. If OFI cannot improve failed auctions, stop chasing ES price-action variants and broaden beyond minute-bar ES setups.

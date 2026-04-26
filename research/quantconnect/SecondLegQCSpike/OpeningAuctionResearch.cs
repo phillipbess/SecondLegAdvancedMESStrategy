@@ -8,9 +8,12 @@ namespace QuantConnect.Algorithm.CSharp
         private string OpeningAuctionModel = "both";
         private int OpeningAuctionConfirmBars = 2;
         private int OpeningAuctionFailureBars = 3;
+        private int OpeningAuctionMinSignalMinutes = 0;
         private int OpeningAuctionMaxSignalMinutes = 90;
         private double OpeningAuctionMinRangeAtr = 0.0;
         private double OpeningAuctionMaxRangeAtr = 999.0;
+        private double OpeningAuctionMinRoomR = -1.0;
+        private double OpeningAuctionMaxRoomR = -1.0;
         private int OpeningAuctionStopBufferTicks = 2;
         private bool OpeningAuctionOneTradePerDay = true;
 
@@ -31,12 +34,15 @@ namespace QuantConnect.Algorithm.CSharp
             OpeningAuctionModel = TextParameter("openingAuctionModel", OpeningAuctionModel).ToLowerInvariant();
             OpeningAuctionConfirmBars = Math.Max(1, IntParameter("openingAuctionConfirmBars", OpeningAuctionConfirmBars));
             OpeningAuctionFailureBars = Math.Max(1, IntParameter("openingAuctionFailureBars", OpeningAuctionFailureBars));
-            OpeningAuctionMaxSignalMinutes = Math.Max(OpeningRangeMinutes, IntParameter("openingAuctionMaxSignalMinutes", OpeningAuctionMaxSignalMinutes));
+            OpeningAuctionMinSignalMinutes = Math.Max(0, IntParameter("openingAuctionMinSignalMinutes", OpeningAuctionMinSignalMinutes));
+            OpeningAuctionMaxSignalMinutes = Math.Max(Math.Max(OpeningRangeMinutes, OpeningAuctionMinSignalMinutes), IntParameter("openingAuctionMaxSignalMinutes", OpeningAuctionMaxSignalMinutes));
             OpeningAuctionMinRangeAtr = Math.Max(0.0, DoubleParameter("openingAuctionMinRangeAtr", OpeningAuctionMinRangeAtr));
             OpeningAuctionMaxRangeAtr = Math.Max(OpeningAuctionMinRangeAtr, DoubleParameter("openingAuctionMaxRangeAtr", OpeningAuctionMaxRangeAtr));
+            OpeningAuctionMinRoomR = DoubleParameter("openingAuctionMinRoomR", OpeningAuctionMinRoomR);
+            OpeningAuctionMaxRoomR = DoubleParameter("openingAuctionMaxRoomR", OpeningAuctionMaxRoomR);
             OpeningAuctionStopBufferTicks = Math.Max(0, IntParameter("openingAuctionStopBufferTicks", OpeningAuctionStopBufferTicks));
             OpeningAuctionOneTradePerDay = BoolParameter("openingAuctionOneTradePerDay", OpeningAuctionOneTradePerDay);
-            _tradeExportKey = $"{ProjectId}/opening_auction_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_model_{OpeningAuctionModel}_confirm_{OpeningAuctionConfirmBars}_fail_{OpeningAuctionFailureBars}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}_or_{OpeningRangeMinutes}_maxsig_{OpeningAuctionMaxSignalMinutes}_range_{ParamToken(OpeningAuctionMinRangeAtr)}-{ParamToken(OpeningAuctionMaxRangeAtr)}.csv";
+            _tradeExportKey = $"{ProjectId}/opening_auction_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_model_{OpeningAuctionModel}_confirm_{OpeningAuctionConfirmBars}_fail_{OpeningAuctionFailureBars}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}_or_{OpeningRangeMinutes}_sig_{OpeningAuctionMinSignalMinutes}-{OpeningAuctionMaxSignalMinutes}_range_{ParamToken(OpeningAuctionMinRangeAtr)}-{ParamToken(OpeningAuctionMaxRangeAtr)}_room_{ParamToken(OpeningAuctionMinRoomR)}-{ParamToken(OpeningAuctionMaxRoomR)}.csv";
         }
 
         private bool IsOpeningAuctionMode()
@@ -69,7 +75,7 @@ namespace QuantConnect.Algorithm.CSharp
                 return;
 
             int minutes = MinutesFromOpen(bar);
-            if (minutes <= OpeningRangeMinutes || minutes > OpeningAuctionMaxSignalMinutes)
+            if (minutes <= OpeningRangeMinutes || minutes < OpeningAuctionMinSignalMinutes || minutes > OpeningAuctionMaxSignalMinutes)
                 return;
 
             double openingRange = _openingRangeHigh - _openingRangeLow;
@@ -215,6 +221,17 @@ namespace QuantConnect.Algorithm.CSharp
                 Block("OaStopTooWide");
                 return;
             }
+            double roomToStructureR = pending.OpeningRangeR / Math.Max(risk, TickSize);
+            if (OpeningAuctionMinRoomR >= 0.0 && roomToStructureR < OpeningAuctionMinRoomR)
+            {
+                Block("OaRoomTooSmall");
+                return;
+            }
+            if (OpeningAuctionMaxRoomR >= 0.0 && roomToStructureR > OpeningAuctionMaxRoomR)
+            {
+                Block("OaRoomTooLarge");
+                return;
+            }
 
             _triggeredSignals++;
             GetMonth(bar.EndTime).Triggered++;
@@ -238,7 +255,7 @@ namespace QuantConnect.Algorithm.CSharp
                 Quantity = quantity,
                 AtrAtPlan = pending.AtrAtSignal,
                 StopAtrMultiple = bar.Atr > 0.0 ? risk / bar.Atr : 0.0,
-                RoomToStructureR = pending.OpeningRangeR / Math.Max(risk, TickSize),
+                RoomToStructureR = roomToStructureR,
                 SignalHour = pending.SignalHour,
                 MinutesFromOpen = pending.MinutesFromOpen,
                 SignalClosePct = pending.SignalClosePct,
