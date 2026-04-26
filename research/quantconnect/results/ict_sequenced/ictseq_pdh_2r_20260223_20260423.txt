@@ -1,0 +1,107 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID:
+e102d9ba783a948cfa3a6af9e79dc230-941cc44763251694036f5546e06a63ad, Lean
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'ICTSeq PDH 2R second bars 20260223 20260423' for
+project 'SecondLegQCSpike 1'
+Backtest url:
+https://www.quantconnect.com/project/30609547/7198f1ce2ed355e00f33782c10d6d326
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 1m Bars           | 19350            | Armed             | 24               |
+| Avg R             | 0.20             | Block Types       | 0                |
+| Entry Mode        | ICTSeq           | Equity            | $100,000.00      |
+| Expired           | 16               | Export Key        | 30609547/ict_exp |
+|                   |                  |                   | ort_20260223_202 |
+|                   |                  |                   | 60423_bar_1_side |
+|                   |                  |                   | _short_model_sil |
+|                   |                  |                   | verbullet_liq_pd |
+|                   |                  |                   | _win_30-90_disp_ |
+|                   |                  |                   | 0p5_fvg_1_target |
+|                   |                  |                   | _2_hold_45.csv   |
+| Fees              | -$0.00           | H10 S             | n=5 avg=0.20     |
+|                   |                  |                   | net=1.0 2R=2     |
+|                   |                  |                   | st=3 to=0 t1=2   |
+|                   |                  |                   | mfe=1.11         |
+|                   |                  |                   | mae=-0.89        |
+| Holdings          | $0.00            | Impulses          | 0                |
+| Leg1              | 0                | Leg2 Candidates   | 0                |
+| Long Armed        | 14               | Net Profit        | $0.00            |
+| Net R             | 1.00             | Params            | mode=ICTSeq      |
+|                   |                  |                   | bar=1 side=short |
+|                   |                  |                   | imp=1.25         |
+|                   |                  |                   | leg2Retr=0.95    |
+|                   |                  |                   | sig=0.5 target=2 |
+|                   |                  |                   | hold=45 trig=3   |
+|                   |                  |                   | liq=False        |
+|                   |                  |                   | roomMax=-1       |
+|                   |                  |                   | struct=none      |
+|                   |                  |                   | block=none       |
+|                   |                  |                   | blockS=none      |
+| Probabilistic     | 0%               | Return            | 0.00 %           |
+| Sharpe Ratio      |                  |                   |                  |
+| RiskTooSmall      | 0                | Room <0.25R       | n=5 avg=0.20     |
+|                   |                  |                   | net=1.0 2R=2     |
+|                   |                  |                   | st=3 to=0 t1=2   |
+|                   |                  |                   | mfe=1.11         |
+|                   |                  |                   | mae=-0.89        |
+| RTH 1m Bars       | 16555            | Runtime Trade     | 5/5              |
+|                   |                  | Rows              |                  |
+| Separations       | 0                | Short Armed       | 10               |
+| Side S            | n=5 avg=0.20     | SignalInvalid     | 0                |
+|                   | net=1.0 2R=2     |                   |                  |
+|                   | st=3 to=0 t1=2   |                   |                  |
+|                   | mfe=1.11         |                   |                  |
+|                   | mae=-0.89        |                   |                  |
+| Stops             | 3                | StopTooWide       | 0                |
+| Struct            | n=5 avg=0.20     | StructureRoom     | 0                |
+| ICT_silverbullet_ | net=1.0 2R=2     |                   |                  |
+| PDH_FVG_SEQ       | st=3 to=0 t1=2   |                   |                  |
+|                   | mfe=1.11         |                   |                  |
+|                   | mae=-0.89        |                   |                  |
+| T01               | 26-03-17 10:04 S | T02               | 26-03-23 10:11 S |
+|                   | Target r=2       |                   | Target r=2 mfe=2 |
+|                   | mfe=2.1293       |                   | mae=-0.6667      |
+|                   | mae=-0.4461      |                   | room=0 bars=1    |
+|                   | room=0 bars=14   |                   |                  |
+| T03               | 26-04-06 10:11 S | T04               | 26-04-08 10:58 S |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.3415       |                   | mfe=0.3 mae=-1.3 |
+|                   | mae=-1.0488      |                   | room=0 bars=4    |
+|                   | room=0 bars=10   |                   |                  |
+| T05               | 26-04-17 11:02 S | Timeouts          | 0                |
+|                   | Stop r=-1        |                   |                  |
+|                   | mfe=0.8 mae=-1   |                   |                  |
+|                   | room=0 bars=2    |                   |                  |
+| Touch 1R          | 2                | Trend Bars        | 0                |
+| Triggered         | 5                | Unrealized        | $0.00            |
+| Virtual Trades    | 5                | Volume            | $0.00            |
+| Win 2R            | 2                |                   |                  |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -1.444           |
+| Tracking Error    | 0.137            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 7198f1ce2ed355e00f33782c10d6d326
+Backtest name: ICTSeq PDH 2R second bars 20260223 20260423
+Backtest url:
+https://www.quantconnect.com/project/30609547/7198f1ce2ed355e00f33782c10d6d326

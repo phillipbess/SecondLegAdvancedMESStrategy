@@ -281,3 +281,19 @@ Follow-up audit: the ICT/FVG family is extremely sensitive to intrabar sequencin
 | ICT 2022 broad RTH, 1.5R | Target-first | 181.24 | 3.02 | Shows massive sequencing dependence |
 
 Updated verdict: **one-minute OHLC is not trustworthy enough to kill or crown ICT/FVG limit-entry ideas**. The next valid test needs tick or second-level sequencing so entry happens first and only subsequent prices can stop/target the trade.
+
+Implemented first sequencing fix on 2026-04-26:
+
+- Added `entryMode=ICTSequenced`.
+- Uses second-resolution MES data for execution sequencing.
+- Keeps 1-minute signal construction.
+- Fills the FVG entry from second bars, then evaluates stop/target only after the fill timestamp.
+
+Smoke window: 2026-02-23 through 2026-04-23.
+
+| Variant | Net R | Avg R | Trades | Read |
+|---|---:|---:|---:|---|
+| AM Silver Bullet PDH short, 2R | 1.00 | 0.20 | 5 | Mechanics work; sample too small |
+| ICT 2022 broad RTH, 1.5R | -9.50 | -0.23 | 42 | Broad model still weak under real sequencing |
+
+Updated read: the sequencing harness is the correct path. The broad ICT 2022 target-first optimism did not survive realistic second-bar sequencing in the smoke window.

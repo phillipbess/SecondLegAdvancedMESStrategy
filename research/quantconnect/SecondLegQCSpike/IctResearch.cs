@@ -45,12 +45,14 @@ namespace QuantConnect.Algorithm.CSharp
             IctMinFvgTicks = Math.Max(0.0, DoubleParameter("ictMinFvgTicks", IctMinFvgTicks));
             IctEntryFvgPct = Clamp(DoubleParameter("ictEntryFvgPct", IctEntryFvgPct), 0.0, 1.0);
             IctOneTradePerDay = BoolParameter("ictOneTradePerDay", IctOneTradePerDay);
-            _tradeExportKey = $"{ProjectId}/ict_export_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_model_{IctModel}_liq_{TextKey(IctLiquiditySet)}_win_{IctWindowStartMinutes}-{IctWindowEndMinutes}_disp_{ParamToken(IctMinDisplacementAtr)}_fvg_{ParamToken(IctMinFvgTicks)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}.csv";
+            string exportPrefix = IsIctSequencedMode() ? "ictseq_export" : "ict_export";
+            _tradeExportKey = $"{ProjectId}/{exportPrefix}_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_bar_{BarMinutes}_side_{SideFilter}_model_{IctModel}_liq_{TextKey(IctLiquiditySet)}_win_{IctWindowStartMinutes}-{IctWindowEndMinutes}_disp_{ParamToken(IctMinDisplacementAtr)}_fvg_{ParamToken(IctMinFvgTicks)}_target_{ParamToken(ProfitTargetR)}_hold_{MaxOutcomeBars}.csv";
         }
 
         private bool IsIctMode()
         {
-            return string.Equals(EntryMode, "ict", StringComparison.OrdinalIgnoreCase)
+            return IsIctSequencedMode()
+                || string.Equals(EntryMode, "ict", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(EntryMode, "ictsilverbullet", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(EntryMode, "ictjudas", StringComparison.OrdinalIgnoreCase)
                 || string.Equals(EntryMode, "ict2022", StringComparison.OrdinalIgnoreCase);
