@@ -1,0 +1,136 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID:
+ec121ba8e445a290c4b072929f47d1af-1b94fb68c4e2622d36b48d0fad2a475c, Lean
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'ICT judas_open_15r 2021_2026' for project
+'SecondLegQCSpike 1'
+Backtest url:
+https://www.quantconnect.com/project/30609547/fb6556cd8d29d2596fbb36741b3d142d
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic        | Value             | Statistic        | Value             |
+|------------------+-------------------+------------------+-------------------|
+| 1m Bars          | 571005            | Armed            | 987               |
+| Avg R            | -0.07             | Block 1          | SameBarBoth:59    |
+| Block 2          | IctStopTooWide:15 | Block 3          | IctRiskTooSmall:1 |
+|                  |                   |                  | 4                 |
+| Block Types      | 3                 | Entry Mode       | ICT               |
+| Equity           | $100,000.00       | Expired          | 436               |
+| Export Key       | 30609547/ict_expo | Fees             | -$0.00            |
+|                  | rt_20210424_20260 |                  |                   |
+|                  | 423_bar_1_side_bo |                  |                   |
+|                  | th_model_judas_li |                  |                   |
+|                  | q_or-pd_win_0-60_ |                  |                   |
+|                  | disp_0p45_fvg_1_t |                  |                   |
+|                  | arget_1p5_hold_60 |                  |                   |
+|                  | .csv              |                  |                   |
+| H09 L            | n=121 avg=-0.11   | H09 S            | n=138 avg=-0.01   |
+|                  | net=-12.8 2R=41   |                  | net=-0.7 2R=50    |
+|                  | st=74 to=6 t1=81  |                  | st=80 to=8 t1=86  |
+|                  | mfe=1.93          |                  | mfe=1.89          |
+|                  | mae=-1.04         |                  | mae=-1.24         |
+| H10 L            | n=124 avg=-0.00   | H10 S            | n=139 avg=-0.18   |
+|                  | net=-0.2 2R=45    |                  | net=-24.5 2R=45   |
+|                  | st=70 to=9 t1=78  |                  | st=93 to=1 t1=82  |
+|                  | mfe=1.44          |                  | mfe=1.74          |
+|                  | mae=-0.77         |                  | mae=-0.79         |
+| Holdings         | $0.00             | Impulses         | 0                 |
+| Leg1             | 0                 | Leg2 Candidates  | 0                 |
+| Long Armed       | 449               | Net Profit       | $0.00             |
+| Net R            | -38.20            | Params           | mode=ICT bar=1    |
+|                  |                   |                  | side=both         |
+|                  |                   |                  | imp=1.25          |
+|                  |                   |                  | leg2Retr=0.95     |
+|                  |                   |                  | sig=0.5           |
+|                  |                   |                  | target=1.5        |
+|                  |                   |                  | hold=60 trig=3    |
+|                  |                   |                  | liq=False         |
+|                  |                   |                  | roomMax=-1        |
+|                  |                   |                  | struct=none       |
+|                  |                   |                  | block=none        |
+|                  |                   |                  | blockS=none       |
+| Probabilistic    | 0%                | Return           | 0.00 %            |
+| Sharpe Ratio     |                   |                  |                   |
+| RiskTooSmall     | 0                 | Room <0.25R      | n=522 avg=-0.07   |
+|                  |                   |                  | net=-38.2 2R=181  |
+|                  |                   |                  | st=317 to=24      |
+|                  |                   |                  | t1=327 mfe=1.75   |
+|                  |                   |                  | mae=-0.96         |
+| RTH 1m Bars      | 489755            | Runtime Trade    | 5/522             |
+|                  |                   | Rows             |                   |
+| Separations      | 0                 | Short Armed      | 538               |
+| Side L           | n=245 avg=-0.05   | Side S           | n=277 avg=-0.09   |
+|                  | net=-13.0 2R=86   |                  | net=-25.2 2R=95   |
+|                  | st=144 to=15      |                  | st=173 to=9       |
+|                  | t1=159 mfe=1.68   |                  | t1=168 mfe=1.82   |
+|                  | mae=-0.90         |                  | mae=-1.01         |
+| SignalInvalid    | 0                 | Stops            | 317               |
+| StopTooWide      | 0                 | Struct           | n=75 avg=0.00     |
+|                  |                   | ICT_judas_ORH_FV | net=0.0 2R=30     |
+|                  |                   | G                | st=45 to=0 t1=52  |
+|                  |                   |                  | mfe=1.54          |
+|                  |                   |                  | mae=-0.73         |
+| Struct           | n=72 avg=0.09     | Struct           | n=38 avg=-0.16    |
+| ICT_judas_ORL_FV | net=6.4 2R=28     | ICT_judas_PDH_FV | net=-6.0 2R=12    |
+| G                | st=37 to=7 t1=52  | G                | st=25 to=1 t1=23  |
+|                  | mfe=1.67          |                  | mfe=1.59          |
+|                  | mae=-0.86         |                  | mae=-0.87         |
+| Struct           | n=29 avg=0.18     | Struct           | n=164 avg=-0.12   |
+| ICT_judas_PDL_FV | net=5.1 2R=13     | ICT_judas_SWING_ | net=-19.2 2R=53   |
+| G                | st=15 to=1 t1=21  | H_FVG            | st=103 to=8 t1=93 |
+|                  | mfe=1.77          |                  | mfe=1.99          |
+|                  | mae=-0.80         |                  | mae=-1.18         |
+| Struct           | n=144 avg=-0.17   | StructureRoom    | 0                 |
+| ICT_judas_SWING_ | net=-24.5 2R=45   |                  |                   |
+| L_FVG            | st=92 to=7 t1=86  |                  |                   |
+|                  | mfe=1.67          |                  |                   |
+|                  | mae=-0.94         |                  |                   |
+| T01              | 21-04-27 10:37 L  | T02              | 21-04-30 10:11 S  |
+|                  | Stop r=-1         |                  | Target r=1.5      |
+|                  | mfe=0.5603        |                  | mfe=1.926         |
+|                  | mae=-2.0044       |                  | mae=-0.1909       |
+|                  | room=0 bars=2     |                  | room=0 bars=3     |
+| T03              | 21-05-04 10:11 L  | T04              | 21-05-05 09:46 S  |
+|                  | Stop r=-1         |                  | Target r=1.5      |
+|                  | mfe=1.596         |                  | mfe=1.6251        |
+|                  | mae=-0.3728       |                  | mae=-0.2601       |
+|                  | room=0 bars=1     |                  | room=0 bars=18    |
+| T05              | 21-05-06 09:43 L  | Timeouts         | 24                |
+|                  | Stop r=-1         |                  |                   |
+|                  | mfe=1.2789        |                  |                   |
+|                  | mae=-1.1149       |                  |                   |
+|                  | room=0 bars=4     |                  |                   |
+| Touch 1R         | 327               | Trend Bars       | 0                 |
+| Triggered        | 522               | Unrealized       | $0.00             |
+| Virtual Trades   | 522               | Volume           | $0.00             |
+| Win 1.5R         | 181               |                  |                   |
+|------------------+-------------------+------------------+-------------------|
+| Total Orders     | 0                 | Average Win      | 0%                |
+| Average Loss     | 0%                | Compounding      | 0%                |
+|                  |                   | Annual Return    |                   |
+| Drawdown         | 0%                | Expectancy       | 0                 |
+| Start Equity     | 100000            | End Equity       | 100000            |
+| Net Profit       | 0%                | Sharpe Ratio     | 0                 |
+| Sortino Ratio    | 0                 | Probabilistic    | 0%                |
+|                  |                   | Sharpe Ratio     |                   |
+| Loss Rate        | 0%                | Win Rate         | 0%                |
+| Profit-Loss      | 0                 | Alpha            | 0                 |
+| Ratio            |                   |                  |                   |
+| Beta             | 0                 | Annual Standard  | 0                 |
+|                  |                   | Deviation        |                   |
+| Annual Variance  | 0                 | Information      | -0.685            |
+|                  |                   | Ratio            |                   |
+| Tracking Error   | 0.142             | Treynor Ratio    | 0                 |
+| Total Fees       | $0.00             | Estimated        | $0                |
+|                  |                   | Strategy         |                   |
+|                  |                   | Capacity         |                   |
+| Lowest Capacity  |                   | Portfolio        | 0%                |
+| Asset            |                   | Turnover         |                   |
+| Drawdown         | 0                 |                  |                   |
+| Recovery         |                   |                  |                   |
++-----------------------------------------------------------------------------+
+Backtest id: fb6556cd8d29d2596fbb36741b3d142d
+Backtest name: ICT judas_open_15r 2021_2026
+Backtest url:
+https://www.quantconnect.com/project/30609547/fb6556cd8d29d2596fbb36741b3d142d

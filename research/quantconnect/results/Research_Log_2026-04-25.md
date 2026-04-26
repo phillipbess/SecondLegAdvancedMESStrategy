@@ -230,3 +230,41 @@ Yearly check for the best both-side variant:
 | 2025-2026 | -1.88 | -0.16 | 17.1 |
 
 Verdict: **keep as a research artifact, not a promoted engine**. The frequency is attractive, but the recent degradation means it needs a context filter or setup split before it can be stacked with the current benchmark.
+
+### ICT Silver Bullet / Judas / 2022 Model
+
+Built a deterministic ICT research engine around:
+
+- Liquidity sweep.
+- Displacement / market-structure shift.
+- Fair-value-gap retrace entry.
+- Configurable liquidity set: swing, opening range, prior day.
+- AM Silver Bullet, PM Silver Bullet, Judas open, and broad ICT 2022 windows.
+
+Important correction: `ictLiquiditySet=pd` initially still included swing sweeps. That was fixed so `swing`, `or`, and `pd` are honored independently. Corrected results supersede earlier mislabeled output.
+
+Broad model results were weak:
+
+| Variant | Net R | Monthly R | Trades/mo | Avg R |
+|---|---:|---:|---:|---:|
+| Silver Bullet AM, both sides, 2R | -15.77 | -0.26 | 8.7 | -0.03 |
+| Judas open, both sides, 1.5R | -38.20 | -0.64 | 8.7 | -0.07 |
+| ICT 2022 broad RTH, both sides, 1.5R | -168.76 | -2.81 | 20.4 | -0.14 |
+
+The only positive corrected pocket:
+
+| Variant | Net R | Monthly R | Trades/mo | Avg R | Read |
+|---|---:|---:|---:|---:|---|
+| AM Silver Bullet, short only, prior-day-high sweep, 2R | 24.88 | 0.41 | 3.0 | 0.14 | Positive micro-edge, not main engine |
+
+Yearly validation for the best ICT pocket:
+
+| Period | Net R | Monthly R | Trades/mo |
+|---|---:|---:|---:|
+| 2021-2022 | 6.96 | 0.58 | 3.2 |
+| 2022-2023 | 3.54 | 0.30 | 3.2 |
+| 2023-2024 | -0.46 | -0.04 | 2.7 |
+| 2024-2025 | 1.96 | 0.16 | 3.5 |
+| 2025-2026 | 12.88 | 1.07 | 2.6 |
+
+Verdict: **do not promote ICT as the new main strategy**. Keep the AM PDH short Silver Bullet as a possible micro-edge only. It is stable enough to remember, but far too small for the `6R-8R/month` goal.

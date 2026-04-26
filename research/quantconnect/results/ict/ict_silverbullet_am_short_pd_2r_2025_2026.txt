@@ -1,0 +1,110 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID:
+4c9efef7506f4041befa0a92176fca17-67ae7f60c289325855af72ce9cd44153, Lean
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'ICT silverbullet_am_short_pd_2r 2025_2026' for project
+'SecondLegQCSpike 1'
+Backtest url:
+https://www.quantconnect.com/project/30609547/40d8486f7ed579ef42408684c917a4b5
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 1m Bars           | 114195           | Armed             | 140              |
+| Avg R             | 0.42             | Block 1           | IctRiskTooSmall: |
+|                   |                  |                   | 1                |
+| Block 2           | SameBarBoth:1    | Block Types       | 2                |
+| Entry Mode        | ICT              | Equity            | $100,000.00      |
+| Expired           | 83               | Export Key        | 30609547/ict_exp |
+|                   |                  |                   | ort_20250424_202 |
+|                   |                  |                   | 60423_bar_1_side |
+|                   |                  |                   | _short_model_sil |
+|                   |                  |                   | verbullet_liq_pd |
+|                   |                  |                   | _win_30-90_disp_ |
+|                   |                  |                   | 0p5_fvg_1_target |
+|                   |                  |                   | _2_hold_45.csv   |
+| Fees              | -$0.00           | H10 S             | n=31 avg=0.42    |
+|                   |                  |                   | net=12.9 2R=14   |
+|                   |                  |                   | st=16 to=1 t1=20 |
+|                   |                  |                   | mfe=1.88         |
+|                   |                  |                   | mae=-0.95        |
+| Holdings          | $0.00            | Impulses          | 0                |
+| Leg1              | 0                | Leg2 Candidates   | 0                |
+| Long Armed        | 68               | Net Profit        | $0.00            |
+| Net R             | 12.88            | Params            | mode=ICT bar=1   |
+|                   |                  |                   | side=short       |
+|                   |                  |                   | imp=1.25         |
+|                   |                  |                   | leg2Retr=0.95    |
+|                   |                  |                   | sig=0.5 target=2 |
+|                   |                  |                   | hold=45 trig=3   |
+|                   |                  |                   | liq=False        |
+|                   |                  |                   | roomMax=-1       |
+|                   |                  |                   | struct=none      |
+|                   |                  |                   | block=none       |
+|                   |                  |                   | blockS=none      |
+| Probabilistic     | 0%               | Return            | 0.00 %           |
+| Sharpe Ratio      |                  |                   |                  |
+| RiskTooSmall      | 0                | Room <0.25R       | n=31 avg=0.42    |
+|                   |                  |                   | net=12.9 2R=14   |
+|                   |                  |                   | st=16 to=1 t1=20 |
+|                   |                  |                   | mfe=1.88         |
+|                   |                  |                   | mae=-0.95        |
+| RTH 1m Bars       | 98010            | Runtime Trade     | 5/31             |
+|                   |                  | Rows              |                  |
+| Separations       | 0                | Short Armed       | 72               |
+| Side S            | n=31 avg=0.42    | SignalInvalid     | 0                |
+|                   | net=12.9 2R=14   |                   |                  |
+|                   | st=16 to=1 t1=20 |                   |                  |
+|                   | mfe=1.88         |                   |                  |
+|                   | mae=-0.95        |                   |                  |
+| Stops             | 16               | StopTooWide       | 0                |
+| Struct            | n=31 avg=0.42    | StructureRoom     | 0                |
+| ICT_silverbullet_ | net=12.9 2R=14   |                   |                  |
+| PDH_FVG           | st=16 to=1 t1=20 |                   |                  |
+|                   | mfe=1.88         |                   |                  |
+|                   | mae=-0.95        |                   |                  |
+| T01               | 25-04-28 10:35 S | T02               | 25-05-02 10:25 S |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.3049       |                   | mfe=1.0254       |
+|                   | mae=-1.015       |                   | mae=-1.3666      |
+|                   | room=0 bars=14   |                   | room=0 bars=3    |
+| T03               | 25-05-12 10:24 S | T04               | 25-05-13 10:33 S |
+|                   | Target r=2       |                   | Target r=2       |
+|                   | mfe=2.6752       |                   | mfe=2.8323       |
+|                   | mae=-0.4604      |                   | mae=-0.6795      |
+|                   | room=0 bars=6    |                   | room=0 bars=2    |
+| T05               | 25-06-04 10:11 S | Timeouts          | 1                |
+|                   | Stop r=-1        |                   |                  |
+|                   | mfe=0.0948       |                   |                  |
+|                   | mae=-1.0191      |                   |                  |
+|                   | room=0 bars=18   |                   |                  |
+| Touch 1R          | 20               | Trend Bars        | 0                |
+| Triggered         | 31               | Unrealized        | $0.00            |
+| Virtual Trades    | 31               | Volume            | $0.00            |
+| Win 2R            | 14               |                   |                  |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -2.049           |
+| Tracking Error    | 0.104            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 40d8486f7ed579ef42408684c917a4b5
+Backtest name: ICT silverbullet_am_short_pd_2r 2025_2026
+Backtest url:
+https://www.quantconnect.com/project/30609547/40d8486f7ed579ef42408684c917a4b5

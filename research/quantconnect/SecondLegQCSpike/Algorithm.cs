@@ -177,7 +177,8 @@ namespace QuantConnect.Algorithm.CSharp
             _continuousSymbol = _future.Symbol;
             Consolidate<TradeBar>(_continuousSymbol, TimeSpan.FromMinutes(BarMinutes), OnAnalysisBar);
             _tradeExportKey = BuildDefaultTradeExportKey(startDate, endDate);
-            _tradeExport.AppendLine("tradeId,entryMode,signalTime,triggerTime,closeTime,side,entry,stop,touchProbePrice,targetPrice,targetR,riskPts,riskDollars,quantity,atrAtPlan,stopAtrMultiple,impulseAtrMultiple,leg1Retracement,leg2Retracement,leg2MomentumRatio,totalPullbackBars,leg1Bars,leg2Bars,structure,roomToStructureR,signalHour,minutesFromOpen,signalClosePct,signalBodyPct,emaFastDistanceAtr,emaSlowDistanceAtr,atrRatio,slopeAtrPct,maxFavorableR,maxAdverseR,outcome,rMultiple,touchedProbe,barsHeld");
+            _tradeExport.AppendLine(BuildDefaultTradeExportHeader());
+            ConfigureIctResearch(startDate, endDate);
             ConfigureCamarillaDynamicResearch(startDate, endDate);
             ConfigureCandidateStackResearch(startDate, endDate);
             ConfigureOpeningAuctionResearch(startDate, endDate);
@@ -200,6 +201,11 @@ namespace QuantConnect.Algorithm.CSharp
 
             UpdateSessionState(bar);
 
+            if (IsIctMode())
+            {
+                TryIctResearch(bar);
+                return;
+            }
             if (IsCamarillaMode())
             {
                 TryCamarillaDynamicResearch(bar);
@@ -1237,6 +1243,8 @@ namespace QuantConnect.Algorithm.CSharp
 
         private string EntryModeToken()
         {
+            if (IsIctMode())
+                return "ICT";
             if (IsCamarillaMode())
                 return "Camarilla";
             if (IsCandidateStackMode())
