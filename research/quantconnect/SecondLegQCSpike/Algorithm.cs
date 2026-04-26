@@ -178,6 +178,7 @@ namespace QuantConnect.Algorithm.CSharp
             Consolidate<TradeBar>(_continuousSymbol, TimeSpan.FromMinutes(BarMinutes), OnAnalysisBar);
             _tradeExportKey = BuildDefaultTradeExportKey(startDate, endDate);
             _tradeExport.AppendLine("tradeId,entryMode,signalTime,triggerTime,closeTime,side,entry,stop,touchProbePrice,targetPrice,targetR,riskPts,riskDollars,quantity,atrAtPlan,stopAtrMultiple,impulseAtrMultiple,leg1Retracement,leg2Retracement,leg2MomentumRatio,totalPullbackBars,leg1Bars,leg2Bars,structure,roomToStructureR,signalHour,minutesFromOpen,signalClosePct,signalBodyPct,emaFastDistanceAtr,emaSlowDistanceAtr,atrRatio,slopeAtrPct,maxFavorableR,maxAdverseR,outcome,rMultiple,touchedProbe,barsHeld");
+            ConfigureCamarillaDynamicResearch(startDate, endDate);
             ConfigureCandidateStackResearch(startDate, endDate);
             ConfigureOpeningAuctionResearch(startDate, endDate);
             ConfigureLiquiditySweepResearch(startDate, endDate);
@@ -199,6 +200,11 @@ namespace QuantConnect.Algorithm.CSharp
 
             UpdateSessionState(bar);
 
+            if (IsCamarillaMode())
+            {
+                TryCamarillaDynamicResearch(bar);
+                return;
+            }
             if (IsCandidateStackMode())
             {
                 TryCandidateStackResearch(bar);
@@ -1087,6 +1093,7 @@ namespace QuantConnect.Algorithm.CSharp
                 High = high,
                 Low = low,
                 Close = close,
+                Volume = (double)input.Volume,
                 Atr = atr,
                 AtrRatio = atrBaseline > 0.0 ? atr / atrBaseline : 0.0,
                 EmaFast = emaFast,
@@ -1230,6 +1237,8 @@ namespace QuantConnect.Algorithm.CSharp
 
         private string EntryModeToken()
         {
+            if (IsCamarillaMode())
+                return "Camarilla";
             if (IsCandidateStackMode())
                 return "CandidateStack";
             if (IsOpeningAuctionMode())
@@ -1342,6 +1351,7 @@ namespace QuantConnect.Algorithm.CSharp
             public double High;
             public double Low;
             public double Close;
+            public double Volume;
             public double Atr;
             public double AtrRatio;
             public double EmaFast;

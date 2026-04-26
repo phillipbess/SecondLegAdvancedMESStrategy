@@ -203,3 +203,30 @@ Verdict: **this is the new price-only benchmark**. It is stable and clearly bett
 5. Build one tick/quote prototype for **OFI-confirmed failed auction** around PDH/PDL/ONH/ONL/ORH/ORL.
 6. Continue only if OFI materially beats the price-only sweep baseline and survives yearly slices.
 7. If OFI cannot improve failed auctions, stop chasing ES price-action variants and broaden beyond minute-bar ES setups.
+
+### Camarilla Dynamic / AVWAP Slope Research
+
+Tested Camarilla pivots with session-anchored VWAP slope as a dynamic regime switch:
+
+- Flat VWAP slope: H3/L3 fade logic.
+- Strong VWAP slope: H4/L4 breakout logic.
+- Standard Camarilla formulas: H3/L3 = prior close +/- prior range * 1.1 / 4; H4/L4 = prior close +/- prior range * 1.1 / 2.
+
+Initial classic H4/L4 stops were too wide for the small-account sizing constraint and produced only `2.92R` over five years. Adding a tighter ATR-capped stop found a real but weak candidate.
+
+| Variant | Net R | Monthly R | Trades/mo | Avg R | Read |
+|---|---:|---:|---:|---:|---|
+| Both-side dynamic, tighter 1.25 ATR stop | 105.02 | 1.75 | 17.4 | 0.10 | Useful frequency, not stable enough |
+| Long-only dynamic, tighter 1.25 ATR stop | 78.23 | 1.30 | 11.2 | 0.12 | Cleaner but still weak recently |
+
+Yearly check for the best both-side variant:
+
+| Period | Net R | Monthly R | Trades/mo |
+|---|---:|---:|---:|
+| 2021-2022 | 60.13 | 5.01 | 18.2 |
+| 2022-2023 | 19.25 | 1.60 | 16.8 |
+| 2023-2024 | 13.58 | 1.13 | 17.8 |
+| 2024-2025 | 13.94 | 1.16 | 16.9 |
+| 2025-2026 | -1.88 | -0.16 | 17.1 |
+
+Verdict: **keep as a research artifact, not a promoted engine**. The frequency is attractive, but the recent degradation means it needs a context filter or setup split before it can be stacked with the current benchmark.

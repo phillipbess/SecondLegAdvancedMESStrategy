@@ -1,0 +1,126 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID:
+a7995642fd7c015a7942e7aedeae0e88-315f57914f906c5cd8e1219dd0ce87a1, Lean
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'Camarilla tight_dynamic_1p25 long 2022_2023' for
+project 'SecondLegQCSpike 1'
+Backtest url:
+https://www.quantconnect.com/project/30609547/1cdcc2ef7c34f60bb933035ae6e7b97c
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic        | Value             | Statistic        | Value             |
+|------------------+-------------------+------------------+-------------------|
+| 5m Bars          | 22749             | Armed            | 124               |
+| Avg R            | 0.12              | Block 1          | SameBarBoth:1     |
+| Block Types      | 1                 | Entry Mode       | Camarilla         |
+| Equity           | $100,000.00       | Expired          | 0                 |
+| Export Key       | 30609547/camarill | Fees             | -$0.00            |
+|                  | a_dynamic_export_ |                  |                   |
+|                  | 20220424_20230423 |                  |                   |
+|                  | _bar_5_side_long_ |                  |                   |
+|                  | model_dynamic_sto |                  |                   |
+|                  | p_tighter_1p25_fl |                  |                   |
+|                  | at_0p025_break_0p |                  |                   |
+|                  | 035_confirm_2_tar |                  |                   |
+|                  | get_1p5_hold_24.c |                  |                   |
+|                  | sv                |                  |                   |
+| H09 L            | n=24 avg=0.15     | H10 L            | n=57 avg=0.21     |
+|                  | net=3.5 2R=11     |                  | net=12.0 2R=23    |
+|                  | st=13 to=0 t1=14  |                  | st=26 to=8 t1=31  |
+|                  | mfe=1.02          |                  | mfe=1.11          |
+|                  | mae=-0.94         |                  | mae=-0.92         |
+| H11 L            | n=16 avg=-0.22    | H12 L            | n=14 avg=0.42     |
+|                  | net=-3.5 2R=5     |                  | net=5.8 2R=7 st=6 |
+|                  | st=11 to=0 t1=8   |                  | to=1 t1=8         |
+|                  | mfe=1.22          |                  | mfe=1.07          |
+|                  | mae=-1.89         |                  | mae=-0.90         |
+| H13 L            | n=11 avg=-0.32    | H14 L            | n=2 avg=0.25      |
+|                  | net=-3.5 2R=3     |                  | net=0.5 2R=1 st=1 |
+|                  | st=8 to=0 t1=3    |                  | to=0 t1=1         |
+|                  | mfe=0.89          |                  | mfe=1.05          |
+|                  | mae=-1.02         |                  | mae=-0.72         |
+| Holdings         | $0.00             | Impulses         | 0                 |
+| Leg1             | 0                 | Leg2 Candidates  | 0                 |
+| Long Armed       | 124               | Net Profit       | $0.00             |
+| Net R            | 14.79             | Params           | mode=Camarilla    |
+|                  |                   |                  | bar=5 side=long   |
+|                  |                   |                  | imp=1.25          |
+|                  |                   |                  | leg2Retr=0.95     |
+|                  |                   |                  | sig=0.5           |
+|                  |                   |                  | target=1.5        |
+|                  |                   |                  | hold=24 trig=3    |
+|                  |                   |                  | liq=False         |
+|                  |                   |                  | roomMax=-1        |
+|                  |                   |                  | struct=none       |
+|                  |                   |                  | block=none        |
+|                  |                   |                  | blockS=none       |
+| Probabilistic    | 0%                | Return           | 0.00 %            |
+| Sharpe Ratio     |                   |                  |                   |
+| RiskTooSmall     | 0                 | Room <0.25R      | n=124 avg=0.12    |
+|                  |                   |                  | net=14.8 2R=50    |
+|                  |                   |                  | st=65 to=9 t1=65  |
+|                  |                   |                  | mfe=1.08          |
+|                  |                   |                  | mae=-1.05         |
+| RTH 5m Bars      | 19512             | Runtime Trade    | 5/124             |
+|                  |                   | Rows             |                   |
+| Separations      | 0                 | Short Armed      | 0                 |
+| Side L           | n=124 avg=0.12    | SignalInvalid    | 0                 |
+|                  | net=14.8 2R=50    |                  |                   |
+|                  | st=65 to=9 t1=65  |                  |                   |
+|                  | mfe=1.08          |                  |                   |
+|                  | mae=-1.05         |                  |                   |
+| Stops            | 65                | StopTooWide      | 0                 |
+| Struct           | n=64 avg=-0.06    | Struct           | n=60 avg=0.31     |
+| CAM_H4_BREAK     | net=-3.6 2R=20    | CAM_L3_FADE      | net=18.4 2R=30    |
+|                  | st=37 to=7 t1=30  |                  | st=28 to=2 t1=35  |
+|                  | mfe=1.03          |                  | mfe=1.13          |
+|                  | mae=-1.24         |                  | mae=-0.85         |
+| StructureRoom    | 0                 | T01              | 22-04-28 12:45 L  |
+|                  |                   |                  | Target r=1.5      |
+|                  |                   |                  | mfe=1.7261        |
+|                  |                   |                  | mae=-0.0008       |
+|                  |                   |                  | room=0 bars=2     |
+| T02              | 22-04-29 10:05 L  | T03              | 22-05-04 12:15 L  |
+|                  | Stop r=-1         |                  | Target r=1.5      |
+|                  | mfe=0.147         |                  | mfe=1.6728        |
+|                  | mae=-1.0189       |                  | mae=-0.4821       |
+|                  | room=0 bars=3     |                  | room=0 bars=3     |
+| T04              | 22-05-12 10:00 L  | T05              | 22-05-13 10:15 L  |
+|                  | Stop r=-1         |                  | Timeout r=1.0973  |
+|                  | mfe=0.0072        |                  | mfe=1.3676        |
+|                  | mae=-1.0149       |                  | mae=-0.2341       |
+|                  | room=0 bars=1     |                  | room=0 bars=26    |
+| Timeouts         | 9                 | Touch 1R         | 65                |
+| Trend Bars       | 0                 | Triggered        | 124               |
+| Unrealized       | $0.00             | Virtual Trades   | 124               |
+| Volume           | $0.00             | Win 1.5R         | 50                |
+|------------------+-------------------+------------------+-------------------|
+| Total Orders     | 0                 | Average Win      | 0%                |
+| Average Loss     | 0%                | Compounding      | 0%                |
+|                  |                   | Annual Return    |                   |
+| Drawdown         | 0%                | Expectancy       | 0                 |
+| Start Equity     | 100000            | End Equity       | 100000            |
+| Net Profit       | 0%                | Sharpe Ratio     | 0                 |
+| Sortino Ratio    | 0                 | Probabilistic    | 0%                |
+|                  |                   | Sharpe Ratio     |                   |
+| Loss Rate        | 0%                | Win Rate         | 0%                |
+| Profit-Loss      | 0                 | Alpha            | 0                 |
+| Ratio            |                   |                  |                   |
+| Beta             | 0                 | Annual Standard  | 0                 |
+|                  |                   | Deviation        |                   |
+| Annual Variance  | 0                 | Information      | -0.036            |
+|                  |                   | Ratio            |                   |
+| Tracking Error   | 0.19              | Treynor Ratio    | 0                 |
+| Total Fees       | $0.00             | Estimated        | $0                |
+|                  |                   | Strategy         |                   |
+|                  |                   | Capacity         |                   |
+| Lowest Capacity  |                   | Portfolio        | 0%                |
+| Asset            |                   | Turnover         |                   |
+| Drawdown         | 0                 |                  |                   |
+| Recovery         |                   |                  |                   |
++-----------------------------------------------------------------------------+
+Backtest id: 1cdcc2ef7c34f60bb933035ae6e7b97c
+Backtest name: Camarilla tight_dynamic_1p25 long 2022_2023
+Backtest url:
+https://www.quantconnect.com/project/30609547/1cdcc2ef7c34f60bb933035ae6e7b97c
