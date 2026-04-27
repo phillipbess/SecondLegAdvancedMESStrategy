@@ -97,6 +97,21 @@ The canonical signoff definition now lives in:
 
 - [docs/Parity_Signoff_Checklist.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/docs/Parity_Signoff_Checklist.md)
 
+## QuantConnect Research
+
+The original second-leg hypothesis did not produce enough edge in broader testing. The current best research candidate is now the **Sweep Reclaim Sequenced** auction-failure retest model:
+
+- sweep/reclaim around `PDH`, `PDL`, `ORH`, `ORL`, `SWING_H`, and `SWING_L`
+- planned retest-limit entry after reclaim
+- second-resolution fill and outcome sequencing
+- explicit anti-lookahead guard against same signal-bar fills
+
+The source-of-truth research explanation and results live here:
+
+- [research/quantconnect/results/SweepSeq_Rolling_2026-04-27.md](C:/Users/bessp/Documents/NinjaTrader 8/bin/Custom/Strategies/SecondLegAdvancedMESStrategy/research/quantconnect/results/SweepSeq_Rolling_2026-04-27.md)
+
+Current posture: promising research breakthrough, not production-ready. The next validation step is execution-friction modeling, raw/mapping level validation, and multi-year yearly slices.
+
 ## Repo Layout
 
 - `AGENTS.md` - local repo editing and reuse contract
