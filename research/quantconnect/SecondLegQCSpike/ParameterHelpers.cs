@@ -72,6 +72,8 @@ namespace QuantConnect.Algorithm.CSharp
                 return "CandidateStack";
             if (IsOpeningAuctionMode())
                 return "OpenAuction";
+            if (IsSweepReclaimSequencedMode())
+                return "SweepSeq";
             if (IsLiquiditySweepMode())
                 return "LiquiditySweep";
             if (IsOpeningDriveMode())

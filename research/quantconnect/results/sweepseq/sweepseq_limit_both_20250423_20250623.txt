@@ -1,0 +1,178 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID:
+9bff3d7a4154d5722200daeb8bdeb8e2-ab7dedf03fcafed300184efcda8bde8a, Lean
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'SweepSeq limit both 20250423_20250623' for project
+'SecondLegQCSpike 1'
+Backtest url:
+https://www.quantconnect.com/project/30609547/1f058615374275af946b7a771a2528b4
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic        | Value             | Statistic        | Value             |
+|------------------+-------------------+------------------+-------------------|
+| 1m Bars          | 19320             | Armed            | 354               |
+| Avg R            | 0.15              | Block 1          | SweepSeqPreFillIn |
+|                  |                   |                  | valid:24          |
+| Block 2          | SameBarBoth:1     | Block Types      | 2                 |
+| Entry Mode       | SweepSeq          | Equity           | $100,000.00       |
+| Expired          | 200               | Export Key       | 30609547/sweepseq |
+|                  |                   |                  | _export_20250423_ |
+|                  |                   |                  | 20250623_bar_1_si |
+|                  |                   |                  | de_both_levels_OR |
+|                  |                   |                  | H-ORL-PDH-PDL-SWI |
+|                  |                   |                  | NG_H-SWING_L_entr |
+|                  |                   |                  | y_limit_min_1_max |
+|                  |                   |                  | _16_reclaim_3_clo |
+|                  |                   |                  | se_0p55_body_0p35 |
+|                  |                   |                  | _disp_0p25_target |
+|                  |                   |                  | _1p5_hold_45.csv  |
+| Fees             | -$0.00            | H09 L            | n=10 avg=-0.25    |
+|                  |                   |                  | net=-2.5 2R=3     |
+|                  |                   |                  | st=7 to=0 t1=4    |
+|                  |                   |                  | mfe=0.75          |
+|                  |                   |                  | mae=-1.07         |
+| H09 S            | n=17 avg=0.62     | H10 L            | n=22 avg=0.14     |
+|                  | net=10.5 2R=11    |                  | net=3.0 2R=10     |
+|                  | st=6 to=0 t1=14   |                  | st=12 to=0 t1=12  |
+|                  | mfe=1.39          |                  | mfe=1.12          |
+|                  | mae=-0.56         |                  | mae=-0.84         |
+| H10 S            | n=38 avg=0.32     | H11 L            | n=16 avg=0.25     |
+|                  | net=12.0 2R=20    |                  | net=4.0 2R=8 st=8 |
+|                  | st=18 to=0 t1=27  |                  | to=0 t1=9         |
+|                  | mfe=1.29          |                  | mfe=1.12          |
+|                  | mae=-0.77         |                  | mae=-0.87         |
+| H11 S            | n=13 avg=-0.23    | H12 L            | n=9 avg=-0.44     |
+|                  | net=-3.0 2R=4     |                  | net=-4.0 2R=2     |
+|                  | st=9 to=0 t1=6    |                  | st=7 to=0 t1=3    |
+|                  | mfe=0.95          |                  | mfe=0.78          |
+|                  | mae=-1.13         |                  | mae=-1.19         |
+| H12 S            | n=8 avg=-0.38     | H13 L            | n=11 avg=0.14     |
+|                  | net=-3.0 2R=2     |                  | net=1.5 2R=5 st=6 |
+|                  | st=6 to=0 t1=3    |                  | to=0 t1=5         |
+|                  | mfe=0.56          |                  | mfe=1.07          |
+|                  | mae=-1.00         |                  | mae=-1.02         |
+| H13 S            | n=7 avg=0.43      | H14 L            | n=3 avg=0.67      |
+|                  | net=3.0 2R=4 st=3 |                  | net=2.0 2R=2 st=1 |
+|                  | to=0 t1=5         |                  | to=0 t1=2         |
+|                  | mfe=1.31          |                  | mfe=1.20          |
+|                  | mae=-0.66         |                  | mae=-0.41         |
+| Holdings         | $0.00             | Impulses         | 0                 |
+| Leg1             | 0                 | Leg2 Candidates  | 0                 |
+| Long Armed       | 190               | Net Profit       | $0.00             |
+| Net R            | 23.50             | Params           | mode=SweepSeq     |
+|                  |                   |                  | bar=1 side=both   |
+|                  |                   |                  | imp=1.25          |
+|                  |                   |                  | leg2Retr=0.95     |
+|                  |                   |                  | sig=0.5           |
+|                  |                   |                  | target=1.5        |
+|                  |                   |                  | hold=45 trig=3    |
+|                  |                   |                  | liq=False         |
+|                  |                   |                  | roomMax=-1        |
+|                  |                   |                  | struct=none       |
+|                  |                   |                  | block=none        |
+|                  |                   |                  | blockS=none       |
+| Probabilistic    | 0%                | Return           | 0.00 %            |
+| Sharpe Ratio     |                   |                  |                   |
+| RiskTooSmall     | 0                 | Room <0.25R      | n=102 avg=0.23    |
+|                  |                   |                  | net=23.0 2R=50    |
+|                  |                   |                  | st=52 to=0 t1=60  |
+|                  |                   |                  | mfe=1.08          |
+|                  |                   |                  | mae=-0.76         |
+| Room <1.00R      | n=9 avg=0.11      | Room >=1R        | n=43 avg=-0.01    |
+|                  | net=1.0 2R=4 st=5 |                  | net=-0.5 2R=17    |
+|                  | to=0 t1=5         |                  | st=26 to=0 t1=25  |
+|                  | mfe=1.18          |                  | mfe=1.17          |
+|                  | mae=-0.96         |                  | mae=-1.07         |
+| RTH 1m Bars      | 16590             | Runtime Trade    | 10/154            |
+|                  |                   | Rows             |                   |
+| Separations      | 0                 | Short Armed      | 164               |
+| Side L           | n=71 avg=0.06     | Side S           | n=83 avg=0.23     |
+|                  | net=4.0 2R=30     |                  | net=19.5 2R=41    |
+|                  | st=41 to=0 t1=35  |                  | st=42 to=0 t1=55  |
+|                  | mfe=1.02          |                  | mfe=1.19          |
+|                  | mae=-0.94         |                  | mae=-0.79         |
+| SignalInvalid    | 0                 | Stops            | 83                |
+| StopTooWide      | 0                 | Struct           | n=26 avg=0.25     |
+|                  |                   | SSEQ_ORH_LIMIT   | net=6.5 2R=13     |
+|                  |                   |                  | st=13 to=0 t1=16  |
+|                  |                   |                  | mfe=1.08          |
+|                  |                   |                  | mae=-0.69         |
+| Struct           | n=20 avg=0.13     | Struct           | n=14 avg=0.96     |
+| SSEQ_ORL_LIMIT   | net=2.5 2R=9      | SSEQ_PDH_LIMIT   | net=13.5 2R=11    |
+|                  | st=11 to=0 t1=9   |                  | st=3 to=0 t1=11   |
+|                  | mfe=0.95          |                  | mfe=1.40          |
+|                  | mae=-0.84         |                  | mae=-0.46         |
+| Struct           | n=10 avg=0.25     | Struct           | n=43 avg=-0.01    |
+| SSEQ_PDL_LIMIT   | net=2.5 2R=5 st=5 | SSEQ_SWING_H_LIM | net=-0.5 2R=17    |
+|                  | to=0 t1=6         | IT               | st=26 to=0 t1=28  |
+|                  | mfe=1.12          |                  | mfe=1.19          |
+|                  | mae=-0.71         |                  | mae=-0.97         |
+| Struct           | n=41 avg=-0.02    | StructureRoom    | 0                 |
+| SSEQ_SWING_L_LIM | net=-1.0 2R=16    |                  |                   |
+| IT               | st=25 to=0 t1=20  |                  |                   |
+|                  | mfe=1.03          |                  |                   |
+|                  | mae=-1.04         |                  |                   |
+| T01              | 25-04-23 10:38 S  | T02              | 25-04-23 10:53 L  |
+|                  | Target r=1.5      |                  | Target r=1.5      |
+|                  | mfe=1.8664        |                  | mfe=2.3978        |
+|                  | mae=-0.0057       |                  | mae=-0.1845       |
+|                  | room=0.0057       |                  | room=0.0738       |
+|                  | bars=2            |                  | bars=2            |
+| T03              | 25-04-23 13:10 S  | T04              | 25-04-24 09:51 S  |
+|                  | Target r=1.5      |                  | Target r=1.5      |
+|                  | mfe=1.6169        |                  | mfe=1.78 mae=0    |
+|                  | mae=-0.0616       |                  | room=1.78 bars=1  |
+|                  | room=0.0616       |                  |                   |
+|                  | bars=1            |                  |                   |
+| T05              | 25-04-24 13:03 S  | T06              | 25-04-25 09:51 L  |
+|                  | Target r=1.5      |                  | Stop r=-1         |
+|                  | mfe=2.1824        |                  | mfe=0.1963        |
+|                  | mae=-0.572        |                  | mae=-2.3859       |
+|                  | room=0.1166       |                  | room=0.025 bars=1 |
+|                  | bars=2            |                  |                   |
+| T07              | 25-04-25 10:14 S  | T08              | 25-04-25 10:49 S  |
+|                  | Target r=1.5      |                  | Target r=1.5      |
+|                  | mfe=1.6147        |                  | mfe=1.9513        |
+|                  | mae=-0.1929       |                  | mae=-0.6309       |
+|                  | room=0.0207       |                  | room=3.5006       |
+|                  | bars=2            |                  | bars=2            |
+| T09              | 25-04-25 13:52 L  | T10              | 25-04-28 10:07 S  |
+|                  | Stop r=-1         |                  | Target r=1.5      |
+|                  | mfe=0.6901        |                  | mfe=1.7414        |
+|                  | mae=-3.4414       |                  | mae=-0.0949       |
+|                  | room=1.2066       |                  | room=0.0199       |
+|                  | bars=1            |                  | bars=1            |
+| Timeouts         | 0                 | Touch 1R         | 90                |
+| Trend Bars       | 0                 | Triggered        | 154               |
+| Unrealized       | $0.00             | Virtual Trades   | 154               |
+| Volume           | $0.00             | Win 1.5R         | 71                |
+|------------------+-------------------+------------------+-------------------|
+| Total Orders     | 0                 | Average Win      | 0%                |
+| Average Loss     | 0%                | Compounding      | 0%                |
+|                  |                   | Annual Return    |                   |
+| Drawdown         | 0%                | Expectancy       | 0                 |
+| Start Equity     | 100000            | End Equity       | 100000            |
+| Net Profit       | 0%                | Sharpe Ratio     | 0                 |
+| Sortino Ratio    | 0                 | Probabilistic    | 0%                |
+|                  |                   | Sharpe Ratio     |                   |
+| Loss Rate        | 0%                | Win Rate         | 0%                |
+| Profit-Loss      | 0                 | Alpha            | 0                 |
+| Ratio            |                   |                  |                   |
+| Beta             | 0                 | Annual Standard  | 0                 |
+|                  |                   | Deviation        |                   |
+| Annual Variance  | 0                 | Information      | -5.29             |
+|                  |                   | Ratio            |                   |
+| Tracking Error   | 0.12              | Treynor Ratio    | 0                 |
+| Total Fees       | $0.00             | Estimated        | $0                |
+|                  |                   | Strategy         |                   |
+|                  |                   | Capacity         |                   |
+| Lowest Capacity  |                   | Portfolio        | 0%                |
+| Asset            |                   | Turnover         |                   |
+| Drawdown         | 0                 |                  |                   |
+| Recovery         |                   |                  |                   |
++-----------------------------------------------------------------------------+
+Backtest id: 1f058615374275af946b7a771a2528b4
+Backtest name: SweepSeq limit both 20250423_20250623
+Backtest url:
+https://www.quantconnect.com/project/30609547/1f058615374275af946b7a771a2528b4

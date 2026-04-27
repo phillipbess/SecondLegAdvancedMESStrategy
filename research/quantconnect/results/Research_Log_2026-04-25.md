@@ -308,3 +308,33 @@ Ran six rolling two-month windows from 2025-04-23 through 2026-04-23 using secon
 | ICT 2022 RTH 1.5R | -56.59 | -4.72 | 20.9 | -0.23 | Frequency is there, edge is not |
 
 Updated verdict: **kill broad ICT 2022 as coded**. Keep the PDH short Silver Bullet only as a possible context feature or micro-edge. The second-resolution test confirms that the target-first one-minute optimism was not reliable enough to chase.
+
+### Sweep Reclaim Sequenced Breakthrough Candidate
+
+Built `SweepReclaimSequenced` after the council diagnosis that the named setup was not the edge; executable auction-failure translation was the missing piece.
+
+The new harness:
+
+- Detects sweep/reclaim around `PDH`, `PDL`, `ORH`, `ORL`, `SWING_H`, and `SWING_L`.
+- Arms a planned entry after reclaim.
+- Uses second bars for fills/outcomes.
+- Blocks fills on or before the completed signal bar timestamp to avoid lookahead.
+- Compares continuation stop-entry against retest-limit entry.
+
+Recent two-month smoke:
+
+| Variant | Net R | Avg R | Trades | Read |
+|---|---:|---:|---:|---|
+| Stop-entry both | -10.34 | -0.06 | 170 | Failed |
+| Stop-entry short | -2.48 | -0.03 | 83 | Failed |
+| Retest-limit both | 25.00 | 0.17 | 150 | Strong |
+| Retest-limit short | 16.50 | 0.23 | 71 | Strong |
+
+Rolling validation from 2025-04-23 through 2026-04-23:
+
+| Variant | Net R | Monthly R | Trades/mo | Avg R | Read |
+|---|---:|---:|---:|---:|---|
+| Retest-limit both | 145.00 | 12.08 | 77.5 | 0.16 | Very strong, but trade-dense |
+| Retest-limit short | 78.00 | 6.50 | 40.6 | 0.16 | First candidate to hit target range |
+
+Updated verdict: **this is the first serious breakthrough candidate**, but not production-ready. The next work must validate execution friction, raw/mapping level integrity, yearly slices, and level/time attribution. Limit-touch fills are the biggest risk.

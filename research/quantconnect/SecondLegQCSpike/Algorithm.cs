@@ -169,7 +169,9 @@ namespace QuantConnect.Algorithm.CSharp
             SetCash(100000);
             SetTimeZone(TimeZones.NewYork);
 
-            Resolution dataResolution = IsIctSequencedMode() ? Resolution.Second : Resolution.Minute;
+            Resolution dataResolution = IsIctSequencedMode() || IsSweepReclaimSequencedMode()
+                ? Resolution.Second
+                : Resolution.Minute;
             _future = AddFuture(
                 Futures.Indices.MicroSP500EMini,
                 dataResolution,
@@ -186,6 +188,7 @@ namespace QuantConnect.Algorithm.CSharp
             ConfigureCandidateStackResearch(startDate, endDate);
             ConfigureOpeningAuctionResearch(startDate, endDate);
             ConfigureLiquiditySweepResearch(startDate, endDate);
+            ConfigureSweepReclaimSequencedResearch(startDate, endDate);
             ConfigureOpeningDriveResearch(startDate, endDate);
 
             Debug($"SecondLegQCSpike init mode={EntryModeToken()} start={startDate:yyyy-MM-dd} end={endDate:yyyy-MM-dd} bar={BarMinutes} side={SideFilter} target={ProfitTargetR:0.###} hold={MaxOutcomeBars} or={OpeningRangeMinutes}");
@@ -232,6 +235,11 @@ namespace QuantConnect.Algorithm.CSharp
             if (IsLiquiditySweepMode())
             {
                 TryLiquiditySweepResearch(bar);
+                return;
+            }
+            if (IsSweepReclaimSequencedMode())
+            {
+                TrySweepReclaimSequencedSignal(bar);
                 return;
             }
             if (IsOpeningDriveMode())

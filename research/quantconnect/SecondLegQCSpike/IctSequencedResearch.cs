@@ -11,14 +11,17 @@ namespace QuantConnect.Algorithm.CSharp
 
         public override void OnData(Slice slice)
         {
-            if (!IsIctSequencedMode() || _continuousSymbol == null)
+            if ((!IsIctSequencedMode() && !IsSweepReclaimSequencedMode()) || _continuousSymbol == null)
                 return;
             if (!slice.Bars.TryGetValue(_continuousSymbol, out TradeBar bar))
                 return;
             if (!IsRegularSession(bar.EndTime))
                 return;
 
-            ProcessIctSequencedExecution(bar);
+            if (IsIctSequencedMode())
+                ProcessIctSequencedExecution(bar);
+            else if (IsSweepReclaimSequencedMode())
+                ProcessSweepReclaimSequencedExecution(bar);
         }
 
         private bool IsIctSequencedMode()
