@@ -1,12 +1,12 @@
 Started compiling project 'SecondLegQCSpike 1'
 Build Request Successful for Project ID: 30609547, with CompileID:
-a04517bedb127c08e0686d2940ba3750-941cc44763251694036f5546e06a63ad, Lean
+612cb7cab611ed77a8ccba3bc22b5018-941cc44763251694036f5546e06a63ad, Lean
 Version: 2.5.0.0.17685
 Successfully compiled project 'SecondLegQCSpike 1'
-Started backtest named 'ICTSeq 2022 RTH 1.5R second bars 20260223 20260423' for
-project 'SecondLegQCSpike 1'
+Started backtest named 'ICTSeq 2022 RTH 1.5R 20260223_20260423' for project
+'SecondLegQCSpike 1'
 Backtest url:
-https://www.quantconnect.com/project/30609547/74c9220af224ac3aab6acd1db34d0219
+https://www.quantconnect.com/project/30609547/5a1e3c60ab595447ce75edf82b6ed06c
  ---------------------------------------- 100%
 +-----------------------------------------------------------------------------+
 | Statistic         | Value            | Statistic         | Value            |
@@ -150,7 +150,7 @@ https://www.quantconnect.com/project/30609547/74c9220af224ac3aab6acd1db34d0219
 | Asset             |                  | Turnover          |                  |
 | Drawdown Recovery | 0                |                   |                  |
 +-----------------------------------------------------------------------------+
-Backtest id: 74c9220af224ac3aab6acd1db34d0219
-Backtest name: ICTSeq 2022 RTH 1.5R second bars 20260223 20260423
+Backtest id: 5a1e3c60ab595447ce75edf82b6ed06c
+Backtest name: ICTSeq 2022 RTH 1.5R 20260223_20260423
 Backtest url:
-https://www.quantconnect.com/project/30609547/74c9220af224ac3aab6acd1db34d0219
+https://www.quantconnect.com/project/30609547/5a1e3c60ab595447ce75edf82b6ed06c

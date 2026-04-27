@@ -1,0 +1,156 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID:
+8c40a32beb1e8bf43c76a95f2a285df2-941cc44763251694036f5546e06a63ad, Lean
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'ICTSeq 2022 RTH 1.5R 20251223_20260223' for project
+'SecondLegQCSpike 1'
+Backtest url:
+https://www.quantconnect.com/project/30609547/c29fbe147748d32eed23f45ca9ac0ed3
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 1m Bars           | 19095            | Armed             | 69               |
+| Avg R             | -0.51            | Block 1           | IctSeqRiskTooSma |
+|                   |                  |                   | ll:2             |
+| Block Types       | 1                | Entry Mode        | ICTSeq           |
+| Equity            | $100,000.00      | Expired           | 26               |
+| Export Key        | 30609547/ict_exp | Fees              | -$0.00           |
+|                   | ort_20251223_202 |                   |                  |
+|                   | 60223_bar_1_side |                   |                  |
+|                   | _both_model_2022 |                   |                  |
+|                   | _liq_swing-or-pd |                   |                  |
+|                   | _win_0-300_disp_ |                   |                  |
+|                   | 0p5_fvg_1_target |                   |                  |
+|                   | _1p5_hold_90.csv |                   |                  |
+| H09 L             | n=4 avg=-1.00    | H09 S             | n=4 avg=-1.00    |
+|                   | net=-4.0 2R=0    |                   | net=-4.0 2R=0    |
+|                   | st=4 to=0 t1=0   |                   | st=4 to=0 t1=1   |
+|                   | mfe=0.33         |                   | mfe=0.69         |
+|                   | mae=-0.34        |                   | mae=-1.49        |
+| H10 L             | n=7 avg=-0.64    | H10 S             | n=8 avg=-0.38    |
+|                   | net=-4.5 2R=1    |                   | net=-3.0 2R=2    |
+|                   | st=6 to=0 t1=1   |                   | st=6 to=0 t1=3   |
+|                   | mfe=0.33         |                   | mfe=0.70         |
+|                   | mae=-0.58        |                   | mae=-0.60        |
+| H11 L             | n=3 avg=-0.17    | H11 S             | n=8 avg=-0.38    |
+|                   | net=-0.5 2R=1    |                   | net=-3.0 2R=2    |
+|                   | st=2 to=0 t1=1   |                   | st=6 to=0 t1=2   |
+|                   | mfe=0.91         |                   | mfe=0.60         |
+|                   | mae=-0.51        |                   | mae=-0.79        |
+| H12 L             | n=4 avg=0.25     | H12 S             | n=1 avg=-1.00    |
+|                   | net=1.0 2R=2     |                   | net=-1.0 2R=0    |
+|                   | st=2 to=0 t1=2   |                   | st=1 to=0 t1=0   |
+|                   | mfe=0.81         |                   | mfe=0.00         |
+|                   | mae=-0.35        |                   | mae=-0.15        |
+| H13 L             | n=1 avg=-1.00    | H13 S             | n=1 avg=-1.00    |
+|                   | net=-1.0 2R=0    |                   | net=-1.0 2R=0    |
+|                   | st=1 to=0 t1=1   |                   | st=1 to=0 t1=0   |
+|                   | mfe=1.22         |                   | mfe=0.62         |
+|                   | mae=-1.02        |                   | mae=-1.10        |
+| Holdings          | $0.00            | Impulses          | 0                |
+| Leg1              | 0                | Leg2 Candidates   | 0                |
+| Long Armed        | 35               | Net Profit        | $0.00            |
+| Net R             | -21.00           | Params            | mode=ICTSeq      |
+|                   |                  |                   | bar=1 side=both  |
+|                   |                  |                   | imp=1.25         |
+|                   |                  |                   | leg2Retr=0.95    |
+|                   |                  |                   | sig=0.5          |
+|                   |                  |                   | target=1.5       |
+|                   |                  |                   | hold=90 trig=3   |
+|                   |                  |                   | liq=False        |
+|                   |                  |                   | roomMax=-1       |
+|                   |                  |                   | struct=none      |
+|                   |                  |                   | block=none       |
+|                   |                  |                   | blockS=none      |
+| Probabilistic     | 0%               | Return            | 0.00 %           |
+| Sharpe Ratio      |                  |                   |                  |
+| RiskTooSmall      | 0                | Room <0.25R       | n=41 avg=-0.51   |
+|                   |                  |                   | net=-21.0 2R=8   |
+|                   |                  |                   | st=33 to=0 t1=11 |
+|                   |                  |                   | mfe=0.60         |
+|                   |                  |                   | mae=-0.68        |
+| RTH 1m Bars       | 16430            | Runtime Trade     | 10/41            |
+|                   |                  | Rows              |                  |
+| Separations       | 0                | Short Armed       | 34               |
+| Side L            | n=19 avg=-0.47   | Side S            | n=22 avg=-0.55   |
+|                   | net=-9.0 2R=4    |                   | net=-12.0 2R=4   |
+|                   | st=15 to=0 t1=5  |                   | st=18 to=0 t1=6  |
+|                   | mfe=0.57         |                   | mfe=0.63         |
+|                   | mae=-0.49        |                   | mae=-0.83        |
+| SignalInvalid     | 0                | Stops             | 33               |
+| StopTooWide       | 0                | Struct            | n=14 avg=-0.46   |
+|                   |                  | ICT_2022_ORH_FVG_ | net=-6.5 2R=3    |
+|                   |                  | SEQ               | st=11 to=0 t1=5  |
+|                   |                  |                   | mfe=0.65         |
+|                   |                  |                   | mae=-0.79        |
+| Struct            | n=12 avg=-0.38   | Struct            | n=3 avg=-0.17    |
+| ICT_2022_ORL_FVG_ | net=-4.5 2R=3    | ICT_2022_PDH_FVG_ | net=-0.5 2R=1    |
+| SEQ               | st=9 to=0 t1=4   | SEQ               | st=2 to=0 t1=1   |
+|                   | mfe=0.66         |                   | mfe=1.07         |
+|                   | mae=-0.47        |                   | mae=-0.75        |
+| Struct            | n=1 avg=-1.00    | Struct            | n=5 avg=-1.00    |
+| ICT_2022_PDL_FVG_ | net=-1.0 2R=0    | ICT_2022_SWING_H_ | net=-5.0 2R=0    |
+| SEQ               | st=1 to=0 t1=0   | FVG_SEQ           | st=5 to=0 t1=0   |
+|                   | mfe=0.05         |                   | mfe=0.30         |
+|                   | mae=-1.06        |                   | mae=-1.01        |
+| Struct            | n=6 avg=-0.58    | StructureRoom     | 0                |
+| ICT_2022_SWING_L_ | net=-3.5 2R=1    |                   |                  |
+| FVG_SEQ           | st=5 to=0 t1=1   |                   |                  |
+|                   | mfe=0.48         |                   |                  |
+|                   | mae=-0.44        |                   |                  |
+| T01               | 25-12-23 10:17 S | T02               | 25-12-24 12:40 S |
+|                   | Stop r=-1        |                   | Stop r=-1 mfe=0  |
+|                   | mfe=0.2585       |                   | mae=-0.1458      |
+|                   | mae=-1.0012      |                   | room=0 bars=1    |
+|                   | room=0 bars=24   |                   |                  |
+| T03               | 25-12-26 10:17 S | T04               | 25-12-29 10:37 L |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.4488       |                   | mfe=0.0496       |
+|                   | mae=-1.0241      |                   | mae=-1.059       |
+|                   | room=0 bars=4    |                   | room=0 bars=2    |
+| T05               | 25-12-30 13:00 L | T06               | 25-12-31 09:53 L |
+|                   | Target r=1.5     |                   | Stop r=-1        |
+|                   | mfe=1.5362       |                   | mfe=0.0407 mae=0 |
+|                   | mae=-0.8993      |                   | room=0 bars=1    |
+|                   | room=0 bars=34   |                   |                  |
+| T07               | 26-01-02 11:19 L | T08               | 26-01-05 11:38 S |
+|                   | Stop r=-1        |                   | Stop r=-1        |
+|                   | mfe=0.017 mae=0  |                   | mfe=0.2597       |
+|                   | room=0 bars=1    |                   | mae=-0.748       |
+|                   |                  |                   | room=0 bars=1    |
+| T09               | 26-01-06 11:58 S | T10               | 26-01-07 10:30 L |
+|                   | Stop r=-1        |                   | Target r=1.5     |
+|                   | mfe=0.1187       |                   | mfe=1.5273       |
+|                   | mae=-1.225       |                   | mae=-0.2867      |
+|                   | room=0 bars=1    |                   | room=0 bars=6    |
+| Timeouts          | 0                | Touch 1R          | 11               |
+| Trend Bars        | 0                | Triggered         | 41               |
+| Unrealized        | $0.00            | Virtual Trades    | 41               |
+| Volume            | $0.00            | Win 1.5R          | 8                |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | 0.315            |
+| Tracking Error    | 0.091            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: c29fbe147748d32eed23f45ca9ac0ed3
+Backtest name: ICTSeq 2022 RTH 1.5R 20251223_20260223
+Backtest url:
+https://www.quantconnect.com/project/30609547/c29fbe147748d32eed23f45ca9ac0ed3

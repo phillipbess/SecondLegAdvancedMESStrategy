@@ -1,0 +1,74 @@
+Started compiling project 'SecondLegQCSpike 1'
+Build Request Successful for Project ID: 30609547, with CompileID:
+f769d080400a04b0bc01d0fef6fdba57-941cc44763251694036f5546e06a63ad, Lean
+Version: 2.5.0.0.17685
+Successfully compiled project 'SecondLegQCSpike 1'
+Started backtest named 'ICTSeq PDH 2R 20250823_20251023' for project
+'SecondLegQCSpike 1'
+Backtest url:
+https://www.quantconnect.com/project/30609547/686039e248c9456bfe7b3cfccad2ae29
+ ---------------------------------------- 100%
++-----------------------------------------------------------------------------+
+| Statistic         | Value            | Statistic         | Value            |
+|-------------------+------------------+-------------------+------------------|
+| 1m Bars           | 19560            | Armed             | 17               |
+| Avg R             | 0.00             | Block Types       | 0                |
+| Entry Mode        | ICTSeq           | Equity            | $100,000.00      |
+| Expired           | 12               | Export Key        | 30609547/ict_exp |
+|                   |                  |                   | ort_20250823_202 |
+|                   |                  |                   | 51023_bar_1_side |
+|                   |                  |                   | _short_model_sil |
+|                   |                  |                   | verbullet_liq_pd |
+|                   |                  |                   | _win_30-90_disp_ |
+|                   |                  |                   | 0p5_fvg_1_target |
+|                   |                  |                   | _2_hold_45.csv   |
+| Fees              | -$0.00           | Holdings          | $0.00            |
+| Impulses          | 0                | Leg1              | 0                |
+| Leg2 Candidates   | 0                | Long Armed        | 11               |
+| Net Profit        | $0.00            | Net R             | 0.00             |
+| Params            | mode=ICTSeq      | Probabilistic     | 0%               |
+|                   | bar=1 side=short | Sharpe Ratio      |                  |
+|                   | imp=1.25         |                   |                  |
+|                   | leg2Retr=0.95    |                   |                  |
+|                   | sig=0.5 target=2 |                   |                  |
+|                   | hold=45 trig=3   |                   |                  |
+|                   | liq=False        |                   |                  |
+|                   | roomMax=-1       |                   |                  |
+|                   | struct=none      |                   |                  |
+|                   | block=none       |                   |                  |
+|                   | blockS=none      |                   |                  |
+| Return            | 0.00 %           | RiskTooSmall      | 0                |
+| RTH 1m Bars       | 16765            | Runtime Trade     | 0/0              |
+|                   |                  | Rows              |                  |
+| Separations       | 0                | Short Armed       | 6                |
+| SignalInvalid     | 0                | Stops             | 0                |
+| StopTooWide       | 0                | StructureRoom     | 0                |
+| Timeouts          | 0                | Touch 1R          | 0                |
+| Trend Bars        | 0                | Triggered         | 0                |
+| Unrealized        | $0.00            | Virtual Trades    | 0                |
+| Volume            | $0.00            | Win 2R            | 0                |
+|-------------------+------------------+-------------------+------------------|
+| Total Orders      | 0                | Average Win       | 0%               |
+| Average Loss      | 0%               | Compounding       | 0%               |
+|                   |                  | Annual Return     |                  |
+| Drawdown          | 0%               | Expectancy        | 0                |
+| Start Equity      | 100000           | End Equity        | 100000           |
+| Net Profit        | 0%               | Sharpe Ratio      | 0                |
+| Sortino Ratio     | 0                | Probabilistic     | 0%               |
+|                   |                  | Sharpe Ratio      |                  |
+| Loss Rate         | 0%               | Win Rate          | 0%               |
+| Profit-Loss Ratio | 0                | Alpha             | 0                |
+| Beta              | 0                | Annual Standard   | 0                |
+|                   |                  | Deviation         |                  |
+| Annual Variance   | 0                | Information Ratio | -2.256           |
+| Tracking Error    | 0.088            | Treynor Ratio     | 0                |
+| Total Fees        | $0.00            | Estimated         | $0               |
+|                   |                  | Strategy Capacity |                  |
+| Lowest Capacity   |                  | Portfolio         | 0%               |
+| Asset             |                  | Turnover          |                  |
+| Drawdown Recovery | 0                |                   |                  |
++-----------------------------------------------------------------------------+
+Backtest id: 686039e248c9456bfe7b3cfccad2ae29
+Backtest name: ICTSeq PDH 2R 20250823_20251023
+Backtest url:
+https://www.quantconnect.com/project/30609547/686039e248c9456bfe7b3cfccad2ae29

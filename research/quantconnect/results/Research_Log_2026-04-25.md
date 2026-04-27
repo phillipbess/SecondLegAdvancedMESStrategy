@@ -297,3 +297,14 @@ Smoke window: 2026-02-23 through 2026-04-23.
 | ICT 2022 broad RTH, 1.5R | -9.50 | -0.23 | 42 | Broad model still weak under real sequencing |
 
 Updated read: the sequencing harness is the correct path. The broad ICT 2022 target-first optimism did not survive realistic second-bar sequencing in the smoke window.
+
+Rolling sequenced validation on 2026-04-26:
+
+Ran six rolling two-month windows from 2025-04-23 through 2026-04-23 using second-resolution execution sequencing.
+
+| Variant | Net R | Monthly R | Trades/mo | Avg R | Read |
+|---|---:|---:|---:|---:|---|
+| PDH short 2R | 4.20 | 0.35 | 2.6 | 0.14 | Positive, but only a micro-edge |
+| ICT 2022 RTH 1.5R | -56.59 | -4.72 | 20.9 | -0.23 | Frequency is there, edge is not |
+
+Updated verdict: **kill broad ICT 2022 as coded**. Keep the PDH short Silver Bullet only as a possible context feature or micro-edge. The second-resolution test confirms that the target-first one-minute optimism was not reliable enough to chase.
